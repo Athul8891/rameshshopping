@@ -57,6 +57,10 @@ class AppTextStyles {
         color: AppColors.white,
         fontSize: 12,
       );
+  static TextStyle get normal12blue => TextStyle(
+    color: AppColors.primaryColor,
+    fontSize: 12,
+  );
 
   static TextStyle get normal9White => TextStyle(
         color: AppColors.white,

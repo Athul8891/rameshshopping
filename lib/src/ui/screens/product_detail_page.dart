@@ -1,4 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:carousel_pro/carousel_pro.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -25,16 +26,35 @@ class ProductDetailPage extends StatefulWidget {
 class _ProductDetailPageState extends State<ProductDetailPage>
     with BaseScreenMixin {
   var addToCartCubit = AppInjector.get<AddToCartCubit>();
+  var arrImages = [];
 
   @override
   void initState() {
     super.initState();
     addToCartCubit.checkItemInCart(widget.productModel.productId);
     addToCartCubit.listenToProduct(widget.productModel.productId);
+
+
+    if (widget.productModel.prodimages != null) {
+
+      var arrImageUrl = widget.productModel.prodimages;
+      for (var i = 0; i < arrImageUrl.length; i++) {
+        arrImages.add(NetworkImage(arrImageUrl[i]));
+      }
+    }
+    //arrImages = widget.productModel.prodimages;
+    print("prodimagesssssssssssssssss");
+
+    print(arrImages);
   }
+
 
   @override
   Widget build(BuildContext context) {
+    var halfOfScreen = MediaQuery.of(context).size.height / 1.5;
+    double width = MediaQuery.of(context).size.width * 0.7;
+    double widthFull = MediaQuery.of(context).size.width;
+    double height = MediaQuery.of(context).size.height;
     return Scaffold(
       key: scaffoldKey,
       floatingActionButton: CommonViewCartOverlay(),
@@ -45,10 +65,38 @@ class _ProductDetailPageState extends State<ProductDetailPage>
       body: SingleChildScrollView(
         child: Column(
           children: <Widget>[
-            CachedNetworkImage(
-              imageUrl: widget.productModel.prodimages[0].toString(),
-              fit: BoxFit.fill,
+
+            Container(
+// padding: EdgeInsets.only(top: 8.0),
+
+              child: Container(
+
+                child: SizedBox(
+                  height: (height / 2.0),
+                  child: Carousel(
+                    images: arrImages.length != 0
+                        ? arrImages
+                        : [AssetImage("assets/promotion/promotion1.jpg")],
+
+                    dotSize: 5.0,
+                    dotSpacing: 15.0,
+                    dotColor: Colors.grey,
+                    indicatorBgPadding: 5.0,
+                    dotBgColor: Colors.purple.withOpacity(0.0),
+                    boxFit: BoxFit.fitWidth,
+                    animationCurve: Curves.decelerate,
+                    dotIncreasedColor: Colors.blue,
+                    overlayShadow: true,
+                    overlayShadowColors: Colors.white,
+                    overlayShadowSize: 0.7,
+                  ),
+                ),
+              ),
             ),
+            // CachedNetworkImage(
+            //   imageUrl: widget.productModel.prodimages[0].toString(),
+            //   fit: BoxFit.fill,
+            // ),
             Container(
               margin: EdgeInsets.all(16),
               child: Column(

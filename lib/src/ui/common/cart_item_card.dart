@@ -28,6 +28,9 @@ class _CartItemCardState extends State<CartItemCard> {
   @override
   void initState() {
     cartItemCubit.initCartValues(widget.cartModel.numOfItems);
+    print("imageeeeeeeees");
+
+    print(widget.cartModel.image);
     super.initState();
   }
 
@@ -48,7 +51,7 @@ class _CartItemCardState extends State<CartItemCard> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       CachedNetworkImage(
-                        imageUrl: widget.cartModel.image,
+                        imageUrl: widget.cartModel.image[0].toString(),
                         height: 68,
                         width: 68,
                         fit: BoxFit.fill,

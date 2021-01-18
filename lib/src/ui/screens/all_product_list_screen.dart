@@ -15,6 +15,7 @@ class AllProductListScreen extends StatefulWidget {
   final String productCondition;
   final String productValue;
 
+
   AllProductListScreen(this.productCondition,this.productValue);
 
   @override
@@ -90,6 +91,7 @@ class _AllProductListScreenState extends State<AllProductListScreen> {
                                       for (int i = 0; i < snapshot.data.documents.length; i++) {
                                         DocumentSnapshot snap = snapshot.data.documents[i];
                                         if(snap.data['strName'].toString()!= "None"){
+                                       //   currencyItems.add(["ALL","0"]);
                                           currencyItems.add( [snap.data['strName'],snap.data['itemId']] );
                                         }
 
@@ -97,7 +99,7 @@ class _AllProductListScreenState extends State<AllProductListScreen> {
 
                                         print(currencyItems);
                                       }
-                                      return Container(
+                                      return currencyItems.length==0?Text("Nothing to filter!"): Container(
                                         padding: EdgeInsets.only(top: 16, bottom: 16),
                                         color: Colors.white,
                                         width: double.infinity,
@@ -164,7 +166,7 @@ class _AllProductListScreenState extends State<AllProductListScreen> {
         return ProductCard(productList[index]);
       },
       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 3,
+        crossAxisCount: 2,
         mainAxisSpacing: 10,
         childAspectRatio: 0.7,
         crossAxisSpacing: 10,
@@ -183,10 +185,30 @@ class _AllProductListScreenState extends State<AllProductListScreen> {
     // }
     return GestureDetector(
       onTap:(){
-        Navigator.of(context).pushNamed(
-            Routes.allProductListScreen,
-            arguments: AllProductListScreenArguments(
-                productCondition: "itemId",productValue: strCategory[1].toString()));
+        if(strCategory[0].toString()=="ALL"){
+          setState(() {
+            allProductsCubit.fetchProducts(widget.productCondition,widget.productValue);
+            if (widget.productCondition == null) {
+              controller.addListener(_scrollListener);
+            }
+            Navigator.pop(context);
+          });
+        }else{
+          setState(() {
+            allProductsCubit.fetchProducts("itemId",strCategory[1].toString());
+            if (widget.productCondition == null) {
+              controller.addListener(_scrollListener);
+            }
+            Navigator.pop(context);
+
+          });
+        }
+
+
+        // Navigator.of(context).pushNamed(
+        //     Routes.allProductListScreen,
+        //     arguments: AllProductListScreenArguments(
+        //         productCondition: "itemId",productValue: strCategory[1].toString()));
       },
       child:  Container(
 

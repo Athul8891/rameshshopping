@@ -116,7 +116,7 @@ class _MainHomeScreenState extends State<MainHomeScreen> {
                                   backgroundColor: AppColors.color6EBA49,
                                   child: Text(
                                     "${value.noOfItemsInCart}",
-                                    style: AppTextStyles.normal9White,
+                                    style: AppTextStyles.normal12blue,
                                   ),
                                 ),
                               ),

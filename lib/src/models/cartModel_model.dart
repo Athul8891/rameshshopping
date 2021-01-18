@@ -3,9 +3,10 @@ import 'package:corazon_customerapp/src/models/product_model.dart';
 
 class CartModel {
   String productId;
-  String image;
+  //String image;
   String name;
   String unit;
+  List<String> image;
 
   String currency;
   num currentPrice;
@@ -17,6 +18,7 @@ class CartModel {
       this.image,
       this.name,
       this.unit,
+      // this.prodimages,
       this.currency,
       this.currentPrice,
       this.quantityPerUnit,
@@ -25,9 +27,11 @@ class CartModel {
   factory CartModel.fromJson(DocumentSnapshot json) {
     return CartModel(
       productId: json['product_id'] as String,
-      image: json['image'] as String,
+   //   image: json['image'] as String,
       name: json['name'] as String,
       unit: json['unit'] as String,
+      image:
+      (json['sellImages'] as List)?.map((e) => e as String)?.toList(),
       currency: json['currency'] as String,
       currentPrice: json['current_price'] as num,
       quantityPerUnit: json['quantity_per_unit'] as num,
@@ -37,10 +41,11 @@ class CartModel {
 
   Map<String, dynamic> toJson() => <String, dynamic>{
         'product_id': productId,
-        'image': image,
+        'sellImages': image,
         'name': name,
         'unit': unit,
         'currency': currency,
+
         'current_price': currentPrice,
         'quantity_per_unit': quantityPerUnit,
         'no_of_items': numOfItems,
@@ -49,9 +54,10 @@ class CartModel {
   factory CartModel.fromProduct(ProductModel productModel, num numOfItems) {
     return CartModel(
         productId: productModel.productId,
-        image: productModel.image,
+        image: productModel.prodimages,
         name: productModel.name,
         unit: productModel.unit,
+
         currency: productModel.currency,
         currentPrice: productModel.currentPrice,
         quantityPerUnit: productModel.quantityPerUnit,

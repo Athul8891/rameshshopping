@@ -18,7 +18,7 @@ class PaymentCubit extends Cubit<PaymentState> {
     var options = {
       'key': 'rzp_test_1DP5mmOlF5G5ag',
       'amount': price * 100,
-      'name': 'Flutter-Commerce',
+      'name': 'Carazon',
       'description': 'This is a Text Payment',
       'prefill': {'contact': '8888888888', 'email': 'test@razorpay.com'},
       'external': {

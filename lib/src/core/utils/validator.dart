@@ -1,3 +1,5 @@
+import 'package:corazon_customerapp/src/res/string_constants.dart';
+
 class Validator {
   String validateName(String value) {
     var pattern = r'(^[a-zA-Z ]*$)';
@@ -15,8 +17,8 @@ class Validator {
     var regExp = new RegExp(pattern);
     if (value.isEmpty) {
       return "Phone number is Required";
-    } else if (value.length != 10) {
-      return "Phone number must be 10 digits";
+    } else if (value.length != StringsConstants.valdationNum) {
+      return "Phone number must be " + StringsConstants.valdationNum.toString() + " digits";
     } else if (!regExp.hasMatch(value)) {
       return "Phone number must be digits";
     }

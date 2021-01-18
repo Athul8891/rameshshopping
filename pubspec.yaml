@@ -19,6 +19,8 @@ dependencies:
   shimmer: 1.1.1
   package_info: ^0.4.0+18
   fluttertoast: ^4.0.0
+  carousel_pro: ^1.0.0
+
   smooth_page_indicator: 0.1.5
   freezed: 0.12.2
   flutter_bloc: 6.0.0

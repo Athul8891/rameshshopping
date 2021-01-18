@@ -42,7 +42,7 @@ class ProductModel {
       image: json['image'] as String,
       name: json['strName'] as String,
       unit: json['strUnit'] as String,
-      description: json['strCat'] as String,
+      description: json['strDisc'] as String,
       prodimages:
       (json['sellImages'] as List)?.map((e) => e as String)?.toList(),
       categories:

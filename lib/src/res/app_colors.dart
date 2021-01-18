@@ -7,7 +7,7 @@ class AppColors {
   static var editTextEnabledColor = HexColor("#EC615C");
 
 //  static Color get primaryColor => HexColor("#EC615C");
-  static Color get primaryColor => HexColor("#96C160");
+  static Color get primaryColor => HexColor("#2D3C97");
 
   static Color get backGroundColor => HexColor("#FFFFFF");
 
@@ -49,14 +49,15 @@ class AppColors {
 
   static Color get colorC4C4C4 => HexColor("#C4C4C4");
 
-  static Color get color6EBA49 => HexColor("#6EBA49");
+  static Color get color6EBA49 => HexColor("#FFFF00");
 
   static Color get colorE2E6EC => HexColor("#E2E6EC");
 
   static Color get colorEC615C => HexColor("#EC615C");
 
-  static Color get color00A056 => HexColor("#00A056");
-  static Color get color96C160 => HexColor("#96C160");
+  static Color get color00A056 => HexColor("#FFFFFF");
+
+  static Color get color96C160 => HexColor("#FFFF00");
   static Color get color9r6C160 => HexColor("#979797");
 
   //const kSecondaryColor = Color(0xFF979797);

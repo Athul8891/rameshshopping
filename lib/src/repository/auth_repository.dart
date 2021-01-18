@@ -1,3 +1,4 @@
+import 'package:corazon_customerapp/src/res/string_constants.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
@@ -18,7 +19,7 @@ class AuthRepository {
     try {
       return firebaseAuth
           .verifyPhoneNumber(
-              phoneNumber: "+91$phoneNumber",
+              phoneNumber: StringsConstants.numPrefix+phoneNumber,
               timeout: Duration(seconds: 60),
               verificationCompleted: verificationCompleted,
               verificationFailed: verificationFailed,

@@ -26,7 +26,7 @@ class StringsConstants {
   static const account = "Account";
   static const viewCart = "View Cart";
   static const edit = "Edit";
-  static const products = "Products";
+  static const products = "Corazon Mart";
   static const details = "Details";
   static const editCaps = "EDIT";
   static const defaultCaps = "DEFAULT";
@@ -72,10 +72,17 @@ class StringsConstants {
   static const totalCaps = "TOTAL";
 
   static const orderedOnCaps = "ORDERED ON";
+  static const orderedSlot = "DELIVERY ON";
 
   //error messages
 
   static const noAddressFound = "No Address Found";
   static const noAddressSelected = "No Address Selected";
   static const connectionNotAvailable = "Network Connection not available";
+  //auth const
+
+  static const numPrefix = "+91";
+  static const valdationNum = 10;
+
+
 }

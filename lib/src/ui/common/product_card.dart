@@ -18,7 +18,9 @@ class ProductCard extends StatelessWidget {
         Navigator.of(context)
             .pushNamed(Routes.productDetailPage, arguments: ProductDetailPageArguments(productModel: productModel));
       },
-      child:Container(
+      child:
+
+      Container(
         //margin: EdgeInsets.all(8),
         padding: EdgeInsets.all(1),
         decoration: BoxDecoration(
@@ -31,7 +33,8 @@ class ProductCard extends StatelessWidget {
           children: [
             AspectRatio(
               aspectRatio: 1.02,
-              child: Container(
+              child:
+              Container(
                // height: 50,
 
                 decoration: BoxDecoration(
@@ -47,23 +50,28 @@ class ProductCard extends StatelessWidget {
 
               ),
             ),
-            // const SizedBox(height: 10),
-            Text(
-              productModel.name,
-              style: AppTextStyles.medium14Black,
+             const SizedBox(height: 5),
+
+
+            Flexible(
+              child: RichText(
+                overflow: TextOverflow.ellipsis,
+                strutStyle: StrutStyle(fontSize: 12.0),
+                text: TextSpan(
+                    style: AppTextStyles.medium18Black,
+                    text:  productModel.name,),
+              ),
             ),
+
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
                   "${"BHD " }${productModel.currentPrice}",
-                  style: AppTextStyles.normal12Black,
+                  style: AppTextStyles.medium16Black,
                 ),
 
-                Text(
-                  "${"BHD "}${productModel.actualPrice}",
-                  style: AppTextStyles.normal12Color81819ASmall,
-                ),
+
                 // InkWell(
                 //   borderRadius: BorderRadius.circular(50),
                 //   onTap: () {},
@@ -86,7 +94,11 @@ class ProductCard extends StatelessWidget {
                 //   // ),
                 // ),
               ],
-            )
+            ),
+            Text(
+              "${"BHD "}${productModel.actualPrice}",
+              style: AppTextStyles.normal12Color81819AStroke,
+            ),
           ],
         ),
       )

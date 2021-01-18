@@ -90,7 +90,20 @@ class _MyOrdersScreenState extends State<MyOrdersScreen> {
                                 getOrderedTime(
                                     orderList[orderListIndex].orderedAt),
                                 style: AppTextStyles.medium14Black,
+                              ),
+
+                              SizedBox(height: 5,),
+
+                              Text(
+                                StringsConstants.orderedSlot,
+                                style: AppTextStyles.normal12Color81819A,
+                              ),
+                              Text(
+
+                                    orderList[orderListIndex].timeSlot,
+                                style: AppTextStyles.medium14Black,
                               )
+
                             ],
                           ),
                         ),

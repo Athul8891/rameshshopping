@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:corazon_customerapp/src/res/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:corazon_customerapp/src/res/app_assets.dart';
 import 'package:corazon_customerapp/src/routes/router.gr.dart';
@@ -32,7 +33,7 @@ class _SplashScreenState extends State<SplashScreen> {
     return SizedBox(
       //color: AppColors.backGroundColor,
       child: Scaffold(
-        //  backgroundColor: AppColors.backGroundColor,
+          backgroundColor: AppColors.color6EBA49,
         body: Center(
           child: Image.asset(
             AppAssets.logo,

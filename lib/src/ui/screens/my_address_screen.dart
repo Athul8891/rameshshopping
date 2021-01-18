@@ -159,7 +159,7 @@ class _MyAddressScreenState extends State<MyAddressScreen> {
                             width: address.isDefault ? null : 0,
                             alignment: Alignment.center,
                             decoration: BoxDecoration(
-                                color: AppColors.color6EBA49,
+                                color: AppColors.primaryColor,
                                 borderRadius: BorderRadius.circular(4)),
                             child: Text(
                               StringsConstants.defaultCaps,
