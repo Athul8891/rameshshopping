@@ -17,9 +17,9 @@ class PaymentCubit extends Cubit<PaymentState> {
     // int.parse((price*100).toString());
     var options = {
       'key': 'rzp_test_1DP5mmOlF5G5ag',
-      'amount': price * 100,
-      'name': 'Carazon',
-      'description': 'This is a Text Payment',
+      'amount': 50*100,
+      'name': 'Corazon Store',
+      'description': 'Paying to Corazon Merchant',
       'prefill': {'contact': '8888888888', 'email': 'test@razorpay.com'},
       'external': {
         'wallets': ['paytm', "phonepe"]

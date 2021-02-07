@@ -72,7 +72,11 @@ class AppTextStyles {
         fontWeight: FontWeight.w500,
         fontSize: 12,
       );
-
+  static TextStyle get medium10Black => TextStyle(
+    color: AppColors.black,
+    fontWeight: FontWeight.w500,
+    fontSize: 10,
+  );
   static TextStyle get medium12Color81819A => TextStyle(
         color: AppColors.color81819A,
         fontSize: 12,

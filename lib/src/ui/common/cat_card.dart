@@ -1,13 +1,15 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:corazon_customerapp/src/res/app_colors.dart';
+import 'package:corazon_customerapp/src/ui/screens/catPage.dart';
 import 'package:flutter/material.dart';
 import 'package:corazon_customerapp/src/models/product_model.dart';
 import 'package:corazon_customerapp/src/res/text_styles.dart';
 import 'package:corazon_customerapp/src/routes/router.gr.dart';
 
-class ProductCard extends StatelessWidget {
+class CatCard extends StatelessWidget {
   final ProductModel productModel;
 
-  ProductCard(this.productModel);
+  CatCard(this.productModel);
 
   @override
   Widget build(BuildContext context) {
@@ -15,19 +17,21 @@ class ProductCard extends StatelessWidget {
 
     //  borderRadius: BorderRadius.circular(10),
       onTap: () {
-        Navigator.of(context)
-            .pushNamed(Routes.productDetailPage, arguments: ProductDetailPageArguments(productModel: productModel));
+
+        Navigator.pushReplacement(
+            context,
+            new MaterialPageRoute(
+                builder: (context) =>   CatPage(catId: productModel.catId, catHeading: productModel.name,)));
+        // Navigator.of(context)
+        //     .pushNamed(Routes.productDetailPage, arguments: ProductDetailPageArguments(productModel: productModel));
       },
       child:
 
       Container(
-        //margin: EdgeInsets.all(8),
+        margin: EdgeInsets.all(8),
         padding: EdgeInsets.all(1),
-        decoration: BoxDecoration(
 
-            color: Colors.white,
-            borderRadius: BorderRadius.all(Radius.circular(6)),
-            border: Border.all(color: Colors.grey.shade200)),
+
         child:  Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -35,30 +39,39 @@ class ProductCard extends StatelessWidget {
               aspectRatio: 1.02,
               child:
               Container(
-               // height: 50,
+
 
                 decoration: BoxDecoration(
-                  color: Colors.grey.withOpacity(0.1),
-                  borderRadius: BorderRadius.circular(15),
-                ),
-
-                //   tag: product.id.toString(),
-                child: CachedNetworkImage(
-                  imageUrl: productModel.prodimages[0].toString(),
-                  fit: BoxFit.fill,
-                ),
-
+                    image: DecorationImage(
+                        image: NetworkImage(productModel.image), fit: BoxFit.fill),
+                    border: Border.all(color: Colors.grey.shade300, width: 1),
+                    shape: BoxShape.circle, color: AppColors.color6EBA49,),
               ),
+              // Container(
+              //  // height: 50,
+              //
+              //   decoration: BoxDecoration(
+              //     color: Colors.grey.withOpacity(0.1),
+              //     borderRadius: BorderRadius.circular(15),
+              //   ),
+              //
+              //   //   tag: product.id.toString(),
+              //   child: CachedNetworkImage(
+              //     imageUrl: productModel.image,
+              //     fit: BoxFit.fill,
+              //   ),
+              //
+              // ),
             ),
-             const SizedBox(height: 5),
+             const SizedBox(height: 8),
 
 
             Flexible(
               child: RichText(
                 overflow: TextOverflow.ellipsis,
-                strutStyle: StrutStyle(fontSize: 12.0),
+                strutStyle: StrutStyle(fontSize: 8.0),
                 text: TextSpan(
-                    style: AppTextStyles.medium18Black,
+                    style: AppTextStyles.medium12Black,
                     text:  productModel.name,),
               ),
             ),
@@ -66,10 +79,10 @@ class ProductCard extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(
-                  "${"BHD " }${productModel.currentPrice.toStringAsFixed(3)}",
-                  style: AppTextStyles.medium16Black,
-                ),
+                // Text(
+                //   "${"BHD " }${productModel.currentPrice}",
+                //   style: AppTextStyles.medium16Black,
+                // ),
 
 
                 // InkWell(
@@ -95,10 +108,10 @@ class ProductCard extends StatelessWidget {
                 // ),
               ],
             ),
-            Text(
-              "${"BHD "}${productModel.actualPrice}",
-              style: AppTextStyles.normal12Color81819AStroke,
-            ),
+            // Text(
+            //   "${"BHD "}${productModel.actualPrice}",
+            //   style: AppTextStyles.normal12Color81819AStroke,
+            // ),
           ],
         ),
       )

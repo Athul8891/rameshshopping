@@ -6,6 +6,9 @@ class ProductModel {
   String name;
   String description;
   String unit;
+  String catId;
+  String subId;
+
   List<String> categories;
   List<String> prodimages;
   String currency;
@@ -23,6 +26,8 @@ class ProductModel {
       this.image,
       this.name,
       this.unit,
+        this.catId,
+        this.subId,
       this.categories,
       this.currency,
       this.dealOfTheDay,
@@ -39,6 +44,9 @@ class ProductModel {
   factory ProductModel.fromJson(DocumentSnapshot json) {
     return ProductModel(
       productId: json['product_id'] as String,
+      catId: json['catId'] as String,
+      subId: json['subId'] as String,
+
       image: json['image'] as String,
       name: json['strName'] as String,
       unit: json['strUnit'] as String,
@@ -62,6 +70,9 @@ class ProductModel {
         'product_id': productId,
         'image': image,
         'name': name,
+
+        'catId': catId,
+        'subId': subId,
         'unit': unit,
         'description': description,
         'categories': categories,
@@ -79,7 +90,7 @@ class ProductModel {
 
   @override
   String toString() {
-    return 'ProductModel{productId: $productId, image: $image, name: $name, unit: $unit, categories: $categories, currency: $currency, dealOfTheDay: $dealOfTheDay, topProducts: $topProducts, onSale: $onSale, currentPrice: $currentPrice, actualPrice: $actualPrice, prodimages: $prodimages}';
+    return 'ProductModel{productId: $productId, image: $image, name: $name, unit: $unit, categories: $categories, currency: $currency, dealOfTheDay: $dealOfTheDay, topProducts: $topProducts, onSale: $onSale, currentPrice: $currentPrice, actualPrice: $actualPrice, prodimages: $prodimages,catId: $catId, subId: $subId}';
   }
 
   List<String> setSearchParam(String name) {

@@ -153,7 +153,7 @@ class _CartItemCardState extends State<CartItemCard> {
                         ),
                       ),
                       Text(
-                        "${widget.cartModel.currency}${widget.cartModel.currentPrice * widget.cartModel.numOfItems}",
+                        "${widget.cartModel.currency}${(widget.cartModel.currentPrice * widget.cartModel.numOfItems).toStringAsFixed(3)}",
                         style: TextStyle(
                           color: AppColors.black,
                           fontSize: 14,

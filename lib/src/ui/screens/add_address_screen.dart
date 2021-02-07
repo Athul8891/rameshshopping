@@ -30,17 +30,22 @@ class _AddAddressScreenState extends State<AddAddressScreen> {
   TextEditingController cityEditingController = TextEditingController();
   TextEditingController stateEditingController = TextEditingController();
   TextEditingController phoneEditingController = TextEditingController();
+  TextEditingController flatEditingController = TextEditingController();
 
   FocusNode nameFocusNode = FocusNode();
   FocusNode emailFocusNode = FocusNode();
   FocusNode pincodeFocusNode = FocusNode();
   FocusNode addressFocusNode = FocusNode();
   FocusNode cityFocusNode = FocusNode();
+  FocusNode buildingFocusNode = FocusNode();
+  FocusNode flatFocusNode = FocusNode();
   FocusNode stateFocusNode = FocusNode();
   FocusNode phoneFocusNode = FocusNode();
   Validator validator = Validator();
 
   bool setAsDefault;
+  String _dropDownValue;
+  String type;
 
   final GlobalKey<FormState> _formKey = new GlobalKey<FormState>();
 
@@ -54,7 +59,9 @@ class _AddAddressScreenState extends State<AddAddressScreen> {
       pincodeEditingController.text = address.pincode;
       addressEditingController.text = address.address;
       cityEditingController.text = address.city;
+      flatEditingController.text = address.flat;
       phoneEditingController.text = address.phoneNumber;
+      _dropDownValue = address.type;
       setAsDefault = address.isDefault;
     }
   }
@@ -85,12 +92,65 @@ class _AddAddressScreenState extends State<AddAddressScreen> {
                       ),
                     ),
                   ),
+
+
+                  ///type
+                  Container(
+                    decoration: BoxDecoration(
+                      color: AppColors.colorF6F5F8,
+                      borderRadius: BorderRadius.circular(5),
+                    ),
+                    alignment: Alignment.bottomRight,
+                    width: double.infinity,
+                    // color: Colors.white,
+                    padding: const EdgeInsets.symmetric(vertical: 5.0,horizontal: 5),
+                    // margin: EdgeInsets.only(left: 2.0, right: 2.0, ),
+
+                    child:DropdownButton(
+
+                      hint: _dropDownValue == null
+                          ? Text('-Address Type-')
+                          : Text(
+                        _dropDownValue,
+                        style: TextStyle(color: Colors.black),
+                      ),
+                      isExpanded: true,
+                      underline: SizedBox(),
+                      iconSize: 30.0,
+                      style: TextStyle(color: Colors.black),
+                      items: ['House', 'Apartment', 'Office',].map(
+                            (val) {
+                          return DropdownMenuItem<String>(
+                            value: val,
+                            child: Text(val),
+                            onTap: (){
+                              _dropDownValue= val;
+                              print("genderrrrrrrrrrrr");
+                              print(type);
+
+                            },
+                          );
+                        },
+                      ).toList(),
+                      onChanged: (val) {
+                        setState(
+                              () {
+                            _dropDownValue = val;
+                          },
+                        );
+                      },
+                    ),
+                  ),
+                  SizedBox(
+                    height: 30,
+                  ),
+                  ///name
                   CustomTextField(
                     hint: StringsConstants.name,
                     textEditingController: nameEditingController,
                     focusNode: nameFocusNode,
                     nextFocusNode: pincodeFocusNode,
-                    validator: validator.validateName,
+                   // validator: validator.validateName,
                     keyboardType: TextInputType.text,
                     textInputAction: TextInputAction.next,
                     onSubmitted: (val) {
@@ -101,12 +161,63 @@ class _AddAddressScreenState extends State<AddAddressScreen> {
                   SizedBox(
                     height: 30,
                   ),
+                  ///blding
+                  CustomTextField(
+                    hint: StringsConstants.address,
+                    keyboardType: TextInputType.phone,
+
+                    textEditingController: addressEditingController,
+                    focusNode: buildingFocusNode,
+                    nextFocusNode: flatFocusNode,
+                    validator: (val) {
+                      if (val.isEmpty) {
+                        return "Building is Required";
+                      } else
+                        return null;
+                    },
+
+                    textInputAction: TextInputAction.next,
+                    onSubmitted: (val) {
+                      FocusScope.of(context).requestFocus(cityFocusNode);
+                    },
+                    // containerHeight: 50,
+                  ),
+                  SizedBox(
+                    height: 30,
+                  ),
+
+                  ///flt
+                  CustomTextField(
+                    hint: "Flat",
+                    textEditingController: flatEditingController,
+                    focusNode: flatFocusNode,
+                    nextFocusNode: flatFocusNode,
+                    validator: (val) {
+                      if (val.isEmpty) {
+                        return "Flat is Required";
+                      } else
+                        return null;
+                    },
+
+                    keyboardType: TextInputType.phone,
+
+                    textInputAction: TextInputAction.next,
+                    onSubmitted: (val) {
+                      FocusScope.of(context).requestFocus(cityFocusNode);
+                    },
+                    // containerHeight: 50,
+                  ),
+                  SizedBox(
+                    height: 30,
+                  ),
+                  ///area
                   CustomTextField(
                     hint: StringsConstants.pincode,
+
                     textEditingController: pincodeEditingController,
                     focusNode: pincodeFocusNode,
                     nextFocusNode: addressFocusNode,
-                    validator: validator.validatePinCode,
+                   // validator: validator.validatePinCode,
                     keyboardType: TextInputType.text,
                     textInputAction: TextInputAction.next,
                     onSubmitted: (val) {
@@ -114,17 +225,63 @@ class _AddAddressScreenState extends State<AddAddressScreen> {
                     },
                     // containerHeight: 50,
                   ),
+
+
                   SizedBox(
                     height: 30,
                   ),
+
+                  ///block
                   CustomTextField(
-                    hint: StringsConstants.address,
-                    textEditingController: addressEditingController,
+                    hint: StringsConstants.city,
+                    textEditingController: cityEditingController,
+                    focusNode: cityFocusNode,
+                    nextFocusNode: stateFocusNode,
+                    keyboardType: TextInputType.phone,
+
+                    //  validator: (val) => validator.validateText(val, "City"),
+                    // keyboardType: TextInputType.text,
+                    textInputAction: TextInputAction.next,
+                    onSubmitted: (val) {
+                      FocusScope.of(context).requestFocus(stateFocusNode);
+                    },
+                    // containerHeight: 50,
+                  ),
+                  SizedBox(
+                    height: 30,
+                  ),
+
+                  ///road
+                  CustomTextField(
+                    hint: StringsConstants.state,
+                    textEditingController: stateEditingController,
+                    focusNode: stateFocusNode,
+                    keyboardType: TextInputType.phone,
+
+                    nextFocusNode: phoneFocusNode,
+                    //validator: (val) => validator.validateText(val, "State"),
+                    //keyboardType: TextInputType.text,
+                    textInputAction: TextInputAction.next,
+                    onSubmitted: (val) {
+                      FocusScope.of(context).requestFocus(phoneFocusNode);
+                    },
+                    // containerHeight: 50,
+                  ),
+                  SizedBox(
+                    height: 30,
+                  ),
+
+
+
+                  ///email
+                  CustomTextField(
+                    hint: "Email",
+                    textEditingController: emailEditingController,
                     focusNode: addressFocusNode,
                     nextFocusNode: cityFocusNode,
                     validator: (val) {
                       if (val.isEmpty) {
-                        return "Address is Required";
+                        return "Email is Required";
                       } else
                         return null;
                     },
@@ -138,43 +295,17 @@ class _AddAddressScreenState extends State<AddAddressScreen> {
                   SizedBox(
                     height: 30,
                   ),
-                  CustomTextField(
-                    hint: StringsConstants.city,
-                    textEditingController: cityEditingController,
-                    focusNode: cityFocusNode,
-                    nextFocusNode: stateFocusNode,
-                    validator: (val) => validator.validateText(val, "City"),
-                    keyboardType: TextInputType.text,
-                    textInputAction: TextInputAction.next,
-                    onSubmitted: (val) {
-                      FocusScope.of(context).requestFocus(stateFocusNode);
-                    },
-                    // containerHeight: 50,
-                  ),
-                  SizedBox(
-                    height: 30,
-                  ),
-                  CustomTextField(
-                    hint: StringsConstants.state,
-                    textEditingController: stateEditingController,
-                    focusNode: stateFocusNode,
-                    nextFocusNode: phoneFocusNode,
-                    validator: (val) => validator.validateText(val, "State"),
-                    keyboardType: TextInputType.text,
-                    textInputAction: TextInputAction.next,
-                    onSubmitted: (val) {
-                      FocusScope.of(context).requestFocus(phoneFocusNode);
-                    },
-                    // containerHeight: 50,
-                  ),
-                  SizedBox(
-                    height: 30,
-                  ),
+
+
+
+
+
+                  ///phn
                   CustomTextField(
                     hint: StringsConstants.phoneNumber,
                     textEditingController: phoneEditingController,
                     focusNode: phoneFocusNode,
-                    validator: validator.validateMobile,
+                    //validator: validator.validateMobile,
                     keyboardType: TextInputType.phone,
                     onChanged: (val) {
                       if (validator.validateMobile(val) == null) {
@@ -241,16 +372,21 @@ class _AddAddressScreenState extends State<AddAddressScreen> {
   }
 
   void onButtonTap() {
-    if (_formKey.currentState.validate()) {
+ //   if (_formKey.currentState.validate()) {
       Address address = Address(
           name: nameEditingController.text,
           address: addressEditingController.text,
           city: cityEditingController.text,
           isDefault: setAsDefault,
           pincode: pincodeEditingController.text,
-          phoneNumber: "+91${phoneEditingController.text}",
+          flat: flatEditingController.text,
+          email: emailEditingController.text,
+
+
+          type:_dropDownValue.toString(),
+          phoneNumber: "+973${phoneEditingController.text}",
           state: stateEditingController.text);
       addAddressCubit.saveAddress(widget.accountDetails, address);
-    }
+   // }
   }
 }

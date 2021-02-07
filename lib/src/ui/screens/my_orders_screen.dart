@@ -126,7 +126,7 @@ class _MyOrdersScreenState extends State<MyOrdersScreen> {
                               width: 13,
                             ),
                             Text(
-                              "${orderList[orderListIndex].currency} ${orderList[orderListIndex].price}",
+                              "${orderList[orderListIndex].currency} ${(orderList[orderListIndex].price).toStringAsFixed(3)}",
                               style: AppTextStyles.normal14Black,
                             )
                           ],

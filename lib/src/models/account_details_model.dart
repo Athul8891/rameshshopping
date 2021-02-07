@@ -36,6 +36,10 @@ class Address {
   String address;
   String city;
   String state;
+  String type;
+  String flat;
+  String email;
+
   String phoneNumber;
   bool isDefault;
 
@@ -44,8 +48,11 @@ class Address {
       this.pincode,
       this.address,
       this.city,
+      this.type,
       this.state,
       this.phoneNumber,
+      this.flat,
+      this.email,
       this.isDefault = false});
 
   Address.fromDocument(json) {
@@ -53,7 +60,10 @@ class Address {
     pincode = json['pincode'];
     address = json['address'];
     city = json['city'];
+    type = json['type'];
     state = json['state'];
+    email = json['email'];
+    flat = json['email'];
     phoneNumber = json['phone_number'];
     isDefault = json['is_default'] ?? false;
   }
@@ -64,6 +74,10 @@ class Address {
     data['pincode'] = this.pincode;
     data['address'] = this.address;
     data['city'] = this.city;
+    data['type'] = this.type;
+    data['email'] = this.email;
+    data['flat'] = this.flat;
+
     data['state'] = this.state;
     data['phone_number'] = this.phoneNumber;
     data['is_default'] = this.isDefault;

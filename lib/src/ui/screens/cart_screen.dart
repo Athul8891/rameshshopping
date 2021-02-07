@@ -26,7 +26,7 @@ enum timingSlots { MORNING, NOON,EVENING,NIGHT }
 class _CartScreenState extends State<CartScreen> with BaseScreenMixin {
   var paymentCubit = AppInjector.get<PaymentCubit>();
   var placeOrderCubit = AppInjector.get<PlaceOrderCubit>();
-  var timeSlot = "MORNING";
+  var timeSlot = "Between 9Am - 12Pm";
   var toggle = true;
   timingSlots _slot = timingSlots.MORNING;
 
@@ -177,7 +177,13 @@ class _CartScreenState extends State<CartScreen> with BaseScreenMixin {
 //          priceRow(
 //              StringsConstants.taxAndCharges, "${cartItemStatus.currency}900"),
           priceRow(StringsConstants.toPay,
-              "${cartItemStatus.currency}${cartItemStatus.priceInCart}",
+              "${cartItemStatus.currency}${ " "+cartItemStatus.priceInCart.toStringAsFixed(3)}",
+              isFinal: true),
+          SizedBox(
+            height: 10,
+          ),
+          priceRow("Delivery Charge",
+              "${cartItemStatus.currency}${" 0.500"}",
               isFinal: true),
         ],
       ),
@@ -249,7 +255,7 @@ class _CartScreenState extends State<CartScreen> with BaseScreenMixin {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
-                      "${cartItemStatus.currency} ${cartItemStatus.priceInCart}",
+                      "${cartItemStatus.currency} ${(cartItemStatus.priceInCart+ 0.500).toStringAsFixed(3)}",
                       style: AppTextStyles.medium15Black,
                     ),
                     ActionText(StringsConstants.viewDetailedBillCaps)
@@ -310,236 +316,227 @@ class _CartScreenState extends State<CartScreen> with BaseScreenMixin {
                                 return  AlertDialog(
 
                                   title: Text('Select time slot to deliver'),
-                                  content: new ListView(
+                                  content: Column(
+                                    mainAxisSize: MainAxisSize.min,
                                     children: <Widget>[
-                                      new Column(
-                                        children: <Widget>[
-                                          new Container(
-                                              decoration: BoxDecoration(
-                                                  borderRadius: BorderRadius.all(Radius.circular(4)),
-                                                  border:
-                                                  Border.all(color: Colors.tealAccent.withOpacity(0.4), width: 1),
-                                                  color: Colors.tealAccent.withOpacity(0.2)),
-                                              margin: EdgeInsets.all(8),
-                                              child: Column(
-                                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                                  mainAxisAlignment: MainAxisAlignment.center,
-                                                  children: <Widget>[
-                                                    ListTile(
-                                                      title:                          Column(
-                                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                                        mainAxisAlignment: MainAxisAlignment.center,
-                                                        children: <Widget>[
-                                                          Text(
-                                                            "MORNING",
-                                                            style: AppTextStyles.medium16PrimaryColor,
-                                                          ),
-                                                          SizedBox(
-                                                            height: 5,
-                                                          ),
-                                                          Text(
-                                                            "Between 9AM-12PM",
-                                                            style: AppTextStyles.medium12Black,
-                                                          )
-                                                        ],
+                                      new Container(
+                                          decoration: BoxDecoration(
+                                              borderRadius: BorderRadius.all(Radius.circular(4)),
+                                              border:
+                                              Border.all(color: Colors.tealAccent.withOpacity(0.4), width: 1),
+                                              color: Colors.tealAccent.withOpacity(0.2)),
+                                          margin: EdgeInsets.all(8),
+                                          child: Column(
+                                              crossAxisAlignment: CrossAxisAlignment.start,
+                                              mainAxisAlignment: MainAxisAlignment.center,
+                                              children: <Widget>[
+                                                ListTile(
+                                                  title:                          Column(
+                                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                                    mainAxisAlignment: MainAxisAlignment.center,
+                                                    children: <Widget>[
+                                                      Text(
+                                                        "MORNING",
+                                                        style: AppTextStyles.medium16PrimaryColor,
                                                       ),
-                                                      leading: Radio(
-                                                        value: timingSlots.MORNING,
-                                                        groupValue: _slot,
-                                                        onChanged: (timingSlots value) {
-                                                          setState(() {
-                                                            _slot = value;
-                                                            timeSlot= "Between 9AM-12PM";
-                                                            print(timeSlot);
-
-                                                          });
-                                                        },
+                                                      SizedBox(
+                                                        height: 5,
                                                       ),
-                                                    ),
+                                                      Text(
+                                                        "Between 9AM-12PM",
+                                                        style: AppTextStyles.medium12Black,
+                                                      )
+                                                    ],
+                                                  ),
+                                                  leading: Radio(
+                                                    value: timingSlots.MORNING,
+                                                    groupValue: _slot,
+                                                    onChanged: (timingSlots value) {
+                                                      setState(() {
+                                                        _slot = value;
+                                                        timeSlot= "Between 9AM-12PM";
+                                                        print(timeSlot);
+
+                                                      });
+                                                    },
+                                                  ),
+                                                ),
 
 
 
-                                                  ])
+                                              ])
 
 
 
-                                          ),
-                                          new Container(
-                                              decoration: BoxDecoration(
-                                                  borderRadius: BorderRadius.all(Radius.circular(4)),
-                                                  border:
-                                                  Border.all(color: Colors.tealAccent.withOpacity(0.4), width: 1),
-                                                  color: Colors.tealAccent.withOpacity(0.2)),
-                                              margin: EdgeInsets.all(8),
-                                              child: Column(
-                                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                                  mainAxisAlignment: MainAxisAlignment.center,
-                                                  children: <Widget>[
-                                                    ListTile(
-                                                      title:                          Column(
-                                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                                        mainAxisAlignment: MainAxisAlignment.center,
-                                                        children: <Widget>[
-                                                          Text(
-                                                            "NOON",
-                                                            style: AppTextStyles.medium16PrimaryColor,
-                                                          ),
-                                                          SizedBox(
-                                                            height: 5,
-                                                          ),
-                                                          Text(
-                                                            "Between 12PM-3PM",
-                                                            style: AppTextStyles.medium12Black,
-                                                          )
-                                                        ],
-                                                      ),
-                                                      leading: Radio(
-                                                        value: timingSlots.NOON,
-                                                        groupValue: _slot,
-                                                        onChanged: (timingSlots value) {
-                                                          setState(() {
-                                                            _slot = value;
-                                                            timeSlot= "Between 12PM-3PM";
-                                                            print(timeSlot);
-
-                                                          });
-                                                        },
-                                                      ),
-                                                    ),
-
-
-
-                                                  ])
-
-
-
-                                          ),
-                                          new Container(
-                                              decoration: BoxDecoration(
-                                                  borderRadius: BorderRadius.all(Radius.circular(4)),
-                                                  border:
-                                                  Border.all(color: Colors.tealAccent.withOpacity(0.4), width: 1),
-                                                  color: Colors.tealAccent.withOpacity(0.2)),
-                                              margin: EdgeInsets.all(8),
-                                              child: Column(
-                                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                                  mainAxisAlignment: MainAxisAlignment.center,
-                                                  children: <Widget>[
-                                                    ListTile(
-                                                      title:                          Column(
-                                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                                        mainAxisAlignment: MainAxisAlignment.center,
-                                                        children: <Widget>[
-                                                          Text(
-                                                            "EVENING",
-                                                            style: AppTextStyles.medium16PrimaryColor,
-                                                          ),
-                                                          SizedBox(
-                                                            height: 5,
-                                                          ),
-                                                          Text(
-                                                            "Between 4PM-7PM",
-                                                            style: AppTextStyles.medium12Black,
-                                                          )
-                                                        ],
-                                                      ),
-                                                      leading: Radio(
-                                                        value: timingSlots.EVENING,
-                                                        groupValue: _slot,
-                                                        onChanged: (timingSlots value) {
-                                                          setState(() {
-                                                            _slot = value;
-                                                            timeSlot= "Between 4PM-7PM";
-                                                            print(timeSlot);
-
-                                                          });
-                                                        },
-                                                      ),
-                                                    ),
-
-
-
-                                                  ])
-
-
-
-                                          ),
-                                          new Container(
-                                              decoration: BoxDecoration(
-                                                  borderRadius: BorderRadius.all(Radius.circular(4)),
-                                                  border:
-                                                  Border.all(color: Colors.tealAccent.withOpacity(0.4), width: 1),
-                                                  color: Colors.tealAccent.withOpacity(0.2)),
-                                              margin: EdgeInsets.all(8),
-                                              child: Column(
-                                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                                  mainAxisAlignment: MainAxisAlignment.center,
-                                                  children: <Widget>[
-                                                    ListTile(
-                                                      title:                          Column(
-                                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                                        mainAxisAlignment: MainAxisAlignment.center,
-                                                        children: <Widget>[
-                                                          Text(
-                                                            "NIGHT",
-                                                            style: AppTextStyles.medium16PrimaryColor,
-                                                          ),
-                                                          SizedBox(
-                                                            height: 5,
-                                                          ),
-                                                          Text(
-                                                            "Between 7PM-10PM",
-                                                            style: AppTextStyles.medium12Black,
-                                                          )
-                                                        ],
-                                                      ),
-                                                      leading: Radio(
-                                                        value: timingSlots.NIGHT,
-                                                        groupValue: _slot,
-                                                        onChanged: (timingSlots value) {
-                                                          setState(() {
-                                                            _slot = value;
-                                                            timeSlot= "Between 7PM-10PM";
-                                                            print(timeSlot);
-
-                                                          });
-                                                        },
-                                                      ),
-                                                    ),
-
-
-
-                                                  ])
-
-
-
-                                          ),
-
-                                          SizedBox(height: 10,),
-                                          FloatingActionButton.extended(
-                                              onPressed: () {
-
-                                                var addressProvider = AppInjector.get<AccountProvider>();
-                                                if (addressProvider.addressSelected != null && timeSlot!="0") {
-                                                  paymentCubit.openCheckout(cartItemStatus.priceInCart);
-                                                } else {
-                                                  if (addressProvider.addressSelected != null ){
-                                                    showSnackBar(title: StringsConstants.noAddressSelected);
-
-                                                  }
-                                                  if (timeSlot!="0"){
-                                                    showSnackBar(title: "Time Slot Not Selected !");
-
-                                                  }
-                                                }
-                                                Navigator.pop(context);
-                                              },
-                                              label: Text(
-                                                "Confirm Order",
-                                                style: AppTextStyles.medium14White,
-                                              ))
-                                        ],
                                       ),
+                                      new Container(
+                                          decoration: BoxDecoration(
+                                              borderRadius: BorderRadius.all(Radius.circular(4)),
+                                              border:
+                                              Border.all(color: Colors.tealAccent.withOpacity(0.4), width: 1),
+                                              color: Colors.tealAccent.withOpacity(0.2)),
+                                          margin: EdgeInsets.all(8),
+                                          child: Column(
+                                              crossAxisAlignment: CrossAxisAlignment.start,
+                                              mainAxisAlignment: MainAxisAlignment.center,
+                                              children: <Widget>[
+                                                ListTile(
+                                                  title:                          Column(
+                                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                                    mainAxisAlignment: MainAxisAlignment.center,
+                                                    children: <Widget>[
+                                                      Text(
+                                                        "NOON",
+                                                        style: AppTextStyles.medium16PrimaryColor,
+                                                      ),
+                                                      SizedBox(
+                                                        height: 5,
+                                                      ),
+                                                      Text(
+                                                        "Between 12PM-4PM",
+                                                        style: AppTextStyles.medium12Black,
+                                                      )
+                                                    ],
+                                                  ),
+                                                  leading: Radio(
+                                                    value: timingSlots.NOON,
+                                                    groupValue: _slot,
+                                                    onChanged: (timingSlots value) {
+                                                      setState(() {
+                                                        _slot = value;
+                                                        timeSlot= "Between 12PM-4PM";
+                                                        print(timeSlot);
+
+                                                      });
+                                                    },
+                                                  ),
+                                                ),
+
+
+
+                                              ])
+
+
+
+                                      ),
+                                      new Container(
+                                          decoration: BoxDecoration(
+                                              borderRadius: BorderRadius.all(Radius.circular(4)),
+                                              border:
+                                              Border.all(color: Colors.tealAccent.withOpacity(0.4), width: 1),
+                                              color: Colors.tealAccent.withOpacity(0.2)),
+                                          margin: EdgeInsets.all(8),
+                                          child: Column(
+                                              crossAxisAlignment: CrossAxisAlignment.start,
+                                              mainAxisAlignment: MainAxisAlignment.center,
+                                              children: <Widget>[
+                                                ListTile(
+                                                  title:                          Column(
+                                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                                    mainAxisAlignment: MainAxisAlignment.center,
+                                                    children: <Widget>[
+                                                      Text(
+                                                        "EVENING",
+                                                        style: AppTextStyles.medium16PrimaryColor,
+                                                      ),
+                                                      SizedBox(
+                                                        height: 5,
+                                                      ),
+                                                      Text(
+                                                        "Between 4PM-7PM",
+                                                        style: AppTextStyles.medium12Black,
+                                                      )
+                                                    ],
+                                                  ),
+                                                  leading: Radio(
+                                                    value: timingSlots.EVENING,
+                                                    groupValue: _slot,
+                                                    onChanged: (timingSlots value) {
+                                                      setState(() {
+                                                        _slot = value;
+                                                        timeSlot= "Between 4PM-7PM";
+                                                        print(timeSlot);
+
+                                                      });
+                                                    },
+                                                  ),
+                                                ),
+
+
+
+                                              ])
+
+
+
+                                      ),
+                                      new Container(
+                                          decoration: BoxDecoration(
+                                              borderRadius: BorderRadius.all(Radius.circular(4)),
+                                              border:
+                                              Border.all(color: Colors.tealAccent.withOpacity(0.4), width: 1),
+                                              color: Colors.tealAccent.withOpacity(0.2)),
+                                          margin: EdgeInsets.all(8),
+                                          child: Column(
+                                              crossAxisAlignment: CrossAxisAlignment.start,
+                                              mainAxisAlignment: MainAxisAlignment.center,
+                                              children: <Widget>[
+                                                ListTile(
+                                                  title:                          Column(
+                                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                                    mainAxisAlignment: MainAxisAlignment.center,
+                                                    children: <Widget>[
+                                                      Text(
+                                                        "NIGHT",
+                                                        style: AppTextStyles.medium16PrimaryColor,
+                                                      ),
+                                                      SizedBox(
+                                                        height: 5,
+                                                      ),
+                                                      Text(
+                                                        "Between 7PM-10PM",
+                                                        style: AppTextStyles.medium12Black,
+                                                      )
+                                                    ],
+                                                  ),
+                                                  leading: Radio(
+                                                    value: timingSlots.NIGHT,
+                                                    groupValue: _slot,
+                                                    onChanged: (timingSlots value) {
+                                                      setState(() {
+                                                        _slot = value;
+                                                        timeSlot= "Between 7PM-10PM";
+                                                        print(timeSlot);
+
+                                                      });
+                                                    },
+                                                  ),
+                                                ),
+
+
+
+                                              ])
+
+
+
+                                      ),
+
+                                      SizedBox(height: 10,),
+                                      FloatingActionButton.extended(
+                                          onPressed: () {
+
+                                            var addressProvider = AppInjector.get<AccountProvider>();
+                                            if (addressProvider.addressSelected != null) {
+                                              paymentCubit.openCheckout(cartItemStatus.priceInCart);
+                                            } else {
+                                              showSnackBar(title: StringsConstants.noAddressSelected);
+
+                                            }
+                                            Navigator.pop(context);
+                                          },
+                                          label: Text(
+                                            "Confirm Order",
+                                            style: AppTextStyles.medium14White,
+                                          ))
                                     ],
                                   ),
                                 );

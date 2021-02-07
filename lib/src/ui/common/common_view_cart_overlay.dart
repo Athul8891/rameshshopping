@@ -24,7 +24,7 @@ class CommonViewCartOverlay extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
                 Text(
-                  "${value.noOfItemsInCart} item${value.noOfItemsInCart > 1 ? "s" : ""} | ${value.currency}${value.priceInCart}",
+                  "${value.noOfItemsInCart} item${value.noOfItemsInCart > 1 ? "s" : ""} | ${value.currency}${value.priceInCart.toStringAsFixed(3)}",
                   style: AppTextStyles.medium16White,
                 ),
                 SizedBox(

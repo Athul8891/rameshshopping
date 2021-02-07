@@ -137,7 +137,7 @@ class AppRouter extends RouterBase {
     AllProductListScreen: (data) {
       final args = data.getArgs<AllProductListScreenArguments>(nullOk: false);
       return CupertinoPageRoute<dynamic>(
-        builder: (context) => AllProductListScreen(args.productCondition,args.productValue),
+        builder: (context) => AllProductListScreen(args.productCondition,args.productValue,args.pageHeading),
         settings: data,
       );
     },
@@ -209,7 +209,9 @@ class AddUserDetailScreenArguments {
 class AllProductListScreenArguments {
   final String productCondition;
   final String productValue;
-  AllProductListScreenArguments({@required this.productCondition,this.productValue});
+  final String pageHeading;
+
+  AllProductListScreenArguments({@required this.productCondition,this.productValue,this.pageHeading});
 }
 
 /// MyAddressScreen arguments holder class

@@ -46,23 +46,38 @@ class FirestoreRepository {
   }
 
   Future<List<DocumentSnapshot>> searchProducts(String query) async {
+    print("query");
+    print(query);
     List<DocumentSnapshot> documentList = (await _firestore
             .collection("Product")
             .where("searchItem", arrayContains: query)
             .getDocuments())
         .documents;
+    print("xoxoxoxoxxoxoxo");
+    print(documentList);
     return documentList;
   }
 
-  Future<List<ProductModel>> getProductsData(String condition , String value) async {
-    List<DocumentSnapshot> docList = (await _firestore
-            .collection("Product")
-            .where(condition, isEqualTo: value)
-            .getDocuments())
-        .documents;
-    return List.generate(docList.length, (index) {
-      return ProductModel.fromJson(docList[index]);
-    });
+  Future<List<ProductModel>> getProductsData(String condition , String value,String root) async {
+
+    if(root=="MainCat"){
+      List<DocumentSnapshot> docList = (await _firestore
+          .collection(root).getDocuments())
+          .documents;
+      return List.generate(docList.length, (index) {
+        return ProductModel.fromJson(docList[index]);
+      });
+    }else{
+      List<DocumentSnapshot> docList = (await _firestore
+          .collection(root)
+          .where(condition, isEqualTo: value)
+          .getDocuments())
+          .documents;
+      return List.generate(docList.length, (index) {
+        return ProductModel.fromJson(docList[index]);
+      });
+    }
+
   }
 
   Future<List<DocumentSnapshot>> getAllProductsData(

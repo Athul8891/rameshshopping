@@ -117,7 +117,7 @@ class _ProductDetailPageState extends State<ProductDetailPage>
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: <Widget>[
                       Text(
-                        "${widget.productModel.currency}${widget.productModel.currentPrice} / ${widget.productModel.quantityPerUnit} ${widget.productModel.unit}",
+                        "${widget.productModel.currency}${widget.productModel.currentPrice.toStringAsFixed(3)} / ${widget.productModel.quantityPerUnit} ${widget.productModel.unit}",
                         style: AppTextStyles.medium16Black,
                       ),
                       SizedBox(

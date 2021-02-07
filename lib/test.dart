@@ -1,84 +1,86 @@
-/// Flutter code sample for Radio
+class MyTabs extends StatefulWidget {
+  @override
+  MyTabsState createState() => MyTabsState();
+}
 
-// Here is an example of Radio widgets wrapped in ListTiles, which is similar
-// to what you could get with the RadioListTile widget.
-//
-// The currently selected character is passed into `groupValue`, which is
-// maintained by the example's `State`. In this case, the first `Radio`
-// will start off selected because `_character` is initialized to
-// `SingingCharacter.lafayette`.
-//
-// If the second radio button is pressed, the example's state is updated
-// with `setState`, updating `_character` to `SingingCharacter.jefferson`.
-// This causes the buttons to rebuild with the updated `groupValue`, and
-// therefore the selection of the second button.
-//
-// Requires one of its ancestors to be a [Material] widget.
+class MyTabsState extends State<MyTabs> with SingleTickerProviderStateMixin {
+  final String url = 'https://jsonplaceholder.typicode.com/posts'; //API url
 
-import 'package:flutter/material.dart';
-
-void main() => runApp(MyApp());
-
-/// This is the main application widget.
-class MyApp extends StatelessWidget {
-  static const String _title = 'Flutter Code Sample';
+  List specials;
+  TabController controller;
 
   @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: _title,
-      home: Scaffold(
-        appBar: AppBar(title: const Text(_title)),
-        body: Center(
-          child: MyStatefulWidget(),
-        ),
-      ),
-    );
+  void initState() {
+    super.initState();
+
+    controller = TabController(vsync: this, length: 3);
+
+//    this.getSpecials().then((jsonSpecials) {
+//      setState(() {
+//        specials = jsonSpecials;
+//      });
+//    });
   }
-}
-
-enum SingingCharacter { lafayette, jefferson }
-
-/// This is the stateful widget that the main application instantiates.
-class MyStatefulWidget extends StatefulWidget {
-  MyStatefulWidget({Key key}) : super(key: key);
 
   @override
-  _MyStatefulWidgetState createState() => _MyStatefulWidgetState();
-}
+  void dispose() {
+    controller.dispose();
+    super.dispose();
+  }
 
-/// This is the private State class that goes with MyStatefulWidget.
-class _MyStatefulWidgetState extends State<MyStatefulWidget> {
-  SingingCharacter _character = SingingCharacter.lafayette;
+  Future<List> getSpecials() async {
+    var response = await http.get(Uri.encodeFull(url),
+        headers: {"Accept": "application/json"});
+    return jsonDecode(response.body);
+  }
 
+  @override
   Widget build(BuildContext context) {
-    return Column(
-      children: <Widget>[
-        ListTile(
-          title: const Text('Lafayette'),
-          leading: Radio(
-            value: SingingCharacter.lafayette,
-            groupValue: _character,
-            onChanged: (SingingCharacter value) {
-              setState(() {
-                _character = value;
-              });
-            },
-          ),
-        ),
-        ListTile(
-          title: const Text('Thomas Jefferson'),
-          leading: Radio(
-            value: SingingCharacter.jefferson,
-            groupValue: _character,
-            onChanged: (SingingCharacter value) {
-              setState(() {
-                _character = value;
-              });
-            },
-          ),
-        ),
-      ],
-    );
+    return FutureBuilder(
+        future: getSpecials(),
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            print(snapshot.data[0]);
+            return MaterialApp(
+                home: Scaffold(
+                  appBar: AppBar(
+                      leading: Icon(Icons.dehaze),
+                      //there's an "action" option for menus and stuff. "leading" for show
+                      title: specials == null
+                          ? Text("LOCAL HOUR")
+                          : Text("Now with more special"),
+                      backgroundColor: Colors.green,
+                      bottom: TabBar(
+                        controller: controller,
+                        tabs: [
+                          Padding(
+                            padding: const EdgeInsets.all(15.0),
+                            child: Text("Today", style: TextStyle(fontSize: 15.0)),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.all(15.0),
+                            child:
+                            Text("Tomorrow", style: TextStyle(fontSize: 15.0)),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.all(15.0),
+                            child:
+                            Text("Next Day", style: TextStyle(fontSize: 15.0)),
+                          ),
+                        ],
+                      )),
+                  body: TabBarView(
+                    controller: controller,
+                    children: <Widget>[
+                      Padding(padding: EdgeInsets.only(top: 10.0),child: Text(snapshot.data[0]["title"], textAlign: TextAlign.center, style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold))),
+                      Padding(padding: EdgeInsets.only(top: 10.0),child: Text(snapshot.data[1]["title"], textAlign: TextAlign.center, style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold))),
+                      Padding(padding: EdgeInsets.only(top: 10.0),child: Text(snapshot.data[2]["title"], textAlign: TextAlign.center, style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold))),
+                    ],
+                  ),
+                ));
+          } else {
+            return Center(child: CircularProgressIndicator());
+          }
+        });
   }
 }

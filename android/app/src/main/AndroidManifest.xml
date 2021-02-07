@@ -3,7 +3,7 @@
     <uses-permission android:name="android.permission.INTERNET"/>
 
     <application
-        android:label="Corazon Store"
+        android:label="Corazon"
         android:icon="@mipmap/ic_launcher">
         <activity
             android:name=".MainActivity"

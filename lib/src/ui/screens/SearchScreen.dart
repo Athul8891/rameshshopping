@@ -46,7 +46,7 @@ class _SearchItemScreenState extends State<SearchItemScreen> {
   Widget productView(List<ProductModel> productList) {
     return GridView.count(
       padding: EdgeInsets.only(bottom: 10, right: 16, left: 16, top: 20),
-      crossAxisCount: 3,
+      crossAxisCount: 2,
       shrinkWrap: true,
       mainAxisSpacing: 10,
       childAspectRatio: 0.7,

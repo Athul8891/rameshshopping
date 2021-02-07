@@ -12,6 +12,8 @@ class CartStatusProvider with ChangeNotifier {
       price =
           price + (cartItems[index].currentPrice * cartItems[index].numOfItems);
     });
+
+   // double n = num.parse(price.toStringAsFixed(2));
     return price;
   }
 

@@ -15,10 +15,13 @@ class StringsConstants {
   static const confirmOtp = "Confirm OTP";
   static const resendOtp = "Didn’t get OTP? Send again";
 
-  static const onSale = "Bakery,Pastry & Nuts";
-  static const topProducts = "Veg/Fruits & Fish/Meats";
-  static const dealOfTheDay = "Super Market";
+  static const onSale = "On Sale";
+  static const topProducts = "Top Selling";
+  static const dealOfTheDay = "Popular Products";
   static const fillipinoFoods = "Fillipio Foods";
+  static const catOfTheDay = "Fillipio Foods";
+
+
   static const add = "Add";
   static const home = "Home";
   static const search = "Search";
@@ -26,7 +29,7 @@ class StringsConstants {
   static const account = "Account";
   static const viewCart = "View Cart";
   static const edit = "Edit";
-  static const products = "Corazon Mart";
+  static const products = "Corazon";
   static const details = "Details";
   static const editCaps = "EDIT";
   static const defaultCaps = "DEFAULT";
@@ -34,7 +37,7 @@ class StringsConstants {
   static const billDetails = "Bill Details";
   static const basketTotal = "Cart Total";
   static const taxAndCharges = "Tax and Charges";
-  static const toPay = "To Pay";
+  static const toPay = "Total Amount";
   static const deliverTo = "Deliver to";
   static const changeTextCapital = "CHANGE";
   static const viewDetailedBillCaps = "VIEW DETAILED BILL";
@@ -56,10 +59,10 @@ class StringsConstants {
   static const savedAddresses = "Saved Address";
   static const addNewCaps = "ADD NEW";
   static const name = "Name";
-  static const pincode = "Pincode";
-  static const address = "Address";
-  static const city = "City";
-  static const state = "State";
+  static const pincode = "Area";
+  static const address = "Building";
+  static const city = "Block";
+  static const state = "Road";
   static const phoneNumber = "Phone Number";
   static const save = "Save";
   static const myOrders = "My Orders";
@@ -79,10 +82,11 @@ class StringsConstants {
   static const noAddressFound = "No Address Found";
   static const noAddressSelected = "No Address Selected";
   static const connectionNotAvailable = "Network Connection not available";
+
   //auth const
 
-  static const numPrefix = "+91";
-  static const valdationNum = 10;
+  static const numPrefix = "+973";
+  static const valdationNum = 8;
 
 
 }

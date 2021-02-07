@@ -30,7 +30,7 @@ class AppInjector {
 
   static T get<T>({String instanceName, dynamic param1, dynamic param2}) =>
       _injector<T>(instanceName: instanceName, param1: param1, param2: param2);
-
+  static const String catOfTheDay = "category";
   static const String dealOfTheDay = "deal_of_the_day";
   static const String topProducts = "top_products";
   static const String onSale = "on_sale";
@@ -49,7 +49,8 @@ class AppInjector {
   static _initCubits() {
     _injector.registerFactory(() => PhoneLoginCubit());
     _injector.registerFactory(() => OtpLoginCubit());
-
+    _injector.registerFactory(() => ProductDataCubit(),
+        instanceName: catOfTheDay);
     _injector.registerFactory(() => ProductDataCubit(),
         instanceName: dealOfTheDay);
     _injector.registerFactory(() => ProductDataCubit(),
