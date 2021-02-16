@@ -1,4 +1,5 @@
 import 'package:corazon_customerapp/src/ui/screens/cart_screen.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:razorpay_flutter/razorpay_flutter.dart';
 import 'package:corazon_customerapp/src/bloc/place_order/place_order.dart';
@@ -14,12 +15,17 @@ import 'package:corazon_customerapp/src/res/string_constants.dart';
 class PlaceOrderCubit extends Cubit<PlaceOrderState> {
   var firebaseRepo = AppInjector.get<FirestoreRepository>();
   var accountProvider = AppInjector.get<AccountProvider>();
+  final FirebaseAuth auth = FirebaseAuth.instance;
   var timeSlots = "";
+  var uid = "";
+
   PlaceOrderCubit() : super(PlaceOrderState.idle());
 
   placeOrder(CartStatusProvider cartItemStatus,
       PaymentSuccessResponse response, String timeSlot,  ) async {
     timeSlots=timeSlot;
+    final FirebaseUser user = await auth.currentUser();
+     uid = user.uid;
     emit(PlaceOrderState.orderPlacedInProgress());
     if (await ConnectionStatus.getInstance().checkConnection()) {
       try {
@@ -64,6 +70,7 @@ class PlaceOrderCubit extends Cubit<PlaceOrderState> {
         paymentId: response.paymentId,
         signature: response.signature,
         timeSlot: timeSlots,
+        uId: uid,
         price: cartItemStatus.priceInCart,
         orderAddress: accountProvider.addressSelected);
     print(orderModel);

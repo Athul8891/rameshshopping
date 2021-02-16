@@ -2,6 +2,8 @@ import 'package:corazon_customerapp/src/models/account_details_model.dart';
 
 class OrderModel {
   String orderId;
+  String uId;
+  String docId;
   num price;
   List<OrderItem> orderItems;
   String orderedAt;
@@ -16,6 +18,8 @@ class OrderModel {
   OrderModel(
       {this.orderId,
       this.price,
+      this.uId,
+      this.docId,
       this.orderItems,
       this.orderedAt,
         this.timeSlot,
@@ -30,6 +34,8 @@ class OrderModel {
         orderId: json['order_id'] as String,
         price: json['price'] as num,
         orderStatus: json['order_status'] as String,
+        uId: json['uId'] as String,
+      //  docId: json['uId'] as String,
         orderedAt: json['ordered_at'] as String,
         currency: json['currency'] as String,
         paymentId: json['payment_id'] as String,
@@ -45,6 +51,7 @@ class OrderModel {
   Map<String, dynamic> toJson() => <String, dynamic>{
         'order_id': orderId,
         'price': price,
+        'uId': uId,
         'ordered_at': DateTime.now().toIso8601String(),
         "order_status": "Ordered",
         "currency": orderItems[0].currency,
@@ -66,6 +73,7 @@ class OrderItem {
   String image;
   String name;
   String timeSlot;
+  String uId;
   String unit;
   String currency;
   num price;
@@ -75,6 +83,7 @@ class OrderItem {
       {this.productId,
       this.image,
       this.name,
+      this.uId,
       this.unit,
         this.timeSlot,
       this.currency,
@@ -86,6 +95,7 @@ class OrderItem {
       productId: json['product_id'] as String,
       image: json['image'] as String,
       name: json['name'] as String,
+      uId: json['uId'] as String,
       unit: json['unit'] as String,
       timeSlot: json['timeSlot'] as String,
 
@@ -99,6 +109,7 @@ class OrderItem {
         'product_id': productId,
         'image': image,
         'name': name,
+        'uId': uId,
         'unit': unit,
     'timeSlot': timeSlot,
 
@@ -109,6 +120,6 @@ class OrderItem {
 
   @override
   String toString() {
-    return 'OrderItem{productId: $productId, image: $image, name: $name, unit: $unit, currency: $currency, price: $price, noOfItems: $noOfItems,timeSlot: $timeSlot}';
+    return 'OrderItem{productId: $productId, image: $image, name: $name, unit: $unit, currency: $currency, price: $price, noOfItems: $noOfItems,timeSlot: $timeSlot,uId: $uId}';
   }
 }

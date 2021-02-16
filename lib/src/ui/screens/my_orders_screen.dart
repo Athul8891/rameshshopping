@@ -1,4 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:corazon_customerapp/src/bloc/base_states/result_state/result_api_builder.dart';
@@ -143,9 +144,33 @@ class _MyOrdersScreenState extends State<MyOrdersScreen> {
                             getOrderStatusIcon(
                                 orderList[orderListIndex].orderStatus)
                           ],
-                        )
+                        ),
+
                       ],
                     ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    GestureDetector(
+                      onTap: (){
+                        _displayTextInputDialog(context,orderListIndex);
+                      },
+                      child:  Container(
+                        margin: EdgeInsets.only(left: 20),
+                        padding: EdgeInsets.only(left: 10, right: 10),
+                        height: 30,
+                        width: 120,
+                        alignment: Alignment.center,
+                        decoration: BoxDecoration(
+                            color: AppColors.primaryColor,
+                            borderRadius: BorderRadius.circular(4)),
+                        child: Text(
+                          "Cancel Order",
+                          style: AppTextStyles.medium14White,
+                        ),
+                      ),
+                    ),
+
                     SizedBox(
                       height: 20,
                     )
@@ -158,6 +183,110 @@ class _MyOrdersScreenState extends State<MyOrdersScreen> {
     );
   }
 
+
+  Future<void> _displayTextInputDialog(BuildContext context , int index) async {
+    return showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+              title: Text('Canceling this order?'),
+              content: Container(
+                height: 150,
+                child:             Column(
+                  children: [
+                    TextField(
+                      onChanged: (value) {
+
+                      },
+                      //  controller: _textFieldController,
+                      decoration: InputDecoration(hintText: "Why Canceling !"),
+                    ),
+                    SizedBox(height: 30,),
+                    FloatingActionButton.extended(
+                        onPressed: () {
+                        ordersCubit.cancelOrders(index);
+                          Navigator.pop(context);
+                          // Flushbar(
+                          //   // title:  "Item added to cart",
+                          //   message: "Order cancelation submited",
+                          //   duration:  Duration(seconds: 2),
+                          // )..show(context);
+
+                          //
+                        },
+                        label: Text(
+                          "Cancel Order",
+                          style: AppTextStyles.medium14White,
+                        )),
+                  ],
+                ),
+              )
+
+          );
+        });
+  }
+
+  // void _showDialog() {
+  //   // flutter defined function
+  //   showDialog(
+  //     context: context,
+  //     builder: (BuildContext context) {
+  //       // return object of type Dialog
+  //       return Dialog(
+  //           shape: RoundedRectangleBorder(
+  //               borderRadius: BorderRadius.circular(4.0)
+  //           ),
+  //           child: Stack(
+  //             overflow: Overflow.visible,
+  //             alignment: Alignment.topCenter,
+  //             children: [
+  //               Container(
+  //                 height: 250,
+  //                 child: Padding(
+  //                   padding: const EdgeInsets.fromLTRB(10, 70, 10, 10),
+  //                   child: Column(
+  //                     children: [
+  //
+  //                       SizedBox(height: 5,),
+  //                       Text('Do you really want to cancel this order?', style: TextStyle(fontSize: 20),),
+  //                       SizedBox(height: 25,),
+  //
+  //                       Row(
+  //                           mainAxisAlignment: MainAxisAlignment.center,
+  //                           children: <Widget>[
+  //                             RaisedButton(onPressed: () {
+  //                               Navigator.of(context).pop();
+  //                             },
+  //                               color: AppColors.primaryColor,
+  //                               child: Text('Yes', style: TextStyle(color: Colors.white),),
+  //                             ),
+  //                             SizedBox(width: 15,),
+  //                             // Spacer(
+  //                             //   flex: 1,
+  //                             // ),
+  //                             RaisedButton(onPressed: () {
+  //                               Navigator.of(context).pop();
+  //                             },
+  //                               color: AppColors.primaryColor,
+  //                               child: Text('No', style: TextStyle(color: Colors.white),),
+  //                             )
+  //
+  //                           ]),
+  //
+  //                     ],
+  //                   ),
+  //                 ),
+  //               ),
+  //               // Positioned(
+  //               //   top: 20,
+  //               //   child:     Text('Do you really want to cancel this order?', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),),
+  //               // ),
+  //             ],
+  //           )
+  //       );
+  //     },
+  //   );
+  // }
   Widget orderCard(OrderItem orderItem) {
     return Container(
       margin: EdgeInsets.only(top: 16, bottom: 20),

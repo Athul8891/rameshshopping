@@ -4,15 +4,18 @@ import 'package:corazon_customerapp/src/models/account_details_model.dart';
 import 'package:corazon_customerapp/src/models/cartModel_model.dart';
 import 'package:corazon_customerapp/src/models/order_model.dart';
 import 'package:corazon_customerapp/src/models/product_model.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 import 'auth_repository.dart';
 
 class FirestoreRepository {
   var authRepo = AppInjector.get<AuthRepository>();
   Firestore _firestore = Firestore.instance;
+  final FirebaseAuth auth = FirebaseAuth.instance;
 
   Future<List<DocumentSnapshot>> getAllProducts(
       [DocumentSnapshot documentSnapshot]) async {
+
     List<DocumentSnapshot> documentList;
     var query = _firestore.collection("products").limit(20).orderBy("name");
 
@@ -27,13 +30,15 @@ class FirestoreRepository {
   }
 
   Future<List<DocumentSnapshot>> getAllOrders(
+
       [DocumentSnapshot documentSnapshot]) async {
+    final FirebaseUser user = await auth.currentUser();
+    final uid = user.uid;
+    print("xoxoxox");
+    print(uid);
     List<DocumentSnapshot> documentList;
     var query = _firestore
-        .collection("users")
-        .document(await authRepo.getUid())
-        .collection("orders")
-        .limit(20)
+        .collection("orders").where("uId",isEqualTo:  uid.toString()).limit(20)
         .orderBy("ordered_at", descending: true);
     if (documentSnapshot != null) {
       documentList =
@@ -195,11 +200,11 @@ class FirestoreRepository {
 
   Future<void> placeOrder(OrderModel orderModel) async {
     return await _firestore
-        .collection("users")
-        .document(await authRepo.getUid())
         .collection("orders")
-        .document(orderModel.orderId)
-        .setData(orderModel.toJson());
+        // .document(await authRepo.getUid())
+        // .collection("orders")
+        // .document(orderModel.orderId)
+        .add(orderModel.toJson());
   }
 
   Future<void> emptyCart() async {

@@ -61,6 +61,9 @@ class _AllProductListScreenState extends State<AllProductListScreen> {
     //   // your code after page opens,splash keeps open until work is done
     // });
     this.getSpinner();
+    setState(() {
+
+    });
     super.initState();
   }
 
@@ -74,20 +77,33 @@ class _AllProductListScreenState extends State<AllProductListScreen> {
 //
 //    });
 // }
-  void getSpinner(){
-
+  Future<String> getSpinner(){
     Firestore.instance.collection("ItemCat").where(widget.productCondition,isEqualTo: widget.productValue).getDocuments().then((QuerySnapshot querySnapshot) => {
       querySnapshot.documents.forEach((doc) {
         print('ambooboooo');
-        catList.add([doc["strName"],doc["itemId"]]);
-        print(doc["strName"]);
-        print(doc["itemId"]);
+        print(querySnapshot.documents.length);
+        if(catList.length != querySnapshot.documents.length){
+          setState(() {
+            catList.add([doc["strName"],doc["itemId"]]);
+            print(doc["strName"]);
+            print(doc["itemId"]);
+          });
+
+
+        }
+
+
+
 
         print(catList);
+
+
       })
 
 
     });
+
+
 
 
   }
@@ -114,20 +130,49 @@ class _AllProductListScreenState extends State<AllProductListScreen> {
         appBar: AppBar(
           title: Text(widget.pageHeading),
 
-          // bottom: TabBar(
-          //   isScrollable: true,
-          //
-          //   tabs: List<Widget>.generate(
-          //     catList.length,
-          //         (int index) {
-          //       return Container(
-          //         child: new Tab(
-          //           child: Text(catList[index][0].toString()),
-          //         ),
-          //       );
-          //     },
-          //   ),
-          // ),
+          bottom: TabBar(
+            isScrollable: true,
+
+            tabs: List<Widget>.generate(
+              catList.length,
+                  (int index) {
+                return GestureDetector(
+                  onTap: (){
+
+                    allProductsCubit.fetchProducts("itemId",catList[index][1].toString());
+                    if (widget.productCondition == null) {
+                      controller.addListener(_scrollListener);
+                    }
+                    // setState(() {
+                    //   if(catList[index][0].toString()=="ALL"){
+                    //     setState(() {
+                    //       allProductsCubit.fetchProducts(widget.productCondition,widget.productValue);
+                    //       if (widget.productCondition == null) {
+                    //         controller.addListener(_scrollListener);
+                    //       }
+                    //       Navigator.pop(context);
+                    //     });
+                    //   }else{
+                    //     setState(() {
+                    //       allProductsCubit.fetchProducts("itemId",catList[index][1].toString());
+                    //       if (widget.productCondition == null) {
+                    //         controller.addListener(_scrollListener);
+                    //       }
+                    //       // Navigator.pop(context);
+                    //
+                    //     });
+                    //   }
+                    // });
+
+                  },
+                  child: new Tab(
+
+                    child: Text(catList[index][0].toString()),
+                  ),
+                );
+              },
+            ),
+          ),
           actions: <Widget>[
             InkWell(
               onTap: () {
@@ -219,6 +264,54 @@ class _AllProductListScreenState extends State<AllProductListScreen> {
 
 
 
+        // Stack(
+        //   children: <Widget>[
+        //
+        //     _tabSection(context) ,
+        //
+        //
+        //   ])
+
+
+
+
+
+      ),
+    );
+  }
+
+
+
+  Widget _tabSection(BuildContext context) {
+    return DefaultTabController(
+      length: catList.length,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: <Widget>[
+          Container(
+            child: TabBar(
+
+              tabs: List<Widget>.generate(
+                catList.length,
+                    (int index) {
+                  return Container(
+                    child: new Tab(
+                      child: Text(catList[index][0].toString()),
+                    ),
+                  );
+                },
+              ),
+
+            ),
+          ),
+          Container(
+            //Add this to give height
+            height: MediaQuery.of(context).size.height,
+            child: TabBarView(children: [
+
+            ]),
+          ),
+        ],
       ),
     );
   }

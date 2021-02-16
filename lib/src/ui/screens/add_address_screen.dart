@@ -1,3 +1,5 @@
+import 'package:corazon_customerapp/src/bloc/address_card/address_card.dart';
+import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:corazon_customerapp/src/bloc/add_address/add_address.dart';
@@ -23,23 +25,27 @@ class AddAddressScreen extends StatefulWidget {
 
 class _AddAddressScreenState extends State<AddAddressScreen> {
   var addAddressCubit = AppInjector.get<AddAddressCubit>();
+  var addressCardCubit = AppInjector.get<AddressCardCubit>();
+
   TextEditingController nameEditingController = TextEditingController();
-  TextEditingController emailEditingController = TextEditingController();
-  TextEditingController pincodeEditingController = TextEditingController();
-  TextEditingController addressEditingController = TextEditingController();
-  TextEditingController cityEditingController = TextEditingController();
-  TextEditingController stateEditingController = TextEditingController();
-  TextEditingController phoneEditingController = TextEditingController();
   TextEditingController flatEditingController = TextEditingController();
+  TextEditingController buildingEditingController = TextEditingController();
+  TextEditingController roadEditingController = TextEditingController();
+  TextEditingController blockEditingController = TextEditingController();
+  TextEditingController areaEditingController = TextEditingController();
+  TextEditingController emailEditingController = TextEditingController();
+  TextEditingController landmarkEditingController = TextEditingController();
+  TextEditingController phoneEditingController = TextEditingController();
 
   FocusNode nameFocusNode = FocusNode();
-  FocusNode emailFocusNode = FocusNode();
-  FocusNode pincodeFocusNode = FocusNode();
-  FocusNode addressFocusNode = FocusNode();
-  FocusNode cityFocusNode = FocusNode();
-  FocusNode buildingFocusNode = FocusNode();
   FocusNode flatFocusNode = FocusNode();
-  FocusNode stateFocusNode = FocusNode();
+  FocusNode buildingFocusNode = FocusNode();
+  FocusNode roadFocusNode = FocusNode();
+  FocusNode blockFocusNode = FocusNode();
+  FocusNode areaFocusNode = FocusNode();
+  FocusNode emailFocusNode = FocusNode();
+  FocusNode landmarkFocusNode = FocusNode();
+
   FocusNode phoneFocusNode = FocusNode();
   Validator validator = Validator();
 
@@ -56,11 +62,14 @@ class _AddAddressScreenState extends State<AddAddressScreen> {
     if (widget.editAddress != null) {
       Address address = widget.editAddress;
       nameEditingController.text = address.name;
-      pincodeEditingController.text = address.pincode;
-      addressEditingController.text = address.address;
-      cityEditingController.text = address.city;
       flatEditingController.text = address.flat;
-      phoneEditingController.text = address.phoneNumber;
+      buildingEditingController.text = address.building;
+      roadEditingController.text = address.road;
+      blockEditingController.text = address.block;
+      areaEditingController.text = address.area;
+      emailEditingController.text = address.email;
+      landmarkEditingController.text = address.landmark;
+      phoneEditingController.text = address.phone;
       _dropDownValue = address.type;
       setAsDefault = address.isDefault;
     }
@@ -118,7 +127,7 @@ class _AddAddressScreenState extends State<AddAddressScreen> {
                       underline: SizedBox(),
                       iconSize: 30.0,
                       style: TextStyle(color: Colors.black),
-                      items: ['House', 'Apartment', 'Office',].map(
+                      items: ['House', 'Office', 'Others',].map(
                             (val) {
                           return DropdownMenuItem<String>(
                             value: val,
@@ -141,44 +150,22 @@ class _AddAddressScreenState extends State<AddAddressScreen> {
                       },
                     ),
                   ),
+
                   SizedBox(
                     height: 30,
                   ),
+
                   ///name
                   CustomTextField(
                     hint: StringsConstants.name,
                     textEditingController: nameEditingController,
                     focusNode: nameFocusNode,
-                    nextFocusNode: pincodeFocusNode,
-                   // validator: validator.validateName,
+                    nextFocusNode: flatFocusNode,
+                     validator: validator.validateName,
                     keyboardType: TextInputType.text,
                     textInputAction: TextInputAction.next,
                     onSubmitted: (val) {
-                      FocusScope.of(context).requestFocus(pincodeFocusNode);
-                    },
-                    // containerHeight: 50,
-                  ),
-                  SizedBox(
-                    height: 30,
-                  ),
-                  ///blding
-                  CustomTextField(
-                    hint: StringsConstants.address,
-                    keyboardType: TextInputType.phone,
-
-                    textEditingController: addressEditingController,
-                    focusNode: buildingFocusNode,
-                    nextFocusNode: flatFocusNode,
-                    validator: (val) {
-                      if (val.isEmpty) {
-                        return "Building is Required";
-                      } else
-                        return null;
-                    },
-
-                    textInputAction: TextInputAction.next,
-                    onSubmitted: (val) {
-                      FocusScope.of(context).requestFocus(cityFocusNode);
+                      FocusScope.of(context).requestFocus(flatFocusNode);
                     },
                     // containerHeight: 50,
                   ),
@@ -203,30 +190,60 @@ class _AddAddressScreenState extends State<AddAddressScreen> {
 
                     textInputAction: TextInputAction.next,
                     onSubmitted: (val) {
-                      FocusScope.of(context).requestFocus(cityFocusNode);
+                      FocusScope.of(context).requestFocus(buildingFocusNode);
+                    },
+                    // containerHeight: 50,
+                  ),
+
+                  SizedBox(
+                    height: 30,
+                  ),
+                  ///blding
+                  CustomTextField(
+                    hint: StringsConstants.address,
+                    keyboardType: TextInputType.phone,
+
+                    textEditingController: buildingEditingController,
+                    focusNode: buildingFocusNode,
+                    nextFocusNode: flatFocusNode,
+                    validator: (val) {
+                      if (val.isEmpty) {
+                        return "Building is Required";
+                      } else
+                        return null;
+                    },
+
+                    textInputAction: TextInputAction.next,
+                    onSubmitted: (val) {
+                      FocusScope.of(context).requestFocus(roadFocusNode);
                     },
                     // containerHeight: 50,
                   ),
                   SizedBox(
                     height: 30,
                   ),
-                  ///area
+                  ///road
                   CustomTextField(
-                    hint: StringsConstants.pincode,
+                    hint: StringsConstants.state,
+                    textEditingController: roadEditingController,
+                    focusNode: roadFocusNode,
+                    keyboardType: TextInputType.phone,
 
-                    textEditingController: pincodeEditingController,
-                    focusNode: pincodeFocusNode,
-                    nextFocusNode: addressFocusNode,
-                   // validator: validator.validatePinCode,
-                    keyboardType: TextInputType.text,
+                    nextFocusNode: phoneFocusNode,
+                    validator: (val) {
+                      if (val.isEmpty) {
+                        return "Road is Required";
+                      } else
+                        return null;
+                    },
+
+                    //keyboardType: TextInputType.text,
                     textInputAction: TextInputAction.next,
                     onSubmitted: (val) {
-                      FocusScope.of(context).requestFocus(addressFocusNode);
+                      FocusScope.of(context).requestFocus(blockFocusNode);
                     },
                     // containerHeight: 50,
                   ),
-
-
                   SizedBox(
                     height: 30,
                   ),
@@ -234,16 +251,22 @@ class _AddAddressScreenState extends State<AddAddressScreen> {
                   ///block
                   CustomTextField(
                     hint: StringsConstants.city,
-                    textEditingController: cityEditingController,
-                    focusNode: cityFocusNode,
-                    nextFocusNode: stateFocusNode,
+                    textEditingController: blockEditingController,
+                    focusNode: blockFocusNode,
+                    nextFocusNode: areaFocusNode,
                     keyboardType: TextInputType.phone,
 
-                    //  validator: (val) => validator.validateText(val, "City"),
+                      validator:(val) {
+                        if (val.isEmpty) {
+                          return "Block is Required";
+                        } else
+                          return null;
+                      },
+
                     // keyboardType: TextInputType.text,
                     textInputAction: TextInputAction.next,
                     onSubmitted: (val) {
-                      FocusScope.of(context).requestFocus(stateFocusNode);
+                      FocusScope.of(context).requestFocus(areaFocusNode);
                     },
                     // containerHeight: 50,
                   ),
@@ -251,25 +274,38 @@ class _AddAddressScreenState extends State<AddAddressScreen> {
                     height: 30,
                   ),
 
-                  ///road
-                  CustomTextField(
-                    hint: StringsConstants.state,
-                    textEditingController: stateEditingController,
-                    focusNode: stateFocusNode,
-                    keyboardType: TextInputType.phone,
 
-                    nextFocusNode: phoneFocusNode,
-                    //validator: (val) => validator.validateText(val, "State"),
-                    //keyboardType: TextInputType.text,
+
+
+                  ///area
+                  CustomTextField(
+                    hint: StringsConstants.pincode,
+
+                    textEditingController: areaEditingController,
+                    focusNode: areaFocusNode,
+                    nextFocusNode: emailFocusNode,
+                   validator: (val) {
+                     if (val.isEmpty) {
+                       return "Area is Required";
+                     } else
+                       return null;
+                   },
+                    keyboardType: TextInputType.text,
                     textInputAction: TextInputAction.next,
                     onSubmitted: (val) {
-                      FocusScope.of(context).requestFocus(phoneFocusNode);
+                      FocusScope.of(context).requestFocus(emailFocusNode);
                     },
                     // containerHeight: 50,
                   ),
+
+
                   SizedBox(
                     height: 30,
                   ),
+
+
+
+
 
 
 
@@ -277,35 +313,24 @@ class _AddAddressScreenState extends State<AddAddressScreen> {
                   CustomTextField(
                     hint: "Email",
                     textEditingController: emailEditingController,
-                    focusNode: addressFocusNode,
-                    nextFocusNode: cityFocusNode,
-                    validator: (val) {
-                      if (val.isEmpty) {
-                        return "Email is Required";
-                      } else
-                        return null;
-                    },
+                    focusNode: emailFocusNode,
+                    nextFocusNode: landmarkFocusNode,
+                    validator: (value) => EmailValidator.validate(value) ? null : "Please enter a valid email",
                     keyboardType: TextInputType.text,
                     textInputAction: TextInputAction.next,
                     onSubmitted: (val) {
-                      FocusScope.of(context).requestFocus(cityFocusNode);
+                      FocusScope.of(context).requestFocus(landmarkFocusNode);
                     },
                     // containerHeight: 50,
                   ),
                   SizedBox(
                     height: 30,
                   ),
-
-
-
-
-
-                  ///phn
                   CustomTextField(
                     hint: StringsConstants.phoneNumber,
                     textEditingController: phoneEditingController,
                     focusNode: phoneFocusNode,
-                    //validator: validator.validateMobile,
+                    validator: validator.validateMobile,
                     keyboardType: TextInputType.phone,
                     onChanged: (val) {
                       if (validator.validateMobile(val) == null) {
@@ -314,6 +339,34 @@ class _AddAddressScreenState extends State<AddAddressScreen> {
                     },
                     // containerHeight: 50,
                   ),
+                  SizedBox(
+                    height: 30,
+                  ),
+                  ///landmark
+                  CustomTextField(
+                    hint: "Landmark",
+                    textEditingController: landmarkEditingController,
+                    focusNode: landmarkFocusNode,
+                    nextFocusNode: phoneFocusNode,
+                    validator: (val) {
+                      if (val.isEmpty) {
+                        return "Landmark is Required";
+                      } else
+                        return null;
+                    },
+                    keyboardType: TextInputType.text,
+                    textInputAction: TextInputAction.next,
+                    onSubmitted: (val) {
+                      FocusScope.of(context).requestFocus(phoneFocusNode);
+                    },
+                    // containerHeight: 50,
+                  ),
+
+
+
+
+                  ///phn
+
                   SizedBox(
                     height: 40,
                   ),
@@ -372,21 +425,55 @@ class _AddAddressScreenState extends State<AddAddressScreen> {
   }
 
   void onButtonTap() {
- //   if (_formKey.currentState.validate()) {
-      Address address = Address(
-          name: nameEditingController.text,
-          address: addressEditingController.text,
-          city: cityEditingController.text,
-          isDefault: setAsDefault,
-          pincode: pincodeEditingController.text,
-          flat: flatEditingController.text,
-          email: emailEditingController.text,
+    if (widget.editAddress != null) {
+      if (_formKey.currentState.validate()) {
+        addressCardCubit.deleteAddress(
+            widget.accountDetails, widget.editAddress);
 
+        Address address = Address(
+          name: nameEditingController.text,
+          flat: flatEditingController.text,
+          building: buildingEditingController.text,
+
+
+
+
+          isDefault: setAsDefault,
+          road: roadEditingController.text,
+          block: blockEditingController.text,
+          area: areaEditingController.text,
+          email: emailEditingController.text,
+          landmark: landmarkEditingController.text,
 
           type:_dropDownValue.toString(),
-          phoneNumber: "+973${phoneEditingController.text}",
-          state: stateEditingController.text);
-      addAddressCubit.saveAddress(widget.accountDetails, address);
-   // }
+          phone: phoneEditingController.text,
+        );
+        addAddressCubit.saveAddress(widget.accountDetails, address);
+      }
+
+    }else{
+
+      if (_formKey.currentState.validate()) {
+
+
+        Address address = Address(
+          name: nameEditingController.text,
+          flat: flatEditingController.text,
+          building: buildingEditingController.text,
+          isDefault: setAsDefault,
+          road: roadEditingController.text,
+          block: blockEditingController.text,
+          area: areaEditingController.text,
+          email: emailEditingController.text,
+          landmark: landmarkEditingController.text,
+
+          type:_dropDownValue.toString(),
+          phone: phoneEditingController.text,
+        );
+        addAddressCubit.saveAddress(widget.accountDetails, address);
+      }
+    }
+
+
   }
 }

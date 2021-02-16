@@ -171,12 +171,12 @@ class _MyAddressScreenState extends State<MyAddressScreen> {
                       SizedBox(
                         height: 33,
                       ),
-                      data(Icons.phone, address.phoneNumber),
+                      data(Icons.phone, address.phone),
                       SizedBox(
                         height: 23,
                       ),
                       data(Icons.place,
-                          "${address.address} ${address.city} ${address.state} ${address.pincode}"),
+                          "${address.flat} ${address.building} ${address.road} ${address.block}"),
                       SizedBox(
                         height: 33,
                       ),
@@ -215,6 +215,10 @@ class _MyAddressScreenState extends State<MyAddressScreen> {
                                       onTap: () {
                                         addressCardCubit.deleteAddress(
                                             accountDetails, address);
+
+                                        print("accountDetailssxxxxxxxxxxxxxxxxxxxxxx");
+                                        print(accountDetails);
+                                        print(address);
                                       },
                                     ),
                             ],

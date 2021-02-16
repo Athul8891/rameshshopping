@@ -81,7 +81,13 @@ class _CartScreenState extends State<CartScreen> with BaseScreenMixin {
               SizedBox(
                 height: 20,
               ),
+
               deliverTo(),
+              SizedBox(
+                height: 20,
+              ),
+              applyCoupon(),
+
               SizedBox(
                 height: 50,
               ),
@@ -91,33 +97,75 @@ class _CartScreenState extends State<CartScreen> with BaseScreenMixin {
       ),
     );
   }
+  Future<void> _displayTextInputDialog(BuildContext context) async {
+    return showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: Text('Apply the Coupon'),
+            content: Container(
+              height: 150,
+              child:             Column(
+                children: [
+                  TextField(
+                    onChanged: (value) {
 
+                    },
+                    //  controller: _textFieldController,
+                    decoration: InputDecoration(hintText: "Enter the code !"),
+                  ),
+ SizedBox(height: 30,),
+                  FloatingActionButton.extended(
+                      onPressed: () {
+
+
+                        Navigator.pop(context);
+                      },
+                      label: Text(
+                        "Apply",
+                        style: AppTextStyles.medium14White,
+                      )),
+                ],
+              ),
+            )
+
+          );
+        });
+  }
   Widget applyCoupon() {
-    return CommonCard(
-        child: Container(
-      margin: EdgeInsets.only(left: 20, right: 14, top: 17, bottom: 17),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Row(
-            children: [
-              Icon(
-                Icons.local_offer,
-                color: AppColors.color81819A,
-              ),
-              SizedBox(
-                width: 10,
-              ),
-              Text(StringsConstants.applyCoupon),
-            ],
-          ),
-          Icon(
-            Icons.keyboard_arrow_right,
-            color: AppColors.color81819A,
-          )
-        ],
-      ),
-    ));
+
+    return GestureDetector(
+      onTap: (){
+        print("gggggggg");
+        _displayTextInputDialog(context);
+      },
+      child:  CommonCard(
+          child: Container(
+            margin: EdgeInsets.only(left: 20, right: 14, top: 17, bottom: 17),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Row(
+                  children: [
+                    Icon(
+                      Icons.local_offer,
+                      color: AppColors.color81819A,
+                    ),
+                    SizedBox(
+                      width: 10,
+                    ),
+                    Text(StringsConstants.applyCoupon),
+                  ],
+                ),
+                Icon(
+                  Icons.keyboard_arrow_right,
+                  color: AppColors.color81819A,
+                )
+              ],
+            ),
+          )) ,
+    );
+
   }
 
   Widget billDetails(CartStatusProvider cartItemStatus) {
@@ -331,7 +379,7 @@ class _CartScreenState extends State<CartScreen> with BaseScreenMixin {
                                               mainAxisAlignment: MainAxisAlignment.center,
                                               children: <Widget>[
                                                 ListTile(
-                                                  title:                          Column(
+                                                  title:Column(
                                                     crossAxisAlignment: CrossAxisAlignment.start,
                                                     mainAxisAlignment: MainAxisAlignment.center,
                                                     children: <Widget>[

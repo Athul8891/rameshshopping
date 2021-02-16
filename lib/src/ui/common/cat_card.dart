@@ -28,7 +28,7 @@ class CatCard extends StatelessWidget {
       child:
 
       Container(
-        margin: EdgeInsets.all(8),
+       // margin: EdgeInsets.all(8),
         padding: EdgeInsets.all(1),
 
 
@@ -45,7 +45,8 @@ class CatCard extends StatelessWidget {
                     image: DecorationImage(
                         image: NetworkImage(productModel.image), fit: BoxFit.fill),
                     border: Border.all(color: Colors.grey.shade300, width: 1),
-                    shape: BoxShape.circle, color: AppColors.color6EBA49,),
+                 //   shape: BoxShape.circle, color: AppColors.color6EBA49,
+                ),
               ),
               // Container(
               //  // height: 50,
@@ -67,47 +68,61 @@ class CatCard extends StatelessWidget {
 
 
             Flexible(
-              child: RichText(
-                overflow: TextOverflow.ellipsis,
-                strutStyle: StrutStyle(fontSize: 8.0),
-                text: TextSpan(
-                    style: AppTextStyles.medium12Black,
-                    text:  productModel.name,),
+              child: Center(
+                child: Text(
+
+                    productModel.name,
+                  textAlign: TextAlign.center,
+                  style: AppTextStyles.medium12Black,
+                  maxLines: 1,
+                ),
               ),
+
+
+              // RichText(
+              //   overflow: TextOverflow.ellipsis,
+              //   strutStyle: StrutStyle(fontSize: 25.0),
+              //   text: TextSpan(
+              //
+              //       style: AppTextStyles.medium12Black,
+              //       text:  productModel.name,
+              //
+              //   ),
+              // ),
             ),
 
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                // Text(
-                //   "${"BHD " }${productModel.currentPrice}",
-                //   style: AppTextStyles.medium16Black,
-                // ),
-
-
-                // InkWell(
-                //   borderRadius: BorderRadius.circular(50),
-                //   onTap: () {},
-                //   // child: Container(
-                //   //   padding: EdgeInsets.all(getProportionateScreenWidth(8)),
-                //   //   height: getProportionateScreenWidth(28),
-                //   //   width: getProportionateScreenWidth(28),
-                //   //   decoration: BoxDecoration(
-                //   //     color: product.isFavourite
-                //   //         ? kPrimaryColor.withOpacity(0.15)
-                //   //         : kSecondaryColor.withOpacity(0.1),
-                //   //     shape: BoxShape.circle,
-                //   //   ),
-                //   //   child: SvgPicture.asset(
-                //   //     "assets/icons/Heart Icon_2.svg",
-                //   //     color: product.isFavourite
-                //   //         ? Color(0xFFFF4848)
-                //   //         : Color(0xFFDBDEE4),
-                //   //   ),
-                //   // ),
-                // ),
-              ],
-            ),
+            // Row(
+            //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            //   children: [
+            //     // Text(
+            //     //   "${"BHD " }${productModel.currentPrice}",
+            //     //   style: AppTextStyles.medium16Black,
+            //     // ),
+            //
+            //
+            //     // InkWell(
+            //     //   borderRadius: BorderRadius.circular(50),
+            //     //   onTap: () {},
+            //     //   // child: Container(
+            //     //   //   padding: EdgeInsets.all(getProportionateScreenWidth(8)),
+            //     //   //   height: getProportionateScreenWidth(28),
+            //     //   //   width: getProportionateScreenWidth(28),
+            //     //   //   decoration: BoxDecoration(
+            //     //   //     color: product.isFavourite
+            //     //   //         ? kPrimaryColor.withOpacity(0.15)
+            //     //   //         : kSecondaryColor.withOpacity(0.1),
+            //     //   //     shape: BoxShape.circle,
+            //     //   //   ),
+            //     //   //   child: SvgPicture.asset(
+            //     //   //     "assets/icons/Heart Icon_2.svg",
+            //     //   //     color: product.isFavourite
+            //     //   //         ? Color(0xFFFF4848)
+            //     //   //         : Color(0xFFDBDEE4),
+            //     //   //   ),
+            //     //   // ),
+            //     // ),
+            //   ],
+            // ),
             // Text(
             //   "${"BHD "}${productModel.actualPrice}",
             //   style: AppTextStyles.normal12Color81819AStroke,
