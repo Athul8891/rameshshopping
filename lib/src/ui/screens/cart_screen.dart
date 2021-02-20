@@ -1,3 +1,5 @@
+import 'package:corazon_customerapp/src/repository/ChekoutApi.dart';
+import 'package:corazon_customerapp/src/ui/screens/paymentpage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:corazon_customerapp/src/bloc/payment/payment.dart';
@@ -22,13 +24,17 @@ class CartScreen extends StatefulWidget {
   _CartScreenState createState() => _CartScreenState();
 }
 enum timingSlots { MORNING, NOON,EVENING,NIGHT }
+enum paymentOption { NETBANKING, COD,BENIFT,BENIFITPAY }
 
 class _CartScreenState extends State<CartScreen> with BaseScreenMixin {
   var paymentCubit = AppInjector.get<PaymentCubit>();
   var placeOrderCubit = AppInjector.get<PlaceOrderCubit>();
   var timeSlot = "Between 9Am - 12Pm";
+  var payingOn = "NET BANKING";
   var toggle = true;
+  var buttonPress = false;
   timingSlots _slot = timingSlots.MORNING;
+  paymentOption _paymthd = paymentOption.NETBANKING;
 
   @override
   void initState() {
@@ -77,6 +83,11 @@ class _CartScreenState extends State<CartScreen> with BaseScreenMixin {
                   }),
                 ),
               ),
+
+              paymentMethod(),
+              SizedBox(
+                height: 10,
+              ),
               billDetails(cartItemStatus),
               SizedBox(
                 height: 20,
@@ -91,6 +102,8 @@ class _CartScreenState extends State<CartScreen> with BaseScreenMixin {
               SizedBox(
                 height: 50,
               ),
+
+
             ],
           ),
         ),
@@ -165,6 +178,140 @@ class _CartScreenState extends State<CartScreen> with BaseScreenMixin {
             ),
           )) ,
     );
+
+  }
+  Widget paymentMethod() {
+
+    return  CommonCard(
+        child: Container(
+          margin: EdgeInsets.only( left: 14 ,right: 14, top: 17, bottom: 17),
+          child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  "Payment Method",
+                  style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.w800,
+                      color: Colors.black,
+                      fontFamily: 'CustomIcons'),
+                ),
+                Divider(
+                  color: Colors.black54,
+                  indent: 10,
+                  endIndent: 10,
+                ),
+                Row(
+                  children: [
+                    SizedBox(
+                      height: 18,
+                      width: 20,
+                      child: Icon(Icons.account_balance,size: 18),
+                    ),
+                    SizedBox(
+                      width: 5,
+                    ),
+                    Text("Net Banking"),
+                    Spacer(),
+
+                   Radio(
+                  value: paymentOption.NETBANKING,
+                 groupValue: _paymthd,
+                 onChanged: (paymentOption value) {
+                 setState(() {
+                 _paymthd = value;
+                 payingOn= "NET BANKING";
+                 print(_paymthd);
+                 print(timeSlot);
+
+              });
+            },
+          ),
+                  ],
+                ),
+                Divider(),
+                Row(
+                  children: [
+                    SizedBox(
+                      height: 18,
+                      width: 20,
+                      child: Icon(Icons.account_balance_wallet_rounded,size: 18),
+                    ),
+                    SizedBox(
+                      width: 5,
+                    ),
+                    Text("Cash On Delivery"),
+                    Spacer(),
+                    Radio(
+                      value: paymentOption.COD,
+                      groupValue: _paymthd,
+                      onChanged: (paymentOption value) {
+                        setState(() {
+                          _paymthd = value;
+                          payingOn= "CASH ON DELIVERY";
+                          print(payingOn);
+
+                        });
+                      },
+                    ),
+                  ],
+                ),
+                Divider(),
+                Row(
+                  children: [
+                    SizedBox(
+                      height: 18,
+                      width: 20,
+                      child:Icon(Icons.payment_rounded,size: 18),
+                    ),
+                    SizedBox(
+                      width: 5,
+                    ),
+                    Text("Benifit"),
+                    Spacer(),
+                    Radio(
+                      value: paymentOption.BENIFT,
+                      groupValue: _paymthd,
+                      onChanged: (paymentOption value) {
+                        setState(() {
+                          _paymthd = value;
+                          payingOn= "BENIFIT";
+                          print(timeSlot);
+
+                        });
+                      },
+                    ),
+                  ],
+                ),
+                Divider(),
+                Row(
+                  children: [
+                    SizedBox(
+                      height: 18,
+                      width: 20,
+                      child:Icon(Icons.phone_android,size: 18),
+                    ),
+                    SizedBox(
+                      width: 5,
+                    ),
+                    Text("Benifit Pay"),
+                    Spacer(),
+                    Radio(
+                      value: paymentOption.BENIFITPAY,
+                      groupValue: _paymthd,
+                      onChanged: (paymentOption value) {
+                        setState(() {
+                          _paymthd = value;
+                          payingOn= "BENIFIT PAY";
+                          print(timeSlot);
+
+                        });
+                      },
+                    ),
+                  ],
+                ),
+              ]),
+        )) ;
 
   }
 
@@ -318,7 +465,7 @@ class _CartScreenState extends State<CartScreen> with BaseScreenMixin {
               if (state is PaymentSuccessful) {
                 placeOrderCubit.placeOrder(
                   cartItemStatus,
-                  state.response,
+                  "Sucess",
                   timeSlot
 
                 );
@@ -569,22 +716,100 @@ class _CartScreenState extends State<CartScreen> with BaseScreenMixin {
                                       ),
 
                                       SizedBox(height: 10,),
-                                      FloatingActionButton.extended(
-                                          onPressed: () {
 
-                                            var addressProvider = AppInjector.get<AccountProvider>();
-                                            if (addressProvider.addressSelected != null) {
-                                              paymentCubit.openCheckout(cartItemStatus.priceInCart);
-                                            } else {
-                                              showSnackBar(title: StringsConstants.noAddressSelected);
+                                      CommonButton(
+                                        title: StringsConstants.save,
+                                        titleColor: AppColors.white,
+                                        height: 50,
+                                        replaceWithIndicator: buttonPress,
+                                        //isDisabled:
+                                        margin: EdgeInsets.only(bottom: 40),
+                                        onTap: () async{
+                                          setState(() {
+                                            buttonPress =true;
+                                          });
+                                          if(payingOn== "CASH ON DELIVERY"){
+                                            placeOrderCubit.placeOrder(
+                                                cartItemStatus,
+                                                "Payed on Cod",
+                                                timeSlot
 
+                                            );
+                                          }
+                                          else{
+                                            var rsp =  await  checkoutApi(cartItemStatus.priceInCart+ 0.500,DateTime.now().millisecondsSinceEpoch.toString(),DateTime.now().millisecondsSinceEpoch.toString());
+
+                                            print("checkingggg");
+                                            print(rsp['result']);
+                                            if(rsp['result'].toString() =="SUCCESS"){
+                                              var sessionid = rsp['session']['id'];
+                                              print(sessionid);
+                                              setState(() {
+                                                buttonPress =false;
+                                              });
+                                              Navigator.push(
+                                                  context,
+                                                  new MaterialPageRoute(
+                                                      builder: (context) =>   WebViewExample(id: sessionid,)));
+
+                                              print(sessionid);
                                             }
-                                            Navigator.pop(context);
-                                          },
-                                          label: Text(
-                                            "Confirm Order",
-                                            style: AppTextStyles.medium14White,
-                                          ))
+
+                                            // var addressProvider = AppInjector.get<AccountProvider>();
+                                            // if (addressProvider.addressSelected != null) {
+                                            // paymentCubit.openCheckout(cartItemStatus.priceInCart);
+                                            // } else {
+                                            //   showSnackBar(title: StringsConstants.noAddressSelected);
+                                            //
+                                            // }
+                                            //  Navigator.pop(context);
+                                          }
+
+                                        },
+                                      )
+                                      // FloatingActionButton.extended(
+                                      //     onPressed: () async{
+                                      //
+                                      //        if(payingOn== "CASH ON DELIVERY"){
+                                      //          placeOrderCubit.placeOrder(
+                                      //              cartItemStatus,
+                                      //              "Payed on Cod",
+                                      //              timeSlot
+                                      //
+                                      //          );
+                                      //        }
+                                      //        else{
+                                      //     var rsp =  await  checkoutApi(cartItemStatus.priceInCart+ 0.500,DateTime.now().millisecondsSinceEpoch.toString(),DateTime.now().millisecondsSinceEpoch.toString());
+                                      //
+                                      //     print("checkingggg");
+                                      //     print(rsp['result']);
+                                      //     if(rsp['result'].toString() =="SUCCESS"){
+                                      //       var sessionid = rsp['session']['id'];
+                                      //       print(sessionid);
+                                      //
+                                      //       Navigator.push(
+                                      //           context,
+                                      //           new MaterialPageRoute(
+                                      //               builder: (context) =>   WebViewExample(id: sessionid,)));
+                                      //
+                                      //       print(sessionid);
+                                      //     }
+                                      //
+                                      //       // var addressProvider = AppInjector.get<AccountProvider>();
+                                      //       // if (addressProvider.addressSelected != null) {
+                                      //         // paymentCubit.openCheckout(cartItemStatus.priceInCart);
+                                      //       // } else {
+                                      //       //   showSnackBar(title: StringsConstants.noAddressSelected);
+                                      //       //
+                                      //       // }
+                                      //     //  Navigator.pop(context);
+                                      //       }
+                                      //
+                                      //     },
+                                      //     label: Text(
+                                      //       "Confirm Order",
+                                      //       style: AppTextStyles.medium14White,
+                                      //     ))
                                     ],
                                   ),
                                 );

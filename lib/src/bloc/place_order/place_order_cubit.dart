@@ -22,7 +22,7 @@ class PlaceOrderCubit extends Cubit<PlaceOrderState> {
   PlaceOrderCubit() : super(PlaceOrderState.idle());
 
   placeOrder(CartStatusProvider cartItemStatus,
-      PaymentSuccessResponse response, String timeSlot,  ) async {
+      String response, String timeSlot,  ) async {
     timeSlots=timeSlot;
     final FirebaseUser user = await auth.currentUser();
      uid = user.uid;
@@ -42,7 +42,7 @@ class PlaceOrderCubit extends Cubit<PlaceOrderState> {
   }
 
   OrderModel _orderFromCartList(
-      CartStatusProvider cartItemStatus, PaymentSuccessResponse response, ) {
+      CartStatusProvider cartItemStatus, String response, ) {
     var cartItems = cartItemStatus.cartItems;
 
     List<OrderItem> getOrderItems() {
@@ -67,8 +67,8 @@ class PlaceOrderCubit extends Cubit<PlaceOrderState> {
         orderId:
             "${cartItemStatus.priceInCart}${DateTime.now().millisecondsSinceEpoch}",
         orderItems: getOrderItems(),
-        paymentId: response.paymentId,
-        signature: response.signature,
+        paymentId: response,
+        signature: response,
         timeSlot: timeSlots,
         uId: uid,
         price: cartItemStatus.priceInCart,

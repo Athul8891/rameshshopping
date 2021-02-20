@@ -73,6 +73,15 @@ class _AccountScreenState extends State<AccountScreen> {
                       Navigator.of(context).pushNamed(Routes.myOrdersScreen);
                     },
                   ),
+                  Divider(),
+                  ListTile(
+                    title: Text(StringsConstants.myAddress),
+                    leading: Icon(Icons.place),
+                    onTap: () {
+                      Navigator.of(context).pushNamed(Routes.myAddressScreen);
+                    },
+                  ),
+
 
                   Divider(),
                   ListTile(
