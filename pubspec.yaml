@@ -51,6 +51,7 @@ flutter:
   assets:
     #Images
     - assets/images/app_logo.png
+    - assets/images/logologin.png
 
 
   fonts:

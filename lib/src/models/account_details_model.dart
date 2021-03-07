@@ -93,6 +93,6 @@ class Address {
   }
 
   String wholeAddress() {
-    return "$flat $building $road $block";
+    return "$name $flat $building $block$area $landmark $phone $email$type";
   }
 }

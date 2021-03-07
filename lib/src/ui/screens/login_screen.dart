@@ -55,7 +55,19 @@ class _LoginScreenState extends State<LoginScreen> {
                   FloatingActionButtonLocation.centerDocked,
               body: Container(
                 child: Column(
-                  children: <Widget>[_loginCard()],
+                  children: <Widget>[
+                    _loginCard(),
+                     Container(
+                       height: 200,
+                       width: 200,
+                       child: Image.asset("assets/images/logologin.png"),
+                     )
+
+
+
+
+
+                  ],
                 ),
               ),
             ),

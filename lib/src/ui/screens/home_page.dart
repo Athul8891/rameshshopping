@@ -76,7 +76,6 @@ class _HomePageScreenState extends State<HomePageScreen> {
                      NetworkImage('https://img.freepik.com/free-vector/special-offer-big-sale-background_1361-2651.jpg?size=626&ext=jpg&ga=GA1.2.1416119577.1612224000'),
                      NetworkImage('https://img.freepik.com/free-vector/special-offer-big-sale-background_1361-2651.jpg?size=626&ext=jpg&ga=GA1.2.1416119577.1612224000'),
                      NetworkImage('https://img.freepik.com/free-vector/special-offer-big-sale-background_1361-2651.jpg?size=626&ext=jpg&ga=GA1.2.1416119577.1612224000'),
-
                    ],
                    autoplay: true,
                    animationCurve: Curves.fastOutSlowIn,
@@ -240,7 +239,7 @@ class _HomePageScreenState extends State<HomePageScreen> {
               crossAxisSpacing: 10,
               children: List.generate(
 
-                products.length > 8 ? 8 : products.length,
+                products.length > 9 ? 9 : products.length,
                     (index) => CatCard(products[index]),
               ),
             ),

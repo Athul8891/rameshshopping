@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -28,7 +29,7 @@ class AllProductListScreen extends StatefulWidget {
 }
 
 class _AllProductListScreenState extends State<AllProductListScreen> {
-  List<dynamic> catList = [];
+  List<dynamic> catList = [["ALL","0"]];
 
   var allProductsCubit = AppInjector.get<AllProductCubit>();
   ScrollController controller = ScrollController();
@@ -52,7 +53,7 @@ class _AllProductListScreenState extends State<AllProductListScreen> {
     }
     setState(() {
 
-    //  this.getSpinner();
+      //  this.getSpinner();
 
     });
 
@@ -78,12 +79,14 @@ class _AllProductListScreenState extends State<AllProductListScreen> {
 //    });
 // }
   Future<String> getSpinner(){
+
     Firestore.instance.collection("ItemCat").where(widget.productCondition,isEqualTo: widget.productValue).getDocuments().then((QuerySnapshot querySnapshot) => {
       querySnapshot.documents.forEach((doc) {
         print('ambooboooo');
         print(querySnapshot.documents.length);
-        if(catList.length != querySnapshot.documents.length){
+        if((catList.length) != (querySnapshot.documents.length+1)){
           setState(() {
+
             catList.add([doc["strName"],doc["itemId"]]);
             print(doc["strName"]);
             print(doc["itemId"]);
@@ -121,156 +124,146 @@ class _AllProductListScreenState extends State<AllProductListScreen> {
   Widget build(BuildContext context) {
     print("productValueeee");
 
-   // print(widget.cat);
-     getSpinner();
+    // print(widget.cat);
+    getSpinner();
     print(catList);
     return DefaultTabController(
       length: catList.length,
       child: Scaffold(
-        appBar: AppBar(
-          title: Text(widget.pageHeading),
+          appBar: AppBar(
+            title: Text(widget.pageHeading),
 
-          bottom: TabBar(
-            isScrollable: true,
-
-            tabs: List<Widget>.generate(
-              catList.length,
-                  (int index) {
-                return GestureDetector(
-                  onTap: (){
-
+            bottom: TabBar(
+              isScrollable: true,
+              onTap: (index){
+                    print("catList[index][0].toString()");
+                             print(catList[0][0].toString());
+                if(catList[index][0].toString()=="ALL"){
+                  print("ll");
+                  setState(() {
+                    allProductsCubit.fetchProducts(widget.productCondition,widget.productValue);
+                    if (widget.productCondition == null) {
+                      controller.addListener(_scrollListener);
+                    }
+                   // Navigator.pop(context);
+                  });
+                }else{
+                  setState(() {
                     allProductsCubit.fetchProducts("itemId",catList[index][1].toString());
                     if (widget.productCondition == null) {
                       controller.addListener(_scrollListener);
                     }
-                    // setState(() {
-                    //   if(catList[index][0].toString()=="ALL"){
-                    //     setState(() {
-                    //       allProductsCubit.fetchProducts(widget.productCondition,widget.productValue);
-                    //       if (widget.productCondition == null) {
-                    //         controller.addListener(_scrollListener);
-                    //       }
-                    //       Navigator.pop(context);
-                    //     });
-                    //   }else{
-                    //     setState(() {
-                    //       allProductsCubit.fetchProducts("itemId",catList[index][1].toString());
-                    //       if (widget.productCondition == null) {
-                    //         controller.addListener(_scrollListener);
-                    //       }
-                    //       // Navigator.pop(context);
-                    //
-                    //     });
-                    //   }
-                    // });
+                    // Navigator.pop(context);
 
-                  },
-                  child: new Tab(
+                  });
+                }
+                print(index);
+              },
+              tabs: List<Widget>.generate(
+                catList.length,
+                    (int index) {
+                  return  new Tab(
 
                     child: Text(catList[index][0].toString()),
-                  ),
-                );
-              },
-            ),
-          ),
-          actions: <Widget>[
-            InkWell(
-              onTap: () {
-                Navigator.of(context).pushNamed(Routes.searchItemScreen);
+                  );
 
-
-              },
-              child: Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Icon(Icons.search),
+                },
               ),
             ),
-            Visibility(
-              child:   InkWell(
+            actions: <Widget>[
+              InkWell(
                 onTap: () {
-                  // Navigator.of(context).pushNamed(Routes.searchItemScreen);
-                  return showDialog(
-                      context: context,
-                      builder: (BuildContext context) {
-                        return AlertDialog(
-                          title: Text('Filter '),
-                          content: Column(
-                              mainAxisSize: MainAxisSize.min,
-                              children: <Widget>[
-                                Container(
-                                  child: ListView.builder(
-                                    shrinkWrap: true,
-                                    primary: false,
-                                    itemCount: catList != null ? catList.length : 0,
-                                    itemBuilder: (context, index) {
-                                      final item = catList != null ? catList[index] : null;
-                                      return categoryListItem(item,index);
-                                    },
-
-                                  ),
-                                )
-                              ]
-                          ),
-                        );
-                      }
-                  );
-                  // showDialog(
-                  //     context: context,
-                  //
-                  //     builder: (BuildContext context) {
-
-
-
+                  Navigator.of(context).pushNamed(Routes.searchItemScreen);
 
 
                 },
                 child: Padding(
                   padding: const EdgeInsets.all(16.0),
-                  child: Icon(Icons.filter_list),
+                  child: Icon(Icons.search),
                 ),
               ),
-              visible: _visibilty,
-            ),
+              // Visibility(
+              //   child:   InkWell(
+              //     onTap: () {
+              //       // Navigator.of(context).pushNamed(Routes.searchItemScreen);
+              //       return showDialog(
+              //           context: context,
+              //           builder: (BuildContext context) {
+              //             return AlertDialog(
+              //               title: Text('Filter '),
+              //               content: Column(
+              //                   mainAxisSize: MainAxisSize.min,
+              //                   children: <Widget>[
+              //                     Container(
+              //                       child: ListView.builder(
+              //                         shrinkWrap: true,
+              //                         primary: false,
+              //                         itemCount: catList != null ? catList.length : 0,
+              //                         itemBuilder: (context, index) {
+              //                           final item = catList != null ? catList[index] : null;
+              //                           return categoryListItem(item,index);
+              //                         },
+              //
+              //                       ),
+              //                     )
+              //                   ]
+              //               ),
+              //             );
+              //           }
+              //       );
+              //       // showDialog(
+              //       //     context: context,
+              //       //
+              //       //     builder: (BuildContext context) {
+              //
+              //
+              //
+              //
+              //
+              //     },
+              //     child: Padding(
+              //       padding: const EdgeInsets.all(16.0),
+              //       child: Icon(Icons.filter_list),
+              //     ),
+              //   ),
+              //   visible: _visibilty,
+              // ),
 
-          ],
-        ),
-        body: BlocConsumer<AllProductCubit, ResultState<List<ProductModel>>>(
+            ],
+          ),
+          body: Stack(
+              children: <Widget>[
+                // _tabSection(context),
+                BlocConsumer<AllProductCubit, ResultState<List<ProductModel>>>(
 
-          cubit: allProductsCubit,
-          listener:
-              (BuildContext context, ResultState<List<ProductModel>> state) {},
-          builder: (BuildContext context, ResultState<List<ProductModel>> state) {
-            return ResultStateBuilder(
-              state: state,
-
-
-              loadingWidget: (bool isReloading) {
-                //getSpinner();
-                return Center(
-                  child: CommonAppLoader(),
-                );
+                  cubit: allProductsCubit,
+                  listener:
+                      (BuildContext context, ResultState<List<ProductModel>> state) {},
+                  builder: (BuildContext context, ResultState<List<ProductModel>> state) {
+                    return ResultStateBuilder(
+                      state: state,
 
 
-              },
-              errorWidget: (String error) {
-                return Container();
-              },
-              dataWidget: (List<ProductModel> value) {
-                return dataWidget(value);
-              },
-            );
-          },
-        ),
+                      loadingWidget: (bool isReloading) {
+                        //getSpinner();
+                        return Center(
+                          child: CommonAppLoader(),
+                        );
 
 
+                      },
+                      errorWidget: (String error) {
+                        return Container();
+                      },
+                      dataWidget: (List<ProductModel> value) {
+                        return dataWidget(value);
+                      },
+                    );
+                  },
+                ),
 
-        // Stack(
-        //   children: <Widget>[
-        //
-        //     _tabSection(context) ,
-        //
-        //
-        //   ])
+
+              ])
 
 
 
@@ -290,12 +283,17 @@ class _AllProductListScreenState extends State<AllProductListScreen> {
         children: <Widget>[
           Container(
             child: TabBar(
-
+              onTap: (index){
+                print(index);
+              },
+              controller: Tabcontroller ,
               tabs: List<Widget>.generate(
                 catList.length,
                     (int index) {
+
                   return Container(
                     child: new Tab(
+
                       child: Text(catList[index][0].toString()),
                     ),
                   );
@@ -304,13 +302,15 @@ class _AllProductListScreenState extends State<AllProductListScreen> {
 
             ),
           ),
-          Container(
-            //Add this to give height
-            height: MediaQuery.of(context).size.height,
-            child: TabBarView(children: [
-
-            ]),
-          ),
+          // Container(
+          //   //Add this to give height
+          //   height: MediaQuery.of(context).size.height,
+          //   child: TabBarView(children: [
+          //
+          //
+          //
+          //   ]),
+          // ),
         ],
       ),
     );
@@ -358,7 +358,7 @@ class _AllProductListScreenState extends State<AllProductListScreen> {
             if (widget.productCondition == null) {
               controller.addListener(_scrollListener);
             }
-           // Navigator.pop(context);
+            // Navigator.pop(context);
 
           });
         }

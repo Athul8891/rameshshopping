@@ -52,7 +52,7 @@ class PlaceOrderCubit extends Cubit<PlaceOrderState> {
           name: cartModel.name,
           productId: cartModel.productId,
           currency: cartModel.currency,
-          price: cartModel.currentPrice,
+          price: double.parse(cartModel.currentPrice.toStringAsFixed(3)),
           unit: cartModel.unit,
           image: cartModel.image[0],
           noOfItems: cartModel.numOfItems,
@@ -71,7 +71,9 @@ class PlaceOrderCubit extends Cubit<PlaceOrderState> {
         signature: response,
         timeSlot: timeSlots,
         uId: uid,
-        price: cartItemStatus.priceInCart,
+        isAccepted: "0",
+        wholeadress: accountProvider.addressSelected.wholeAddress(),
+        price: double.parse(cartItemStatus.priceInCart.toStringAsFixed(3)),
         orderAddress: accountProvider.addressSelected);
     print(orderModel);
     return orderModel;

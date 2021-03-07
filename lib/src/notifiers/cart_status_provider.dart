@@ -13,8 +13,10 @@ class CartStatusProvider with ChangeNotifier {
           price + (cartItems[index].currentPrice * cartItems[index].numOfItems);
     });
 
-   // double n = num.parse(price.toStringAsFixed(2));
-    return price;
+    double n = num.parse(price.toStringAsFixed(3));
+   print("nnnnnnnn");
+   print(n);
+    return n;
   }
 
   String get currency => noOfItemsInCart > 0 ? cartItems[0]?.currency : "";

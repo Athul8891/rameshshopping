@@ -1,4 +1,5 @@
 import 'package:corazon_customerapp/src/repository/ChekoutApi.dart';
+import 'package:corazon_customerapp/src/ui/screens/benifitpaypage.dart';
 import 'package:corazon_customerapp/src/ui/screens/paymentpage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -20,31 +21,38 @@ import 'package:corazon_customerapp/src/ui/common/common_card.dart';
 import 'package:corazon_customerapp/src/ui/screens/base_screen_mixin.dart';
 
 class CartScreen extends StatefulWidget {
+
+
+  final String id;
+
+  CartScreen({Key key , this.id}) : super(key: key);
   @override
   _CartScreenState createState() => _CartScreenState();
 }
-enum timingSlots { MORNING, NOON,EVENING,NIGHT }
+enum timingSlots {SELECT, MORNING, NOON,EVENING,NIGHT }
 enum paymentOption { NETBANKING, COD,BENIFT,BENIFITPAY }
 
 class _CartScreenState extends State<CartScreen> with BaseScreenMixin {
   var paymentCubit = AppInjector.get<PaymentCubit>();
   var placeOrderCubit = AppInjector.get<PlaceOrderCubit>();
-  var timeSlot = "Between 9Am - 12Pm";
+  var timeSlot = "SELECT";
   var payingOn = "NET BANKING";
   var toggle = true;
   var buttonPress = false;
-  timingSlots _slot = timingSlots.MORNING;
+  timingSlots _slot = timingSlots.SELECT;
   paymentOption _paymthd = paymentOption.NETBANKING;
 
   @override
   void initState() {
     super.initState();
+
   }
 
   @override
   Widget build(BuildContext context) {
 
     return ProviderNotifier<CartStatusProvider>(
+
       child: (CartStatusProvider cartItemStatus) {
         return Scaffold(
           key: scaffoldKey,
@@ -201,6 +209,7 @@ class _CartScreenState extends State<CartScreen> with BaseScreenMixin {
                   indent: 10,
                   endIndent: 10,
                 ),
+                ///netbanbk
                 Row(
                   children: [
                     SizedBox(
@@ -211,7 +220,7 @@ class _CartScreenState extends State<CartScreen> with BaseScreenMixin {
                     SizedBox(
                       width: 5,
                     ),
-                    Text("Net Banking"),
+                    Text("Online Payment\n Visa,Master,AMEX"),
                     Spacer(),
 
                    Radio(
@@ -230,33 +239,8 @@ class _CartScreenState extends State<CartScreen> with BaseScreenMixin {
                   ],
                 ),
                 Divider(),
-                Row(
-                  children: [
-                    SizedBox(
-                      height: 18,
-                      width: 20,
-                      child: Icon(Icons.account_balance_wallet_rounded,size: 18),
-                    ),
-                    SizedBox(
-                      width: 5,
-                    ),
-                    Text("Cash On Delivery"),
-                    Spacer(),
-                    Radio(
-                      value: paymentOption.COD,
-                      groupValue: _paymthd,
-                      onChanged: (paymentOption value) {
-                        setState(() {
-                          _paymthd = value;
-                          payingOn= "CASH ON DELIVERY";
-                          print(payingOn);
 
-                        });
-                      },
-                    ),
-                  ],
-                ),
-                Divider(),
+                ///benifitcard
                 Row(
                   children: [
                     SizedBox(
@@ -267,7 +251,7 @@ class _CartScreenState extends State<CartScreen> with BaseScreenMixin {
                     SizedBox(
                       width: 5,
                     ),
-                    Text("Benifit"),
+                    Text("Benifit Card"),
                     Spacer(),
                     Radio(
                       value: paymentOption.BENIFT,
@@ -284,6 +268,8 @@ class _CartScreenState extends State<CartScreen> with BaseScreenMixin {
                   ],
                 ),
                 Divider(),
+
+                ///benifitpay
                 Row(
                   children: [
                     SizedBox(
@@ -310,6 +296,39 @@ class _CartScreenState extends State<CartScreen> with BaseScreenMixin {
                     ),
                   ],
                 ),
+                Divider(),
+
+
+
+                ///cod
+                Row(
+                  children: [
+                    SizedBox(
+                      height: 18,
+                      width: 20,
+                      child: Icon(Icons.account_balance_wallet_rounded,size: 18),
+                    ),
+                    SizedBox(
+                      width: 5,
+                    ),
+                    Text("Cash On Delivery"),
+                    Spacer(),
+                    Radio(
+                      value: paymentOption.COD,
+                      groupValue: _paymthd,
+                      onChanged: (paymentOption value) {
+                        setState(() {
+                          _paymthd = value;
+                          payingOn= "CASH ON DELIVERY";
+                          print(payingOn);
+
+                        });
+                      },
+                    ),
+                  ],
+                ),
+
+
               ]),
         )) ;
 
@@ -462,13 +481,14 @@ class _CartScreenState extends State<CartScreen> with BaseScreenMixin {
           BlocConsumer<PaymentCubit, PaymentState>(
             cubit: paymentCubit,
             listener: (BuildContext context, PaymentState state) {
-              if (state is PaymentSuccessful) {
+              if (widget.id=="1") {
                 placeOrderCubit.placeOrder(
                   cartItemStatus,
-                  "Sucess",
+                  "Online Payment",
                   timeSlot
 
                 );
+
               }
             },
             builder: (BuildContext context, PaymentState paymentState) {
@@ -500,324 +520,348 @@ class _CartScreenState extends State<CartScreen> with BaseScreenMixin {
                     margin: EdgeInsets.only(right: 20),
                     onTap: () {
                       print("taaaaaaaaaaaaap");
+                      var addressProvider = AppInjector.get<AccountProvider>();
+                      if (addressProvider.addressSelected != null) {
+                        showDialog(
+                            context: context,
 
-                      showDialog(
-                          context: context,
+                            builder: (BuildContext context) {
+                              return StatefulBuilder(
+                                builder: (context, StateSetter setState){
+                                  return  AlertDialog(
 
-                          builder: (BuildContext context) {
+                                    title: Text('Select time slot to deliver'),
+                                    content: Column(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: <Widget>[
+                                        new Container(
+                                            decoration: BoxDecoration(
+                                                borderRadius: BorderRadius.all(Radius.circular(4)),
+                                                border:
+                                                Border.all(color: Colors.tealAccent.withOpacity(0.4), width: 1),
+                                                color: Colors.tealAccent.withOpacity(0.2)),
+                                            margin: EdgeInsets.all(8),
+                                            child: Column(
+                                                crossAxisAlignment: CrossAxisAlignment.start,
+                                                mainAxisAlignment: MainAxisAlignment.center,
+                                                children: <Widget>[
+                                                  ListTile(
+                                                    title:Column(
+                                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                                      mainAxisAlignment: MainAxisAlignment.center,
+                                                      children: <Widget>[
+                                                        Text(
+                                                          "MORNING",
 
-                            return StatefulBuilder(
-                              builder: (context, StateSetter setState){
-                                return  AlertDialog(
+                                                          style: AppTextStyles.medium16PrimaryColor,
+                                                        ),
+                                                        SizedBox(
+                                                          height: 5,
+                                                        ),
+                                                        Text(
+                                                          "Between 9AM-12PM",
+                                                          style: AppTextStyles.medium12Black,
+                                                        )
+                                                      ],
+                                                    ),
+                                                    leading: Radio(
+                                                      value: timingSlots.MORNING,
+                                                      groupValue: _slot,
+                                                      onChanged: (timingSlots value) {
+                                                        setState(() {
+                                                          _slot = value;
+                                                          timeSlot= "Between 9AM-12PM";
+                                                          print(timeSlot);
 
-                                  title: Text('Select time slot to deliver'),
-                                  content: Column(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: <Widget>[
-                                      new Container(
-                                          decoration: BoxDecoration(
-                                              borderRadius: BorderRadius.all(Radius.circular(4)),
-                                              border:
-                                              Border.all(color: Colors.tealAccent.withOpacity(0.4), width: 1),
-                                              color: Colors.tealAccent.withOpacity(0.2)),
-                                          margin: EdgeInsets.all(8),
-                                          child: Column(
-                                              crossAxisAlignment: CrossAxisAlignment.start,
-                                              mainAxisAlignment: MainAxisAlignment.center,
-                                              children: <Widget>[
-                                                ListTile(
-                                                  title:Column(
-                                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                                    mainAxisAlignment: MainAxisAlignment.center,
-                                                    children: <Widget>[
-                                                      Text(
-                                                        "MORNING",
-                                                        style: AppTextStyles.medium16PrimaryColor,
-                                                      ),
-                                                      SizedBox(
-                                                        height: 5,
-                                                      ),
-                                                      Text(
-                                                        "Between 9AM-12PM",
-                                                        style: AppTextStyles.medium12Black,
-                                                      )
-                                                    ],
+                                                        });
+                                                      },
+                                                    ),
                                                   ),
-                                                  leading: Radio(
-                                                    value: timingSlots.MORNING,
-                                                    groupValue: _slot,
-                                                    onChanged: (timingSlots value) {
-                                                      setState(() {
-                                                        _slot = value;
-                                                        timeSlot= "Between 9AM-12PM";
-                                                        print(timeSlot);
 
-                                                      });
-                                                    },
+
+
+                                                ])
+
+
+
+                                        ),
+                                        new Container(
+                                            decoration: BoxDecoration(
+                                                borderRadius: BorderRadius.all(Radius.circular(4)),
+                                                border:
+                                                Border.all(color: Colors.tealAccent.withOpacity(0.4), width: 1),
+                                                color: Colors.tealAccent.withOpacity(0.2)),
+                                            margin: EdgeInsets.all(8),
+                                            child: Column(
+                                                crossAxisAlignment: CrossAxisAlignment.start,
+                                                mainAxisAlignment: MainAxisAlignment.center,
+                                                children: <Widget>[
+                                                  ListTile(
+                                                    title:                          Column(
+                                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                                      mainAxisAlignment: MainAxisAlignment.center,
+                                                      children: <Widget>[
+                                                        Text(
+                                                          "NOON",
+                                                          style: AppTextStyles.medium16PrimaryColor,
+                                                        ),
+                                                        SizedBox(
+                                                          height: 5,
+                                                        ),
+                                                        Text(
+                                                          "Between 12PM-4PM",
+                                                          style: AppTextStyles.medium12Black,
+                                                        )
+                                                      ],
+                                                    ),
+                                                    leading: Radio(
+                                                      value: timingSlots.NOON,
+                                                      groupValue: _slot,
+                                                      onChanged: (timingSlots value) {
+                                                        setState(() {
+                                                          _slot = value;
+                                                          timeSlot= "Between 12PM-4PM";
+                                                          print(timeSlot);
+
+                                                        });
+                                                      },
+                                                    ),
                                                   ),
-                                                ),
 
 
 
-                                              ])
+                                                ])
 
 
 
-                                      ),
-                                      new Container(
-                                          decoration: BoxDecoration(
-                                              borderRadius: BorderRadius.all(Radius.circular(4)),
-                                              border:
-                                              Border.all(color: Colors.tealAccent.withOpacity(0.4), width: 1),
-                                              color: Colors.tealAccent.withOpacity(0.2)),
-                                          margin: EdgeInsets.all(8),
-                                          child: Column(
-                                              crossAxisAlignment: CrossAxisAlignment.start,
-                                              mainAxisAlignment: MainAxisAlignment.center,
-                                              children: <Widget>[
-                                                ListTile(
-                                                  title:                          Column(
-                                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                                    mainAxisAlignment: MainAxisAlignment.center,
-                                                    children: <Widget>[
-                                                      Text(
-                                                        "NOON",
-                                                        style: AppTextStyles.medium16PrimaryColor,
-                                                      ),
-                                                      SizedBox(
-                                                        height: 5,
-                                                      ),
-                                                      Text(
-                                                        "Between 12PM-4PM",
-                                                        style: AppTextStyles.medium12Black,
-                                                      )
-                                                    ],
+                                        ),
+                                        new Container(
+                                            decoration: BoxDecoration(
+                                                borderRadius: BorderRadius.all(Radius.circular(4)),
+                                                border:
+                                                Border.all(color: Colors.tealAccent.withOpacity(0.4), width: 1),
+                                                color: Colors.tealAccent.withOpacity(0.2)),
+                                            margin: EdgeInsets.all(8),
+                                            child: Column(
+                                                crossAxisAlignment: CrossAxisAlignment.start,
+                                                mainAxisAlignment: MainAxisAlignment.center,
+                                                children: <Widget>[
+                                                  ListTile(
+                                                    title:                          Column(
+                                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                                      mainAxisAlignment: MainAxisAlignment.center,
+                                                      children: <Widget>[
+                                                        Text(
+                                                          "EVENING",
+                                                          style: AppTextStyles.medium16PrimaryColor,
+                                                        ),
+                                                        SizedBox(
+                                                          height: 5,
+                                                        ),
+                                                        Text(
+                                                          "Between 4PM-7PM",
+                                                          style: AppTextStyles.medium12Black,
+                                                        )
+                                                      ],
+                                                    ),
+                                                    leading: Radio(
+                                                      value: timingSlots.EVENING,
+                                                      groupValue: _slot,
+                                                      onChanged: (timingSlots value) {
+                                                        setState(() {
+                                                          _slot = value;
+                                                          timeSlot= "Between 4PM-7PM";
+                                                          print(timeSlot);
+
+                                                        });
+                                                      },
+                                                    ),
                                                   ),
-                                                  leading: Radio(
-                                                    value: timingSlots.NOON,
-                                                    groupValue: _slot,
-                                                    onChanged: (timingSlots value) {
-                                                      setState(() {
-                                                        _slot = value;
-                                                        timeSlot= "Between 12PM-4PM";
-                                                        print(timeSlot);
 
-                                                      });
-                                                    },
+
+
+                                                ])
+
+
+
+                                        ),
+                                        new Container(
+                                            decoration: BoxDecoration(
+                                                borderRadius: BorderRadius.all(Radius.circular(4)),
+                                                border:
+                                                Border.all(color: Colors.tealAccent.withOpacity(0.4), width: 1),
+                                                color: Colors.tealAccent.withOpacity(0.2)),
+                                            margin: EdgeInsets.all(8),
+                                            child: Column(
+                                                crossAxisAlignment: CrossAxisAlignment.start,
+                                                mainAxisAlignment: MainAxisAlignment.center,
+                                                children: <Widget>[
+                                                  ListTile(
+                                                    title:                          Column(
+                                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                                      mainAxisAlignment: MainAxisAlignment.center,
+                                                      children: <Widget>[
+                                                        Text(
+                                                          "NIGHT",
+                                                          style: AppTextStyles.medium16PrimaryColor,
+                                                        ),
+                                                        SizedBox(
+                                                          height: 5,
+                                                        ),
+                                                        Text(
+                                                          "Between 7PM-10PM",
+                                                          style: AppTextStyles.medium12Black,
+                                                        )
+                                                      ],
+                                                    ),
+                                                    leading: Radio(
+                                                      value: timingSlots.NIGHT,
+                                                      groupValue: _slot,
+                                                      onChanged: (timingSlots value) {
+                                                        setState(() {
+                                                          _slot = value;
+                                                          timeSlot= "Between 7PM-10PM";
+                                                          print(timeSlot);
+
+                                                        });
+                                                      },
+                                                    ),
                                                   ),
-                                                ),
 
 
 
-                                              ])
+                                                ])
 
 
 
-                                      ),
-                                      new Container(
-                                          decoration: BoxDecoration(
-                                              borderRadius: BorderRadius.all(Radius.circular(4)),
-                                              border:
-                                              Border.all(color: Colors.tealAccent.withOpacity(0.4), width: 1),
-                                              color: Colors.tealAccent.withOpacity(0.2)),
-                                          margin: EdgeInsets.all(8),
-                                          child: Column(
-                                              crossAxisAlignment: CrossAxisAlignment.start,
-                                              mainAxisAlignment: MainAxisAlignment.center,
-                                              children: <Widget>[
-                                                ListTile(
-                                                  title:                          Column(
-                                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                                    mainAxisAlignment: MainAxisAlignment.center,
-                                                    children: <Widget>[
-                                                      Text(
-                                                        "EVENING",
-                                                        style: AppTextStyles.medium16PrimaryColor,
-                                                      ),
-                                                      SizedBox(
-                                                        height: 5,
-                                                      ),
-                                                      Text(
-                                                        "Between 4PM-7PM",
-                                                        style: AppTextStyles.medium12Black,
-                                                      )
-                                                    ],
-                                                  ),
-                                                  leading: Radio(
-                                                    value: timingSlots.EVENING,
-                                                    groupValue: _slot,
-                                                    onChanged: (timingSlots value) {
-                                                      setState(() {
-                                                        _slot = value;
-                                                        timeSlot= "Between 4PM-7PM";
-                                                        print(timeSlot);
+                                        ),
 
-                                                      });
-                                                    },
-                                                  ),
-                                                ),
+                                        SizedBox(height: 10,),
+
+                                        CommonButton(
+                                          title: timeSlot=="SELECT"?"Timeslot Not Selected!":StringsConstants.save,
+                                          titleColor: AppColors.white,
+                                          height: 50,
+                                          replaceWithIndicator: buttonPress,
+                                          //isDisabled:
+                                          margin: EdgeInsets.only(bottom: 40),
+                                          onTap: () async{
+                                            if(timeSlot=="SELECT"){
 
 
-
-                                              ])
-
-
-
-                                      ),
-                                      new Container(
-                                          decoration: BoxDecoration(
-                                              borderRadius: BorderRadius.all(Radius.circular(4)),
-                                              border:
-                                              Border.all(color: Colors.tealAccent.withOpacity(0.4), width: 1),
-                                              color: Colors.tealAccent.withOpacity(0.2)),
-                                          margin: EdgeInsets.all(8),
-                                          child: Column(
-                                              crossAxisAlignment: CrossAxisAlignment.start,
-                                              mainAxisAlignment: MainAxisAlignment.center,
-                                              children: <Widget>[
-                                                ListTile(
-                                                  title:                          Column(
-                                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                                    mainAxisAlignment: MainAxisAlignment.center,
-                                                    children: <Widget>[
-                                                      Text(
-                                                        "NIGHT",
-                                                        style: AppTextStyles.medium16PrimaryColor,
-                                                      ),
-                                                      SizedBox(
-                                                        height: 5,
-                                                      ),
-                                                      Text(
-                                                        "Between 7PM-10PM",
-                                                        style: AppTextStyles.medium12Black,
-                                                      )
-                                                    ],
-                                                  ),
-                                                  leading: Radio(
-                                                    value: timingSlots.NIGHT,
-                                                    groupValue: _slot,
-                                                    onChanged: (timingSlots value) {
-                                                      setState(() {
-                                                        _slot = value;
-                                                        timeSlot= "Between 7PM-10PM";
-                                                        print(timeSlot);
-
-                                                      });
-                                                    },
-                                                  ),
-                                                ),
-
-
-
-                                              ])
-
-
-
-                                      ),
-
-                                      SizedBox(height: 10,),
-
-                                      CommonButton(
-                                        title: StringsConstants.save,
-                                        titleColor: AppColors.white,
-                                        height: 50,
-                                        replaceWithIndicator: buttonPress,
-                                        //isDisabled:
-                                        margin: EdgeInsets.only(bottom: 40),
-                                        onTap: () async{
-                                          setState(() {
-                                            buttonPress =true;
-                                          });
-                                          if(payingOn== "CASH ON DELIVERY"){
-                                            placeOrderCubit.placeOrder(
-                                                cartItemStatus,
-                                                "Payed on Cod",
-                                                timeSlot
-
-                                            );
-                                          }
-                                          else{
-                                            var rsp =  await  checkoutApi(cartItemStatus.priceInCart+ 0.500,DateTime.now().millisecondsSinceEpoch.toString(),DateTime.now().millisecondsSinceEpoch.toString());
-
-                                            print("checkingggg");
-                                            print(rsp['result']);
-                                            if(rsp['result'].toString() =="SUCCESS"){
-                                              var sessionid = rsp['session']['id'];
-                                              print(sessionid);
+                                            }
+                                            else{
                                               setState(() {
-                                                buttonPress =false;
+                                                buttonPress =true;
                                               });
-                                              Navigator.push(
-                                                  context,
-                                                  new MaterialPageRoute(
-                                                      builder: (context) =>   WebViewExample(id: sessionid,)));
+                                              if(payingOn== "CASH ON DELIVERY"){
+                                                placeOrderCubit.placeOrder(
+                                                    cartItemStatus,
+                                                    "Payed on Cod",
+                                                    timeSlot
 
-                                              print(sessionid);
+                                                );
+                                                print("cartItemStatus");
+
+                                              }
+
+                                              if(payingOn== "BENIFIT"){
+                                                Navigator.push(
+                                                    context,
+                                                    new MaterialPageRoute(
+                                                        builder: (context) => BeniftPayPage(id: DateTime.now().millisecondsSinceEpoch.toString(),amnt: (double.parse(cartItemStatus.priceInCart.toStringAsFixed(3))) + (0.500),)));
+                                                print("cartItemStatus");
+
+                                              }
+                                              else{
+
+                                                var rsp = await checkoutApi( (double.parse(cartItemStatus.priceInCart.toStringAsFixed(3))) + (0.500),DateTime.now().millisecondsSinceEpoch.toString(),DateTime.now().millisecondsSinceEpoch.toString());
+
+                                                print("checkingggg");
+                                                print(rsp);
+                                                print(rsp['result']);
+                                                if(rsp['result'].toString() =="SUCCESS"){
+                                                  var sessionid = rsp['session']['id'];
+                                                  print(sessionid);
+                                                  setState(() {
+                                                    buttonPress =false;
+                                                  });
+                                                  Navigator.push(
+                                                      context,
+                                                      new MaterialPageRoute(
+                                                          builder: (context) => WebViewExample(id: sessionid,)));
+
+                                                  print(sessionid);
+                                                }
+
+                                                // var addressProvider = AppInjector.get<AccountProvider>();
+                                                // if (addressProvider.addressSelected != null) {
+                                                // paymentCubit.openCheckout(cartItemStatus.priceInCart);
+                                                // } else {
+                                                //   showSnackBar(title: StringsConstants.noAddressSelected);
+                                                //
+                                                // }
+                                                //  Navigator.pop(context);
+                                              }
                                             }
 
-                                            // var addressProvider = AppInjector.get<AccountProvider>();
-                                            // if (addressProvider.addressSelected != null) {
-                                            // paymentCubit.openCheckout(cartItemStatus.priceInCart);
-                                            // } else {
-                                            //   showSnackBar(title: StringsConstants.noAddressSelected);
-                                            //
-                                            // }
-                                            //  Navigator.pop(context);
-                                          }
 
-                                        },
-                                      )
-                                      // FloatingActionButton.extended(
-                                      //     onPressed: () async{
-                                      //
-                                      //        if(payingOn== "CASH ON DELIVERY"){
-                                      //          placeOrderCubit.placeOrder(
-                                      //              cartItemStatus,
-                                      //              "Payed on Cod",
-                                      //              timeSlot
-                                      //
-                                      //          );
-                                      //        }
-                                      //        else{
-                                      //     var rsp =  await  checkoutApi(cartItemStatus.priceInCart+ 0.500,DateTime.now().millisecondsSinceEpoch.toString(),DateTime.now().millisecondsSinceEpoch.toString());
-                                      //
-                                      //     print("checkingggg");
-                                      //     print(rsp['result']);
-                                      //     if(rsp['result'].toString() =="SUCCESS"){
-                                      //       var sessionid = rsp['session']['id'];
-                                      //       print(sessionid);
-                                      //
-                                      //       Navigator.push(
-                                      //           context,
-                                      //           new MaterialPageRoute(
-                                      //               builder: (context) =>   WebViewExample(id: sessionid,)));
-                                      //
-                                      //       print(sessionid);
-                                      //     }
-                                      //
-                                      //       // var addressProvider = AppInjector.get<AccountProvider>();
-                                      //       // if (addressProvider.addressSelected != null) {
-                                      //         // paymentCubit.openCheckout(cartItemStatus.priceInCart);
-                                      //       // } else {
-                                      //       //   showSnackBar(title: StringsConstants.noAddressSelected);
-                                      //       //
-                                      //       // }
-                                      //     //  Navigator.pop(context);
-                                      //       }
-                                      //
-                                      //     },
-                                      //     label: Text(
-                                      //       "Confirm Order",
-                                      //       style: AppTextStyles.medium14White,
-                                      //     ))
-                                    ],
-                                  ),
-                                );
-                              },
-                            );
+                                          },
+                                        )
+                                        // FloatingActionButton.extended(
+                                        //     onPressed: () async{
+                                        //
+                                        //        if(payingOn== "CASH ON DELIVERY"){
+                                        //          placeOrderCubit.placeOrder(
+                                        //              cartItemStatus,
+                                        //              "Payed on Cod",
+                                        //              timeSlot
+                                        //
+                                        //          );
+                                        //        }
+                                        //        else{
+                                        //     var rsp =  await  checkoutApi(cartItemStatus.priceInCart+ 0.500,DateTime.now().millisecondsSinceEpoch.toString(),DateTime.now().millisecondsSinceEpoch.toString());
+                                        //
+                                        //     print("checkingggg");
+                                        //     print(rsp['result']);
+                                        //     if(rsp['result'].toString() =="SUCCESS"){
+                                        //       var sessionid = rsp['session']['id'];
+                                        //       print(sessionid);
+                                        //
+                                        //       Navigator.push(
+                                        //           context,
+                                        //           new MaterialPageRoute(
+                                        //               builder: (context) =>   WebViewExample(id: sessionid,)));
+                                        //
+                                        //       print(sessionid);
+                                        //     }
+                                        //
+                                        //       // var addressProvider = AppInjector.get<AccountProvider>();
+                                        //       // if (addressProvider.addressSelected != null) {
+                                        //         // paymentCubit.openCheckout(cartItemStatus.priceInCart);
+                                        //       // } else {
+                                        //       //   showSnackBar(title: StringsConstants.noAddressSelected);
+                                        //       //
+                                        //       // }
+                                        //     //  Navigator.pop(context);
+                                        //       }
+                                        //
+                                        //     },
+                                        //     label: Text(
+                                        //       "Confirm Order",
+                                        //       style: AppTextStyles.medium14White,
+                                        //     ))
+                                      ],
+                                    ),
+                                  );
+                                },
+                              );});
+                      } else {
+                        showSnackBar(title: StringsConstants.noAddressSelected);
 
-                          }
-                          );
+                      }
+
+
 
 
 
@@ -831,4 +875,7 @@ class _CartScreenState extends State<CartScreen> with BaseScreenMixin {
       ),
     );
   }
+
+
+
 }

@@ -4,6 +4,8 @@ import 'package:corazon_customerapp/src/models/account_details_model.dart';
 import 'package:corazon_customerapp/src/models/cartModel_model.dart';
 import 'package:corazon_customerapp/src/models/order_model.dart';
 import 'package:corazon_customerapp/src/models/product_model.dart';
+import 'package:corazon_customerapp/src/repository/MailerApi.dart';
+import 'package:corazon_customerapp/src/repository/mailAp.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 import 'auth_repository.dart';
@@ -199,12 +201,38 @@ class FirestoreRepository {
   }
 
   Future<void> placeOrder(OrderModel orderModel) async {
+    // print("xooxoxx");
+    //
+    // var item = orderModel.toJson();
+    // var orditem = item['order_items'];
+    // print(orditem);
     return await _firestore
         .collection("orders")
         // .document(await authRepo.getUid())
         // .collection("orders")
         // .document(orderModel.orderId)
-        .add(orderModel.toJson());
+        .add(orderModel.toJson()).then((value){
+            print("xooxoxx");
+            var item = orderModel.toJson();
+            var orditem = item['order_items'];
+            var ordadrs = item['order_address'];
+            sendEmail(orditem,ordadrs,item);
+
+
+      //Navigator.of(context).pop();
+    });
+
+
+
+  }
+
+  Future<void> sendEmail(orditem, ordadrs, Map<String, dynamic> item,) async {
+    print("seeeeeeeeeeeeeeeeeeeend");
+    var send = await senMail(ordadrs['email'].toString(),item['price'].toString(),item['order_id'].toString(),ordadrs['name'].toString(),ordadrs['email'].toString(),ordadrs['phone'].toString(),item['wholeadress'].toString(),orditem);
+    print("send");
+    print(send);
+
+
   }
 
   Future<void> emptyCart() async {

@@ -11,8 +11,11 @@ class OrderModel {
   String currency;
   String paymentId;
   String timeSlot;
+  String isAccepted;
 
   String signature;
+  String wholeadress;
+  num timestamp;
   Address orderAddress;
 
   OrderModel(
@@ -20,6 +23,7 @@ class OrderModel {
       this.price,
       this.uId,
       this.docId,
+      this.isAccepted,
       this.orderItems,
       this.orderedAt,
         this.timeSlot,
@@ -27,6 +31,8 @@ class OrderModel {
       this.currency,
       this.paymentId,
       this.signature,
+      this.timestamp,
+      this.wholeadress,
       this.orderAddress});
 
   factory OrderModel.fromJson(json) {
@@ -38,9 +44,12 @@ class OrderModel {
       //  docId: json['uId'] as String,
         orderedAt: json['ordered_at'] as String,
         currency: json['currency'] as String,
+        isAccepted: json['currency'] as String,
         paymentId: json['payment_id'] as String,
         signature: json['signature'] as String,
+        wholeadress: json['wholeadress'] as String,
         timeSlot: json['timeSlot'] as String,
+        timestamp: json['timestamp'] as num,
 
         orderAddress: Address.fromDocument(json['order_address']),
         orderItems: (json['order_items'] as List)
@@ -50,15 +59,19 @@ class OrderModel {
 
   Map<String, dynamic> toJson() => <String, dynamic>{
         'order_id': orderId,
-        'price': price,
+        'price': double.parse(price.toStringAsFixed(3)),
         'uId': uId,
+        'isAccepted': isAccepted,
         'ordered_at': DateTime.now().toIso8601String(),
         "order_status": "Ordered",
         "currency": orderItems[0].currency,
         "payment_id": paymentId,
         "signature": signature,
         "timeSlot":timeSlot,
+        "wholeadress":wholeadress,
         "order_address": orderAddress.toJson(),
+        "timestamp":DateTime.now().millisecondsSinceEpoch,
+
         'order_items': List<dynamic>.from(orderItems.map((x) => x.toJson())),
       };
 
@@ -74,7 +87,9 @@ class OrderItem {
   String name;
   String timeSlot;
   String uId;
+  String isAccepted;
   String unit;
+  String wholeadress;
   String currency;
   num price;
   num noOfItems;
@@ -83,10 +98,12 @@ class OrderItem {
       {this.productId,
       this.image,
       this.name,
+      this.isAccepted,
       this.uId,
       this.unit,
         this.timeSlot,
       this.currency,
+      this.wholeadress,
       this.price,
       this.noOfItems});
 
@@ -96,8 +113,10 @@ class OrderItem {
       image: json['image'] as String,
       name: json['name'] as String,
       uId: json['uId'] as String,
+      isAccepted: json['isAccepted'] as String,
       unit: json['unit'] as String,
       timeSlot: json['timeSlot'] as String,
+      wholeadress: json['wholeadress'] as String,
 
       currency: json['currency'] as String,
       price: json['price'] as num,
@@ -110,8 +129,10 @@ class OrderItem {
         'image': image,
         'name': name,
         'uId': uId,
+        'isAccepted': isAccepted,
         'unit': unit,
     'timeSlot': timeSlot,
+    'wholeadress': wholeadress,
 
     'currency': currency,
         'price': price,
@@ -120,6 +141,6 @@ class OrderItem {
 
   @override
   String toString() {
-    return 'OrderItem{productId: $productId, image: $image, name: $name, unit: $unit, currency: $currency, price: $price, noOfItems: $noOfItems,timeSlot: $timeSlot,uId: $uId}';
+    return 'OrderItem{productId: $productId,isAccepted: $isAccepted, image: $image, name: $name, unit: $unit, currency: $currency, price: $price, noOfItems: $noOfItems,timeSlot: $timeSlot,uId: $uId}';
   }
 }

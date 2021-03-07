@@ -151,25 +151,7 @@ class _MyOrdersScreenState extends State<MyOrdersScreen> {
                     SizedBox(
                       height: 10,
                     ),
-                    GestureDetector(
-                      onTap: (){
-                        _displayTextInputDialog(context,orderListIndex);
-                      },
-                      child:  Container(
-                        margin: EdgeInsets.only(left: 20),
-                        padding: EdgeInsets.only(left: 10, right: 10),
-                        height: 30,
-                        width: 120,
-                        alignment: Alignment.center,
-                        decoration: BoxDecoration(
-                            color: AppColors.primaryColor,
-                            borderRadius: BorderRadius.circular(4)),
-                        child: Text(
-                          "Cancel Order",
-                          style: AppTextStyles.medium14White,
-                        ),
-                      ),
-                    ),
+                    canctBt(orderList,orderListIndex),
 
                     SizedBox(
                       height: 20,
@@ -184,6 +166,63 @@ class _MyOrdersScreenState extends State<MyOrdersScreen> {
   }
 
 
+  Widget canctBt(List<OrderModel> orderList, int orderListIndex){
+    var endtime = (orderList[orderListIndex].timestamp)+(300000);
+    var currenttime = DateTime.now().millisecondsSinceEpoch;
+    var diffrence = currenttime-endtime;
+
+
+    print("current  =  "+currenttime.toString()  );
+
+    print( "end  =  "+endtime.toString()  );
+    print(currenttime-endtime);
+    if  (currenttime < endtime){
+      return  GestureDetector(
+        onTap:(){
+          _displayTextInputDialog(context,orderListIndex);
+        },
+        child:  Container(
+          margin: EdgeInsets.only(left: 20),
+          padding: EdgeInsets.only(left: 10, right: 10),
+          height: 30,
+          width: 120,
+          alignment: Alignment.center,
+          decoration: BoxDecoration(
+              color: AppColors.primaryColor,
+              borderRadius: BorderRadius.circular(4)),
+          child:  Text(
+            "Cancel Order",
+            style: AppTextStyles.medium14White,
+          ),
+        ),
+      );
+
+    }
+    else{
+      return  GestureDetector(
+        onTap:(){
+
+        },
+        child:  Container(
+          margin: EdgeInsets.only(left: 20),
+          padding: EdgeInsets.only(left: 10, right: 10),
+          height: 40,
+          width: 120,
+          alignment: Alignment.center,
+          decoration: BoxDecoration(
+              color: Colors.grey,
+              borderRadius: BorderRadius.circular(4)),
+          child:  Text(
+            "Cancellation Timeout!",
+            style: AppTextStyles.medium14White,textAlign: TextAlign.center,
+          ),
+        ),
+      );
+
+    }
+
+
+  }
   Future<void> _displayTextInputDialog(BuildContext context , int index) async {
     return showDialog(
         context: context,
@@ -310,9 +349,12 @@ class _MyOrdersScreenState extends State<MyOrdersScreen> {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+
                     Text(
                       orderItem.name,
-                      style: AppTextStyles.normal14Black,
+                      maxLines: 2,
+                      textAlign: TextAlign.end,
+                      overflow: TextOverflow.ellipsis,
                     ),
                     SizedBox(
                       height: 10,

@@ -88,6 +88,8 @@ class AppTextStyles {
       fontSize: 12,
       decoration: TextDecoration.lineThrough);
 
+
+
   static TextStyle get normal12Color81819ASmall => TextStyle(
       color: AppColors.color81819A,
       fontSize: 10,

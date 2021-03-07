@@ -20,7 +20,7 @@ Future checkoutApi(double amount, String id,String ref) async {
         "apiOperation": "CREATE_CHECKOUT_SESSION",
         "interaction":{
           "operation": "PURCHASE",
-          "returnUrl":"https://nodegateway.herokuapp.com/res"
+          "returnUrl":"https://corazonmart.com/pg/MasterPG/response.php"
 
         },
         "order": {

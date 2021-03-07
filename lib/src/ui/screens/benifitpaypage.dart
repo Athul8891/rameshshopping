@@ -4,19 +4,21 @@ import 'package:corazon_customerapp/src/ui/screens/cart_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
-class WebViewExample extends StatefulWidget {
+class BeniftPayPage extends StatefulWidget {
   final String id;
+  final double amnt;
 
-  WebViewExample({Key key , this.id}) : super(key: key);
+  BeniftPayPage({Key key , this.id,this.amnt}) : super(key: key);
 
   @override
-  WebViewExampleState createState() => WebViewExampleState(id);
+  WebViewExampleState createState() => WebViewExampleState(id,amnt);
 }
 
-class WebViewExampleState extends State<WebViewExample> {
+class WebViewExampleState extends State<BeniftPayPage> {
   String id;
+  double amnt;
 
-  WebViewExampleState(this.id);
+  WebViewExampleState(this.id,this.amnt);
 
   @override
   void initState() {
@@ -29,17 +31,17 @@ class WebViewExampleState extends State<WebViewExample> {
   Widget build(BuildContext context) {
     return WebView(
 
-      initialUrl: "https://corazonmart.com/pg/MasterPG/master.php?SessionId=" + widget.id.toString()+"&&street=test&&city=test&&postcodeZip=987456&&stateProvince=ukrain&&country=USA" ,
+      initialUrl: "https://www.corazonmart.com/pg/Benifit/benifit_pg/request.php?amnt="+widget.amnt.toString()+"&&id="+widget.id.toString() ,
       javascriptMode: JavascriptMode.unrestricted,
       navigationDelegate: (request) {
         print(request.url);
         if (request.url.contains('resultIndicator')) {
-          print("hello");
 
           Navigator.pushReplacement(
               context,
               new MaterialPageRoute(
                   builder: (context) => CartScreen(id: "1",)));
+          print("hello");
           // TODO when api success
         } else if (request.url.contains('connect-fail')) {
           // TODO when api fail
