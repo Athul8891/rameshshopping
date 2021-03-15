@@ -8,6 +8,7 @@ class ProductModel {
   String unit;
   String catId;
   String subId;
+  String barcode;
 
   List<String> categories;
   List<String> prodimages;
@@ -29,6 +30,7 @@ class ProductModel {
         this.catId,
         this.subId,
       this.categories,
+      this.barcode,
       this.currency,
       this.dealOfTheDay,
       this.topProducts,
@@ -46,6 +48,7 @@ class ProductModel {
       productId: json['product_id'] as String,
       catId: json['catId'] as String,
       subId: json['subId'] as String,
+      barcode: json['barcode'] as String,
 
       image: json['image'] as String,
       name: json['strName'] as String,
@@ -70,6 +73,7 @@ class ProductModel {
         'product_id': productId,
         'image': image,
         'name': name,
+        'barcode': barcode,
 
         'catId': catId,
         'subId': subId,

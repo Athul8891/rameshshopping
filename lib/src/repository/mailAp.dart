@@ -4,22 +4,28 @@ import 'package:http/http.dart' as http;
 
 
 
-Future senMail(to,amnt,transcationid,custName,custEmail,custPhone,custAddress,ordrs) async {
+Future senMail(to,amnt,transcationid,custName,custEmail,custPhone,custAddress,barcode,ordrs) async {
   var signupApi = 'https://corazonmart.com/mail/mail.php';
   List ordList = List();
   ordList=ordrs;
-  print("ordrs");
+  print("o11111111111111rdrs");
   print(ordList);
+  print(amnt);
 
+  var price = double.parse(amnt);
+  print("priceeeeeeeee7777eeeeeeee");
 
+    var  amnut= price.toStringAsFixed(3);
+     print(amnut);
   Map<String, String> queryParameters = {
     'to': to,
-    'amnt': amnt,
+    'amnt': amnut.toString(),
     'transcationid': transcationid,
     'custName': custName,
     'custEmail':custEmail,
     'custPhone': custPhone,
-    'custAddress': custAddress
+    'custAddress': custAddress,
+    'barcode': barcode
 
 
   };

@@ -1,5 +1,6 @@
 import 'package:corazon_customerapp/src/repository/ChekoutApi.dart';
 import 'package:corazon_customerapp/src/ui/screens/benifitpaypage.dart';
+import 'package:corazon_customerapp/src/ui/screens/ordercompleted.dart';
 import 'package:corazon_customerapp/src/ui/screens/paymentpage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -19,6 +20,7 @@ import 'package:corazon_customerapp/src/ui/common/cart_item_card.dart';
 import 'package:corazon_customerapp/src/ui/common/common_button.dart';
 import 'package:corazon_customerapp/src/ui/common/common_card.dart';
 import 'package:corazon_customerapp/src/ui/screens/base_screen_mixin.dart';
+import 'package:intl/intl.dart';
 
 class CartScreen extends StatefulWidget {
 
@@ -39,15 +41,22 @@ class _CartScreenState extends State<CartScreen> with BaseScreenMixin {
   var payingOn = "NET BANKING";
   var toggle = true;
   var buttonPress = false;
+  var time24 = 0;
   timingSlots _slot = timingSlots.SELECT;
   paymentOption _paymthd = paymentOption.NETBANKING;
 
   @override
   void initState() {
     super.initState();
-
+    get24hr();
   }
+ void get24hr(){
 
+   var now = DateTime.now();
+   print("hrrrrrrrrrr");
+   time24= int.parse(DateFormat('HH').format(now));
+   print(DateFormat('HH').format(now));
+ }
   @override
   Widget build(BuildContext context) {
 
@@ -251,7 +260,7 @@ class _CartScreenState extends State<CartScreen> with BaseScreenMixin {
                     SizedBox(
                       width: 5,
                     ),
-                    Text("Benifit Card"),
+                    Text(" Benifit Card\n(Bahrain Issued Debit Card)"),
                     Spacer(),
                     Radio(
                       value: paymentOption.BENIFT,
@@ -501,8 +510,14 @@ class _CartScreenState extends State<CartScreen> with BaseScreenMixin {
                       orderNotPlaced: (String message) {},
                       orderSuccessfullyPlaced: () {
                         if (Navigator.canPop(context)) {
-                          Navigator.of(context)
-                              .pushReplacementNamed(Routes.myOrdersScreen);
+                          // Navigator.of(context)
+                          //     .pushReplacementNamed(Routes.myOrdersScreen);
+
+                          Navigator.of(context).pushReplacement(new MaterialPageRoute(
+                              builder: (context) =>PaymentSuccessfull()));
+
+
+
                         }
                       });
                 },
@@ -567,14 +582,19 @@ class _CartScreenState extends State<CartScreen> with BaseScreenMixin {
                                                     leading: Radio(
                                                       value: timingSlots.MORNING,
                                                       groupValue: _slot,
-                                                      onChanged: (timingSlots value) {
+                                                      onChanged:
+
+                                                   //   time24>=12?null:
+
+                                                          (timingSlots value) {
                                                         setState(() {
                                                           _slot = value;
                                                           timeSlot= "Between 9AM-12PM";
                                                           print(timeSlot);
 
                                                         });
-                                                      },
+                                                      }
+                                                      ,
                                                     ),
                                                   ),
 
@@ -617,7 +637,7 @@ class _CartScreenState extends State<CartScreen> with BaseScreenMixin {
                                                     leading: Radio(
                                                       value: timingSlots.NOON,
                                                       groupValue: _slot,
-                                                      onChanged: (timingSlots value) {
+                                                      onChanged:time24>=16?null: (timingSlots value) {
                                                         setState(() {
                                                           _slot = value;
                                                           timeSlot= "Between 12PM-4PM";
@@ -667,7 +687,7 @@ class _CartScreenState extends State<CartScreen> with BaseScreenMixin {
                                                     leading: Radio(
                                                       value: timingSlots.EVENING,
                                                       groupValue: _slot,
-                                                      onChanged: (timingSlots value) {
+                                                      onChanged:time24>=19?null: (timingSlots value) {
                                                         setState(() {
                                                           _slot = value;
                                                           timeSlot= "Between 4PM-7PM";
@@ -717,7 +737,7 @@ class _CartScreenState extends State<CartScreen> with BaseScreenMixin {
                                                     leading: Radio(
                                                       value: timingSlots.NIGHT,
                                                       groupValue: _slot,
-                                                      onChanged: (timingSlots value) {
+                                                      onChanged: time24>=22?null:(timingSlots value) {
                                                         setState(() {
                                                           _slot = value;
                                                           timeSlot= "Between 7PM-10PM";

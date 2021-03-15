@@ -101,7 +101,7 @@ class _MyHomePageState extends State<CatPage> {
                       ),
                           child: Center(
                             child: new Text(document['strName'],
-                              style: TextStyle(fontWeight: FontWeight.normal,color: Colors.black87,backgroundColor: Colors.white38),
+                              style: TextStyle(fontWeight: FontWeight.bold,  color: Colors.black87,backgroundColor: Colors.white38,fontSize: 20.0, ),
 
                             ),
                           ) ,

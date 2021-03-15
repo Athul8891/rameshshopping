@@ -1,4 +1,5 @@
 import 'package:carousel_pro/carousel_pro.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:corazon_customerapp/src/ui/common/cat_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -29,10 +30,31 @@ class _HomePageScreenState extends State<HomePageScreen> {
   ProductDataCubit onSaleCubit =
       AppInjector.get<ProductDataCubit>(instanceName: AppInjector.onSale);
 
+  var arrBanner = [];
+
   @override
   void initState() {
+    getBanner();
     fetchProductData();
     super.initState();
+
+  }
+
+
+  getBanner(){
+    Firestore.instance.collection('Banner').getDocuments()
+        .then((QuerySnapshot querySnapshot) => {
+      querySnapshot.documents.forEach((doc) {
+
+        setState(() {
+          arrBanner.add(NetworkImage(doc["image"]));
+          print("arrBanner");
+          print(arrBanner);
+        });
+
+
+      })
+    });
   }
 
   fetchProductData() async {
@@ -69,14 +91,12 @@ class _HomePageScreenState extends State<HomePageScreen> {
 
               productCatBuilder(catCubit, StringsConstants.catOfTheDay),
                Container(
-                 height: 200,
+                 height: 180,
                  child:Carousel(
                    boxFit: BoxFit.fill,
-                   images: [
-                     NetworkImage('https://img.freepik.com/free-vector/special-offer-big-sale-background_1361-2651.jpg?size=626&ext=jpg&ga=GA1.2.1416119577.1612224000'),
-                     NetworkImage('https://img.freepik.com/free-vector/special-offer-big-sale-background_1361-2651.jpg?size=626&ext=jpg&ga=GA1.2.1416119577.1612224000'),
-                     NetworkImage('https://img.freepik.com/free-vector/special-offer-big-sale-background_1361-2651.jpg?size=626&ext=jpg&ga=GA1.2.1416119577.1612224000'),
-                   ],
+                   images: arrBanner.length != 0
+                       ? arrBanner
+                       : [AssetImage("assets/images/app_logo.png")],
                    autoplay: true,
                    animationCurve: Curves.fastOutSlowIn,
                    animationDuration: Duration(milliseconds: 500),
@@ -278,14 +298,14 @@ class _HomePageScreenState extends State<HomePageScreen> {
                       String value;
 
                       if (title == StringsConstants.dealOfTheDay) {
-                        condition = "catId";
-                        value = "S01";
+                        condition = "dealOfTheDay";
+                        value = "true";
                       } else if (title == StringsConstants.topProducts) {
-                        condition = "catId";
-                        value = "B03";
+                        condition = "topProducts";
+                        value = "true";
                       } else if (title == StringsConstants.onSale) {
-                        condition = "catId";
-                        value = "B03";
+                        condition = "onSale";
+                        value = "true";
                       }
                       Navigator.of(context).pushNamed(
                           Routes.allProductListScreen,

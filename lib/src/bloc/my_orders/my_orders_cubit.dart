@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:corazon_customerapp/src/repository/orderCancelApi.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:corazon_customerapp/src/bloc/base_states/result_state/result_state.dart';
 import 'package:corazon_customerapp/src/di/app_injector.dart';
@@ -27,6 +28,7 @@ class MyOrdersCubit extends Cubit<ResultState<List<OrderModel>>> {
       });
       emit(ResultState.data(data: _orderList.toSet().toList()));
     } catch (e) {
+      print("erroooooor");
       emit(ResultState.error(error: e.toString()));
     }
   }
@@ -42,10 +44,14 @@ class MyOrdersCubit extends Cubit<ResultState<List<OrderModel>>> {
             // "id": uid.toString(),
             "order_status": "Canceled",
           }) .then((value){
+
+        print("ordersssTTTTTTTTsss");
+        print(_documents[i].data['order_address'].toString());
+        var ordadrs =_documents[i].data['order_address'];
+        orderCancelApi(ordadrs['email'].toString(),ordadrs['name'].toString());
             print("]+sucess");
         _orderList = List<OrderModel>.generate(_documents.length, (index) {
-          print("orderssssss");
-          print(_documents[index].documentID);
+
           //     _orderList[index].docId =_documents[index].documentID;
           // OrderModel.fromJson(_documents[index].)
           //_documents

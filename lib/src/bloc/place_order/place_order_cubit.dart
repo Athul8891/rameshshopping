@@ -50,7 +50,7 @@ class PlaceOrderCubit extends Cubit<PlaceOrderState> {
         CartModel cartModel = cartItems[index];
         return OrderItem(
           name: cartModel.name,
-          productId: cartModel.productId,
+          productId: cartModel.barcode,
           currency: cartModel.currency,
           price: double.parse(cartModel.currentPrice.toStringAsFixed(3)),
           unit: cartModel.unit,

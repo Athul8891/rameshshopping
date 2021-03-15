@@ -20,20 +20,20 @@ class OrderModel {
 
   OrderModel(
       {this.orderId,
-      this.price,
-      this.uId,
-      this.docId,
-      this.isAccepted,
-      this.orderItems,
-      this.orderedAt,
+        this.price,
+        this.uId,
+        this.docId,
+        this.isAccepted,
+        this.orderItems,
+        this.orderedAt,
         this.timeSlot,
-      this.orderStatus,
-      this.currency,
-      this.paymentId,
-      this.signature,
-      this.timestamp,
-      this.wholeadress,
-      this.orderAddress});
+        this.orderStatus,
+        this.currency,
+        this.paymentId,
+        this.signature,
+        this.timestamp,
+        this.wholeadress,
+        this.orderAddress});
 
   factory OrderModel.fromJson(json) {
     return OrderModel(
@@ -41,7 +41,7 @@ class OrderModel {
         price: json['price'] as num,
         orderStatus: json['order_status'] as String,
         uId: json['uId'] as String,
-      //  docId: json['uId'] as String,
+        //  docId: json['uId'] as String,
         orderedAt: json['ordered_at'] as String,
         currency: json['currency'] as String,
         isAccepted: json['currency'] as String,
@@ -58,22 +58,22 @@ class OrderModel {
   }
 
   Map<String, dynamic> toJson() => <String, dynamic>{
-        'order_id': orderId,
-        'price': double.parse(price.toStringAsFixed(3)),
-        'uId': uId,
-        'isAccepted': isAccepted,
-        'ordered_at': DateTime.now().toIso8601String(),
-        "order_status": "Ordered",
-        "currency": orderItems[0].currency,
-        "payment_id": paymentId,
-        "signature": signature,
-        "timeSlot":timeSlot,
-        "wholeadress":wholeadress,
-        "order_address": orderAddress.toJson(),
-        "timestamp":DateTime.now().millisecondsSinceEpoch,
+    'order_id': orderId,
+    'price': double.parse(price.toStringAsFixed(3)),
+    'uId': uId,
+    'isAccepted': isAccepted,
+    'ordered_at': DateTime.now().toIso8601String(),
+    "order_status": "Ordered",
+    "currency": orderItems[0].currency,
+    "payment_id": paymentId,
+    "signature": signature,
+    "timeSlot":timeSlot,
+    "wholeadress":wholeadress,
+    "order_address": orderAddress.toJson(),
+    "timestamp":DateTime.now().millisecondsSinceEpoch,
 
-        'order_items': List<dynamic>.from(orderItems.map((x) => x.toJson())),
-      };
+    'order_items': List<dynamic>.from(orderItems.map((x) => x.toJson())),
+  };
 
   @override
   String toString() {
@@ -89,6 +89,7 @@ class OrderItem {
   String uId;
   String isAccepted;
   String unit;
+  String barcode;
   String wholeadress;
   String currency;
   num price;
@@ -96,16 +97,16 @@ class OrderItem {
 
   OrderItem(
       {this.productId,
-      this.image,
-      this.name,
-      this.isAccepted,
-      this.uId,
-      this.unit,
+        this.image,
+        this.name,
+        this.isAccepted,
+        this.uId,
+        this.unit,
         this.timeSlot,
-      this.currency,
-      this.wholeadress,
-      this.price,
-      this.noOfItems});
+        this.currency,
+        this.wholeadress,
+        this.price,
+        this.noOfItems});
 
   factory OrderItem.fromJson(json) {
     return OrderItem(
@@ -125,19 +126,19 @@ class OrderItem {
   }
 
   Map<String, dynamic> toJson() => <String, dynamic>{
-        'product_id': productId,
-        'image': image,
-        'name': name,
-        'uId': uId,
-        'isAccepted': isAccepted,
-        'unit': unit,
+    'product_id': productId,
+    'image': image,
+    'name': name,
+    'uId': uId,
+    'isAccepted': isAccepted,
+    'unit': unit,
     'timeSlot': timeSlot,
     'wholeadress': wholeadress,
 
     'currency': currency,
-        'price': price,
-        'no_of_items': noOfItems,
-      };
+    'price': price,
+    'no_of_items': noOfItems,
+  };
 
   @override
   String toString() {

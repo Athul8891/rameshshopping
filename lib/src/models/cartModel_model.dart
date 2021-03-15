@@ -6,6 +6,7 @@ class CartModel {
   //String image;
   String name;
   String unit;
+  String barcode;
   List<String> image;
 
   String currency;
@@ -21,6 +22,7 @@ class CartModel {
       // this.prodimages,
       this.currency,
       this.currentPrice,
+      this.barcode,
       this.quantityPerUnit,
       this.numOfItems});
 
@@ -33,6 +35,7 @@ class CartModel {
       image:
       (json['sellImages'] as List)?.map((e) => e as String)?.toList(),
       currency: json['currency'] as String,
+      barcode: json['barcode'] as String,
       currentPrice: json['current_price'] as num,
       quantityPerUnit: json['quantity_per_unit'] as num,
       numOfItems: json['no_of_items'] as num,
@@ -45,6 +48,7 @@ class CartModel {
         'name': name,
         'unit': unit,
         'currency': currency,
+        'barcode': barcode,
 
         'current_price': currentPrice,
         'quantity_per_unit': quantityPerUnit,
@@ -57,6 +61,7 @@ class CartModel {
         image: productModel.prodimages,
         name: productModel.name,
         unit: productModel.unit,
+        barcode: productModel.barcode,
 
         currency: productModel.currency,
         currentPrice: productModel.currentPrice,

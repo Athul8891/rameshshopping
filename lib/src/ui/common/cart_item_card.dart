@@ -45,62 +45,58 @@ class _CartItemCardState extends State<CartItemCard> {
             children: [
               Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: <Widget>[
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      CachedNetworkImage(
-                        imageUrl: widget.cartModel.image[0].toString(),
-                        height: 68,
-                        width: 68,
-                        fit: BoxFit.fill,
-                      ),
-                      SizedBox(
-                        width: 20,
-                      ),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            widget.cartModel.name,
-                            style: TextStyle(
-                                fontWeight: FontWeight.w500,
-                                fontSize: 15,
-                                color: AppColors.black),
-                          ),
-                          SizedBox(
-                            height: 10,
-                          ),
-                          Text(
-                            "${widget.cartModel.currency}${widget.cartModel.currentPrice} / ${widget.cartModel.quantityPerUnit} ${widget.cartModel.unit}",
-                            style: TextStyle(
-                                fontSize: 14, color: AppColors.color81819A),
-                          ),
-                        ],
-                      )
-                    ],
+                children: [
+                  CachedNetworkImage(
+                    imageUrl: widget.cartModel.image[0].toString(),
+                    height: 68,
+                    width: 68,
+                    fit: BoxFit.fill,
                   ),
-                  BlocBuilder<CartItemCubit, CartItemState>(
-                    cubit: cartItemCubit,
-                    builder: (BuildContext context, CartItemState state) {
-                      if (state is CartDeleteLoading) {
-                        return CommonAppLoader(
-                          size: 20,
-                        );
-                      }
-                      return Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: ActionText(
-                          StringsConstants.deleteCaps,
-                          onTap: () {
-                            cartItemCubit.deleteItem(widget.cartModel);
-                          },
+                  SizedBox(
+                    width: 20,
+                  ),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          widget.cartModel.name,
+                          style: TextStyle(
+                              fontWeight: FontWeight.w500,
+                              fontSize: 15,
+                              color: AppColors.black),
                         ),
-                      );
-                    },
+                        SizedBox(
+                          height: 10,
+                        ),
+                        Text(
+                          "${widget.cartModel.currency}${widget.cartModel.currentPrice} / ${widget.cartModel.quantityPerUnit} ${widget.cartModel.unit}",
+                          style: TextStyle(
+                              fontSize: 14, color: AppColors.color81819A),
+                        ),
+                      ],
+                    ),
                   )
                 ],
+              ),
+              BlocBuilder<CartItemCubit, CartItemState>(
+                cubit: cartItemCubit,
+                builder: (BuildContext context, CartItemState state) {
+                  if (state is CartDeleteLoading) {
+                    return CommonAppLoader(
+                      size: 20,
+                    );
+                  }
+                  return Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: ActionText(
+                      StringsConstants.deleteCaps,
+                      onTap: () {
+                        cartItemCubit.deleteItem(widget.cartModel);
+                      },
+                    ),
+                  );
+                },
               ),
               SizedBox(
                 height: 26,

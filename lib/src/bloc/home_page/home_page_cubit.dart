@@ -34,19 +34,19 @@ class ProductDataCubit extends Cubit<ResultState<List<ProductModel>>> {
           root = "MainCat";
           break;
         case ProductData.DealOfTheDay:
-          condition = "catId";
-          value = "S01";
+          condition = "dealOfTheDay";
+          value = "true";
           root = "Product";
           break;
         case ProductData.OnSale:
-          condition = "catId";
-          value = "B03";
+          condition = "topProducts";
+          value = "true";
           root = "Product";
 
           break;
         case ProductData.TopProducts:
-          condition = "catId";
-          value = "B03";
+          condition = "onSale";
+          value = "true";
           root = "Product";
 
           break;

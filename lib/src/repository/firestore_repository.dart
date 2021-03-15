@@ -6,6 +6,7 @@ import 'package:corazon_customerapp/src/models/order_model.dart';
 import 'package:corazon_customerapp/src/models/product_model.dart';
 import 'package:corazon_customerapp/src/repository/MailerApi.dart';
 import 'package:corazon_customerapp/src/repository/mailAp.dart';
+import 'package:corazon_customerapp/src/repository/orderCancelApi.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 import 'auth_repository.dart';
@@ -216,7 +217,12 @@ class FirestoreRepository {
             var item = orderModel.toJson();
             var orditem = item['order_items'];
             var ordadrs = item['order_address'];
-            sendEmail(orditem,ordadrs,item);
+            var price = item['price'];
+            print("priceeeeeeeeeeeeeeeee");
+            print(price.toStringAsFixed(3));
+            sendEmail(orditem,ordadrs,item,price);
+
+
 
 
       //Navigator.of(context).pop();
@@ -226,10 +232,10 @@ class FirestoreRepository {
 
   }
 
-  Future<void> sendEmail(orditem, ordadrs, Map<String, dynamic> item,) async {
-    print("seeeeeeeeeeeeeeeeeeeend");
-    var send = await senMail(ordadrs['email'].toString(),item['price'].toString(),item['order_id'].toString(),ordadrs['name'].toString(),ordadrs['email'].toString(),ordadrs['phone'].toString(),item['wholeadress'].toString(),orditem);
-    print("send");
+  Future<void> sendEmail(orditem, ordadrs, Map<String, dynamic> item,price) async {
+    print("seeeeeeeeeee55555555555555555eeeeeeeeend");
+    var send = await senMail(ordadrs['email'].toString(),price.toString(),item['order_id'].toString(),ordadrs['name'].toString(),ordadrs['email'].toString(),ordadrs['phone'].toString(),item['wholeadress'].toString(),item['barcode'].toString(),orditem);
+    print("se444444444444444444444444444nd");
     print(send);
 
 

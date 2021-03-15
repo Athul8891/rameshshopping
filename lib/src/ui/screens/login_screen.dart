@@ -1,3 +1,4 @@
+import 'package:corazon_customerapp/src/res/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:corazon_customerapp/src/core/utils/validator.dart';
@@ -48,7 +49,7 @@ class _LoginScreenState extends State<LoginScreen> {
           ),
           SafeArea(
             child: Scaffold(
-              backgroundColor: Colors.transparent,
+              backgroundColor: AppColors.color96C160,
               // backgroundColor: Styles.transparent,
 //            floatingActionButton: _floatingActionButton(),
               floatingActionButtonLocation:

@@ -1,6 +1,6 @@
 name: corazon_customerapp
 description: A new Flutter project.
-version: 1.0.0+1
+version: 1.0.1+2
 
 environment:
   sdk: ">=2.7.0 <3.0.0"
@@ -33,7 +33,7 @@ dependencies:
   provider: 4.3.1
   flushbar: ^1.10.4
   webview_flutter: ^1.0.7
-
+  lottie: ^0.7.0+1
 
 dev_dependencies:
   flutter_test:
@@ -52,6 +52,7 @@ flutter:
     #Images
     - assets/images/app_logo.png
     - assets/images/logologin.png
+    - assets/images/PaymentSuccessful.json
 
 
   fonts:

@@ -95,7 +95,7 @@ class ProductCard extends StatelessWidget {
                 // ),
               ],
             ),
-            Text(
+            Text(productModel.actualPrice==0?"":
               "${"BHD "}${productModel.actualPrice.toStringAsFixed(3)}",
               style: AppTextStyles.normal12Color81819AStroke,
             ),

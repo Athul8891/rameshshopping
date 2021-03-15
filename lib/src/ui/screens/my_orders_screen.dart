@@ -331,6 +331,7 @@ class _MyOrdersScreenState extends State<MyOrdersScreen> {
       margin: EdgeInsets.only(top: 16, bottom: 20),
       child: Card(
           child: Container(
+
         padding: EdgeInsets.all(15),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -346,24 +347,25 @@ class _MyOrdersScreenState extends State<MyOrdersScreen> {
                 SizedBox(
                   width: 10,
                 ),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
 
-                    Text(
-                      orderItem.name,
-                      maxLines: 2,
-                      textAlign: TextAlign.end,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                    SizedBox(
-                      height: 10,
-                    ),
-                    Text(
-                      "${orderItem.currency} ${orderItem.price} / ${orderItem.unit}",
-                      style: AppTextStyles.normal14Color81819A,
-                    ),
-                  ],
+                      Text(
+                        orderItem.name,
+                        textAlign: TextAlign.end,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      Text(
+                        "${orderItem.currency} ${orderItem.price} / ${orderItem.unit}",
+                        style: AppTextStyles.normal14Color81819A,
+                      ),
+                    ],
+                  ),
                 )
               ],
             ),
