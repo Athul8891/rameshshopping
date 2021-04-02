@@ -6,8 +6,8 @@ import 'package:http/http.dart' as http;
 
 Future checkoutApi(double amount, String id,String ref) async {
   String url = "https://afs.gateway.mastercard.com/api/rest/version/57/merchant/TEST100069450/session";
-  String username = 'merchant.TEST100069450';
-  String password = '67a64bac33288a690bd0a4736b95444f';
+  String username = 'merchant.100069450';
+  String password = '56ddbb34eb6598cf3a9cabca5726f614';
   String basicAuth =
       'Basic ' + base64Encode(utf8.encode('$username:$password'));
   print(basicAuth);

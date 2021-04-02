@@ -68,16 +68,7 @@ class _AllProductListScreenState extends State<AllProductListScreen> {
     super.initState();
   }
 
-//  void loadc(){
-//    setState(() {
-//      allProductsCubit.fetchProducts("itemId",catList[1].toString());
-//      if (widget.productCondition == null) {
-//        controller.addListener(_scrollListener);
-//      }
-//      // Navigator.pop(context);
-//
-//    });
-// }
+
   Future<String> getSpinner(){
 
     Firestore.instance.collection("ItemCat").where(widget.productCondition,isEqualTo: widget.productValue).getDocuments().then((QuerySnapshot querySnapshot) => {
@@ -95,10 +86,7 @@ class _AllProductListScreenState extends State<AllProductListScreen> {
 
         }
 
-
-
-
-        print(catList);
+      print(catList);
 
 
       })

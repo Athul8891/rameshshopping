@@ -30,6 +30,14 @@ class _MyHomePageState extends State<CatPage> {
     print("catId");
 
     print(catId);
+    print(catHeading);
+    // if(catId=="SP001"){
+    //   Navigator.of(context).pushNamed(
+    //       Routes.allProductListScreen,
+    //       arguments: AllProductListScreenArguments(
+    //           productCondition: catId,productValue: "true",pageHeading:catHeading ));
+    // }
+
     super.initState();
   }
   void getSpinner(String productCondition,String productValue){
