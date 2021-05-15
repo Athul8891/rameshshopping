@@ -11,8 +11,13 @@ Future senMail(to,amnt,transcationid,custName,custEmail,custPhone,custAddress,ba
   print("o11111111111111rdrs");
   print(ordList);
   print(amnt);
+  var del =0.500;
 
-  var price = double.parse(amnt);
+  if(double.parse(amnt)>3.00){
+
+    del=0.0;
+  }
+  var price = double.parse(amnt)+del;
   print("priceeeeeeeee7777eeeeeeee");
 
     var  amnut= price.toStringAsFixed(3);

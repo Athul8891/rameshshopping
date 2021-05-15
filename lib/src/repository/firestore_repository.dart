@@ -8,8 +8,11 @@ import 'package:corazon_customerapp/src/repository/MailerApi.dart';
 import 'package:corazon_customerapp/src/repository/mailAp.dart';
 import 'package:corazon_customerapp/src/repository/orderCancelApi.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-
+import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'auth_repository.dart';
+import 'dart:io';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class FirestoreRepository {
   var authRepo = AppInjector.get<AuthRepository>();
@@ -233,10 +236,15 @@ class FirestoreRepository {
   }
 
   Future<void> sendEmail(orditem, ordadrs, Map<String, dynamic> item,price) async {
+
+    SharedPreferences prefs =
+    await SharedPreferences.getInstance();
+    prefs.setString("timeSlot", "SELECT");
+    print("cartItemStatus");
     print("seeeeeeeeeee55555555555555555eeeeeeeeend");
     var send = await senMail(ordadrs['email'].toString(),price.toString(),item['order_id'].toString(),ordadrs['name'].toString(),ordadrs['email'].toString(),ordadrs['phone'].toString(),item['wholeadress'].toString(),item['barcode'].toString(),orditem);
     print("se444444444444444444444444444nd");
-    print(send);
+    print(price);
 
 
   }
@@ -253,4 +261,79 @@ class FirestoreRepository {
       }
     });
   }
+
+
+  Future<void> checkCoupon(code) async {
+    final FirebaseUser user = await auth.currentUser();
+    final uid = user.uid;
+    print("xoxoxox");
+    print(uid);
+
+    var rslt = "";
+
+    _firestore.collection('coupon')
+        .document(code)
+        .get()
+        .then((DocumentSnapshot documentSnapshot) {
+
+      if (documentSnapshot.exists) {
+
+             ///checking user here had applied code before
+
+        _firestore.collection('coupon')
+            .document(code).collection(code).document(uid)
+            .get()
+            .then((DocumentSnapshot documentSnapshot) {
+
+          if (documentSnapshot.exists) {
+
+            rslt="Coupon code used before !";
+
+          }
+          else{
+
+            _firestore.collection("coupon").document(code).collection(code).document(uid).setData(
+                {
+                  // "id": uid.toString(),
+                  "isUsed":true,
+
+
+
+                }
+
+            ) .then((value){
+              rslt ="Coupon code successfully applied !";
+              //Navigator.of(context).pop();
+            })
+                .catchError((error) {
+              rslt ="Failed to connect sever";
+
+
+            });
+
+
+
+          }
+
+        }
+
+        );
+      }
+      else{
+        rslt="Invalid code used";
+      }
+
+    }
+
+    ) .catchError((error) {
+
+      rslt ="Failed to connect sever";
+    });
+
+
+    return rslt ;
+  }
+
+
+
 }

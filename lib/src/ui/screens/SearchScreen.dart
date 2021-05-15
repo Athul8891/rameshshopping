@@ -36,7 +36,17 @@ class _SearchItemScreenState extends State<SearchItemScreen> {
               return Center(
                 child: CommonAppLoader(),
               );
-            }, productList: (List<ProductModel> productList) {
+            }
+            , productList: (List<ProductModel> productList) {
+              print("seachlisssssst");
+              print(productList);
+              if(productList.isEmpty){
+                return Center(
+                  child: SelectableText("Item not found ! \n  Please contact our Customer Care.\n Whatsapp 33653517", textAlign: TextAlign.center,),
+                );
+              }
+
+
               return productView(productList);
             });
           },

@@ -33,6 +33,8 @@ class MyOrdersCubit extends Cubit<ResultState<List<OrderModel>>> {
     }
   }
   cancelOrders(int i) async {
+
+    var ok ='OK';
     emit(ResultState.loading());
     try {
       _documents = await firebaseRepo.getAllOrders();
@@ -50,6 +52,8 @@ class MyOrdersCubit extends Cubit<ResultState<List<OrderModel>>> {
         var ordadrs =_documents[i].data['order_address'];
         orderCancelApi(ordadrs['email'].toString(),ordadrs['name'].toString());
             print("]+sucess");
+
+            //return ok;
         _orderList = List<OrderModel>.generate(_documents.length, (index) {
 
           //     _orderList[index].docId =_documents[index].documentID;
@@ -64,15 +68,17 @@ class MyOrdersCubit extends Cubit<ResultState<List<OrderModel>>> {
       }).catchError((error) {
         print("]+fail");
 
-        _orderList = List<OrderModel>.generate(_documents.length, (index) {
-          print("orderssssss");
-          print(_documents[index].documentID);
-          //     _orderList[index].docId =_documents[index].documentID;
-          // OrderModel.fromJson(_documents[index].)
-          //_documents
-          return OrderModel.fromJson(_documents[index]);
-        });
-        emit(ResultState.data(data: _orderList.toSet().toList()));
+
+        return "fail";
+        // _orderList = List<OrderModel>.generate(_documents.length, (index) {
+        //   print("orderssssss");
+        //   print(_documents[index].documentID);
+        //   //     _orderList[index].docId =_documents[index].documentID;
+        //   // OrderModel.fromJson(_documents[index].)
+        //   //_documents
+        //   return OrderModel.fromJson(_documents[index]);
+        // });
+        // emit(ResultState.data(data: _orderList.toSet().toList()));
 
       });
 

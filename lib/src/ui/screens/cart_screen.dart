@@ -1,4 +1,5 @@
 import 'package:corazon_customerapp/src/repository/ChekoutApi.dart';
+import 'package:corazon_customerapp/src/repository/coupon.dart';
 import 'package:corazon_customerapp/src/ui/screens/benifitpaypage.dart';
 import 'package:corazon_customerapp/src/ui/screens/ordercompleted.dart';
 import 'package:corazon_customerapp/src/ui/screens/paymentpage.dart';
@@ -20,18 +21,20 @@ import 'package:corazon_customerapp/src/ui/common/cart_item_card.dart';
 import 'package:corazon_customerapp/src/ui/common/common_button.dart';
 import 'package:corazon_customerapp/src/ui/common/common_card.dart';
 import 'package:corazon_customerapp/src/ui/screens/base_screen_mixin.dart';
+import 'package:corazon_customerapp/src/repository/firestore_repository.dart';
 import 'package:intl/intl.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class CartScreen extends StatefulWidget {
 
 
-  final String id;
+   String id;
 
   CartScreen({Key key , this.id}) : super(key: key);
   @override
   _CartScreenState createState() => _CartScreenState();
 }
-enum timingSlots {SELECT, MORNING, NOON,EVENING,NIGHT }
+enum timingSlots {SELECT, MORNING, NOON,EVENING,NIGHT,MIDNIGHT }
 enum paymentOption { NETBANKING, COD,BENIFT,BENIFITPAY }
 
 class _CartScreenState extends State<CartScreen> with BaseScreenMixin {
@@ -42,27 +45,119 @@ class _CartScreenState extends State<CartScreen> with BaseScreenMixin {
   var toggle = true;
   var buttonPress = false;
   var time24 = 0;
+  var nine = true;
+  var twelev = true;
+  var sixteen = true;
+  var nineten = true;
+  var midnight = true;
+  var onlineTimeSlot= "";
+  var delv = 0.500;
   timingSlots _slot = timingSlots.SELECT;
   paymentOption _paymthd = paymentOption.NETBANKING;
+  TextEditingController couponController = TextEditingController();
 
   @override
   void initState() {
     super.initState();
-    get24hr();
-  }
- void get24hr(){
+    // setState(() {
+    //   widget.id="1";
+    // });
 
-   var now = DateTime.now();
-   print("hrrrrrrrrrr");
-   time24= int.parse(DateFormat('HH').format(now));
-   print(DateFormat('HH').format(now));
- }
+    print(widget.id);
+
+    get24hr();
+    getTimeSlot();
+  }
+
+  void timerSched(){
+    print("timeeeeeeeeeeeeeeeeeeeeeee");
+    print(time24);
+    if(time24>=9){
+      setState(() {///9pm-12pm
+        nine=false;
+        print("timeeeeeeeeeeeeeeeeeeeeeee");
+        print(nine);
+      });
+    }
+    if( time24>=12){
+      setState(() {///12-3pm
+        twelev=false;
+      });
+    }
+    if( time24>=15){ ///3pm-6pm
+      setState(() {
+        sixteen=false;
+      });
+    }
+    if(time24>=18){///6pm-8pm
+      setState(() {
+        nineten=false;
+        nine=true;
+        twelev=true;
+        sixteen=true;
+
+      });
+    }
+    if(time24>=20){///8pm-10pm
+      setState(() {
+        midnight=false;
+        nineten=true;
+        nine=true;
+        twelev=true;
+        sixteen=true;
+
+      });
+    }
+    if(time24>=22){///10
+      setState(() {
+        midnight=true;
+        nineten=true;
+        nine=true;
+        twelev=true;
+        sixteen=true;
+
+      });
+    }
+
+
+
+  }
+  void get24hr(){
+
+    var now = DateTime.now();
+    print("hrrrrrrrrrr");
+    time24= int.parse(DateFormat('HH').format(now));
+    print(DateFormat('HH').format(now));
+    timerSched();
+  }
+  void getTimeSlot() async {
+    var prefs = await SharedPreferences.getInstance();
+
+    var strKey = prefs.getString('timeSlot');
+    setState(() {
+      onlineTimeSlot =strKey;
+
+    });
+
+  }
+
+
   @override
   Widget build(BuildContext context) {
 
     return ProviderNotifier<CartStatusProvider>(
 
       child: (CartStatusProvider cartItemStatus) {
+        // ignore: unrelated_type_equality_checks
+        if (widget.id=="1") {
+          placeOrderCubit.placeOrder(
+              cartItemStatus,
+              "Online Payment",
+              onlineTimeSlot
+
+          );
+
+        }
         return Scaffold(
           key: scaffoldKey,
           backgroundColor: AppColors.colorF8F8F8,
@@ -132,32 +227,33 @@ class _CartScreenState extends State<CartScreen> with BaseScreenMixin {
         context: context,
         builder: (context) {
           return AlertDialog(
-            title: Text('Apply the Coupon'),
-            content: Container(
-              height: 150,
-              child:             Column(
-                children: [
-                  TextField(
-                    onChanged: (value) {
+              title: Text('Apply the Coupon'),
+              content: Container(
+                height: 150,
+                child:             Column(
+                  children: [
+                    TextField(
+                      controller: couponController,
+                      onChanged: (value) {
 
-                    },
-                    //  controller: _textFieldController,
-                    decoration: InputDecoration(hintText: "Enter the code !"),
-                  ),
- SizedBox(height: 30,),
-                  FloatingActionButton.extended(
-                      onPressed: () {
-
-
-                        Navigator.pop(context);
                       },
-                      label: Text(
-                        "Apply",
-                        style: AppTextStyles.medium14White,
-                      )),
-                ],
-              ),
-            )
+                      //  controller: _textFieldController,
+                      decoration: InputDecoration(hintText: "Enter the code !"),
+                    ),
+                    SizedBox(height: 30,),
+                    FloatingActionButton.extended(
+                        onPressed: () {
+                        // var rsp = checkCoupon(couponController.text.toString());
+
+                          Navigator.pop(context);
+                        },
+                        label: Text(
+                          "Apply",
+                          style: AppTextStyles.medium14White,
+                        )),
+                  ],
+                ),
+              )
 
           );
         });
@@ -229,22 +325,22 @@ class _CartScreenState extends State<CartScreen> with BaseScreenMixin {
                     SizedBox(
                       width: 5,
                     ),
-                    Text("Online Payment\n Visa,Master,AMEX"),
+                    Text("Credit Card"),
                     Spacer(),
 
-                   Radio(
-                  value: paymentOption.NETBANKING,
-                 groupValue: _paymthd,
-                 onChanged: (paymentOption value) {
-                 setState(() {
-                 _paymthd = value;
-                 payingOn= "NET BANKING";
-                 print(_paymthd);
-                 print(timeSlot);
+                    Radio(
+                      value: paymentOption.NETBANKING,
+                      groupValue: _paymthd,
+                      onChanged: (paymentOption value) {
+                        setState(() {
+                          _paymthd = value;
+                          payingOn= "NET BANKING";
+                          print(_paymthd);
+                          print(timeSlot);
 
-              });
-            },
-          ),
+                        });
+                      },
+                    ),
                   ],
                 ),
                 Divider(),
@@ -260,7 +356,7 @@ class _CartScreenState extends State<CartScreen> with BaseScreenMixin {
                     SizedBox(
                       width: 5,
                     ),
-                    Text(" Benifit Card\n(Bahrain Issued Debit Card)"),
+                    Text("Debit Card"),
                     Spacer(),
                     Radio(
                       value: paymentOption.BENIFT,
@@ -383,34 +479,34 @@ class _CartScreenState extends State<CartScreen> with BaseScreenMixin {
 
     return CommonCard(
         child: Container(
-      margin: EdgeInsets.all(20),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            StringsConstants.billDetails,
-            style: AppTextStyles.medium14Black,
-          ),
-          SizedBox(
-            height: 20,
-          ),
+          margin: EdgeInsets.all(20),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                StringsConstants.billDetails,
+                style: AppTextStyles.medium14Black,
+              ),
+              SizedBox(
+                height: 20,
+              ),
 //          priceRow(
 //              StringsConstants.basketTotal,
 //              "${cartItemStatus.currency}${cartItemStatus.priceInCart}"),
 //          priceRow(
 //              StringsConstants.taxAndCharges, "${cartItemStatus.currency}900"),
-          priceRow(StringsConstants.toPay,
-              "${cartItemStatus.currency}${ " "+cartItemStatus.priceInCart.toStringAsFixed(3)}",
-              isFinal: true),
-          SizedBox(
-            height: 10,
+              priceRow(StringsConstants.toPay,
+                  "${cartItemStatus.currency}${ " "+cartItemStatus.priceInCart.toStringAsFixed(3)}",
+                  isFinal: true),
+              SizedBox(
+                height: 10,
+              ),
+              priceRow("Delivery Charge",
+                  "${cartItemStatus.currency}${(delv).toStringAsFixed(3).toString()}",
+                  isFinal: true),
+            ],
           ),
-          priceRow("Delivery Charge",
-              "${cartItemStatus.currency}${" 0.500"}",
-              isFinal: true),
-        ],
-      ),
-    ));
+        ));
   }
 
   Widget deliverTo() {
@@ -418,52 +514,82 @@ class _CartScreenState extends State<CartScreen> with BaseScreenMixin {
       child: (AccountProvider accountProvider) {
         return CommonCard(
             child: Container(
-          margin: EdgeInsets.all(20),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              margin: EdgeInsets.all(20),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    StringsConstants.deliverTo,
-                    style: AppTextStyles.medium14Black,
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        StringsConstants.deliverTo,
+                        style: AppTextStyles.medium14Black,
+                      ),
+                      ActionText(
+                        accountProvider.addressSelected == null
+                            ? StringsConstants.addNewCaps
+                            : StringsConstants.changeTextCapital,
+                        onTap: () {
+                          if (accountProvider.addressSelected == null) {
+                            Navigator.pushNamed(context, Routes.addAddressScreen,
+                                arguments: AddAddressScreenArguments(
+                                  newAddress: true,
+                                  accountDetails: accountProvider.accountDetails,
+                                ));
+                          } else {
+                            Navigator.of(context)
+                                .pushNamed(Routes.myAddressScreen, arguments:MyAddressScreenArguments(selectedAddress: true) );
+                          }
+                        },
+                      )
+                    ],
                   ),
-                  ActionText(
-                    accountProvider.addressSelected == null
-                        ? StringsConstants.addNewCaps
-                        : StringsConstants.changeTextCapital,
-                    onTap: () {
-                      if (accountProvider.addressSelected == null) {
-                        Navigator.pushNamed(context, Routes.addAddressScreen,
-                            arguments: AddAddressScreenArguments(
-                              newAddress: true,
-                              accountDetails: accountProvider.accountDetails,
-                            ));
-                      } else {
-                        Navigator.of(context)
-                            .pushNamed(Routes.myAddressScreen, arguments:MyAddressScreenArguments(selectedAddress: true) );
-                      }
-                    },
-                  )
+                  SizedBox(
+                    height: 20,
+                  ),
+                  Text(
+                    accountProvider.addressSelected?.wholeAddress() ??
+                        StringsConstants.noAddressFound,
+                    style: AppTextStyles.medium12Color81819A,
+                  ),
                 ],
               ),
-              SizedBox(
-                height: 20,
-              ),
-              Text(
-                accountProvider.addressSelected?.wholeAddress() ??
-                    StringsConstants.noAddressFound,
-                style: AppTextStyles.medium12Color81819A,
-              ),
-            ],
-          ),
-        ));
+            ));
       },
     );
   }
 
   Widget checkOut(CartStatusProvider cartItemStatus) {
+
+
+    print("arttttttttt");
+
+    if(cartItemStatus.priceInCart>3.00){
+
+
+
+      WidgetsBinding.instance.addPostFrameCallback((_){
+          setState(() {
+            delv=0.0;
+
+          });
+
+      });
+
+
+
+    }
+    else{
+
+       WidgetsBinding.instance.addPostFrameCallback((_){
+       setState(() {
+           delv = 0.500;});
+
+      });
+
+    }
+
+    print(delv);
     return Container(
       height: 94,
       color: AppColors.white,
@@ -478,7 +604,7 @@ class _CartScreenState extends State<CartScreen> with BaseScreenMixin {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
-                      "${cartItemStatus.currency} ${(cartItemStatus.priceInCart+ 0.500).toStringAsFixed(3)}",
+                      "${cartItemStatus.currency} ${(cartItemStatus.priceInCart+ delv).toStringAsFixed(3)}",
                       style: AppTextStyles.medium15Black,
                     ),
                     ActionText(StringsConstants.viewDetailedBillCaps)
@@ -490,15 +616,15 @@ class _CartScreenState extends State<CartScreen> with BaseScreenMixin {
           BlocConsumer<PaymentCubit, PaymentState>(
             cubit: paymentCubit,
             listener: (BuildContext context, PaymentState state) {
-              if (widget.id=="1") {
-                placeOrderCubit.placeOrder(
-                  cartItemStatus,
-                  "Online Payment",
-                  timeSlot
-
-                );
-
-              }
+              // if (widget.id=="1") {
+              //   placeOrderCubit.placeOrder(
+              //       cartItemStatus,
+              //       "Online Payment",
+              //       timeSlot
+              //
+              //   );
+              //
+              // }
             },
             builder: (BuildContext context, PaymentState paymentState) {
               return BlocConsumer<PlaceOrderCubit, PlaceOrderState>(
@@ -528,10 +654,10 @@ class _CartScreenState extends State<CartScreen> with BaseScreenMixin {
                     width: 190,
                     height: 50,
                     replaceWithIndicator:
-                        (placeOrderState is OrderPlacedInProgress ||
-                                paymentState is PaymentButtonLoading)
-                            ? true
-                            : false,
+                    (placeOrderState is OrderPlacedInProgress ||
+                        paymentState is PaymentButtonLoading)
+                        ? true
+                        : false,
                     margin: EdgeInsets.only(right: 20),
                     onTap: () {
                       print("taaaaaaaaaaaaap");
@@ -554,8 +680,8 @@ class _CartScreenState extends State<CartScreen> with BaseScreenMixin {
                                                 borderRadius: BorderRadius.all(Radius.circular(4)),
                                                 border:
                                                 Border.all(color: Colors.tealAccent.withOpacity(0.4), width: 1),
-                                                color: time24>=9?
-                                                Colors.grey.withOpacity(0.5): time24>=22? Colors.tealAccent.withOpacity(0.2):Colors.tealAccent.withOpacity(0.2)),
+                                                color: nine==false?
+                                                Colors.grey.withOpacity(0.5):Colors.tealAccent.withOpacity(0.2)),
                                             margin: EdgeInsets.all(8),
                                             child: Column(
                                                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -585,23 +711,14 @@ class _CartScreenState extends State<CartScreen> with BaseScreenMixin {
                                                       groupValue: _slot,
                                                       onChanged:
 
-                                                     time24>=9?null: time24>=22?
-
-                                                          (timingSlots value) {
+                                                      nine==false?null:  (timingSlots value) {
                                                         setState(() {
                                                           _slot = value;
                                                           timeSlot= "Between 9AM-12PM";
                                                           print(timeSlot);
 
                                                         });
-                                                      }:   (timingSlots value) {
-                                                       setState(() {
-                                                         _slot = value;
-                                                         timeSlot= "Between 9AM-12PM";
-                                                         print(timeSlot);
-
-                                                       });
-                                                     }
+                                                      }
                                                       ,
                                                     ),
                                                   ),
@@ -618,14 +735,14 @@ class _CartScreenState extends State<CartScreen> with BaseScreenMixin {
                                                 borderRadius: BorderRadius.all(Radius.circular(4)),
                                                 border:
                                                 Border.all(color: Colors.tealAccent.withOpacity(0.4), width: 1),
-                                                color:time24>=12?Colors.grey.withOpacity(0.5): Colors.tealAccent.withOpacity(0.2)),
+                                                color:twelev==false?Colors.grey.withOpacity(0.5): Colors.tealAccent.withOpacity(0.2)),
                                             margin: EdgeInsets.all(8),
                                             child: Column(
                                                 crossAxisAlignment: CrossAxisAlignment.start,
                                                 mainAxisAlignment: MainAxisAlignment.center,
                                                 children: <Widget>[
                                                   ListTile(
-                                                    title:                          Column(
+                                                    title: Column(
                                                       crossAxisAlignment: CrossAxisAlignment.start,
                                                       mainAxisAlignment: MainAxisAlignment.center,
                                                       children: <Widget>[
@@ -637,7 +754,7 @@ class _CartScreenState extends State<CartScreen> with BaseScreenMixin {
                                                           height: 5,
                                                         ),
                                                         Text(
-                                                          "Between 12PM-4PM",
+                                                          "Between 12PM-3PM",
                                                           style: AppTextStyles.medium12Black,
                                                         )
                                                       ],
@@ -645,10 +762,10 @@ class _CartScreenState extends State<CartScreen> with BaseScreenMixin {
                                                     leading: Radio(
                                                       value: timingSlots.NOON,
                                                       groupValue: _slot,
-                                                      onChanged:time24>=12?null: (timingSlots value) {
+                                                      onChanged:twelev==false?null: (timingSlots value) {
                                                         setState(() {
                                                           _slot = value;
-                                                          timeSlot= "Between 12PM-4PM";
+                                                          timeSlot= "Between 12PM-3PM";
                                                           print(timeSlot);
 
                                                         });
@@ -668,7 +785,7 @@ class _CartScreenState extends State<CartScreen> with BaseScreenMixin {
                                                 borderRadius: BorderRadius.all(Radius.circular(4)),
                                                 border:
                                                 Border.all(color: Colors.tealAccent.withOpacity(0.4), width: 1),
-                                                color: time24>=16?Colors.grey.withOpacity(0.5): Colors.tealAccent.withOpacity(0.2)),
+                                                color: sixteen==false?Colors.grey.withOpacity(0.5): Colors.tealAccent.withOpacity(0.2)),
                                             margin: EdgeInsets.all(8),
                                             child: Column(
                                                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -687,7 +804,7 @@ class _CartScreenState extends State<CartScreen> with BaseScreenMixin {
                                                           height: 5,
                                                         ),
                                                         Text(
-                                                          "Between 4PM-7PM",
+                                                          "Between 3PM-6PM",
                                                           style: AppTextStyles.medium12Black,
                                                         )
                                                       ],
@@ -695,10 +812,10 @@ class _CartScreenState extends State<CartScreen> with BaseScreenMixin {
                                                     leading: Radio(
                                                       value: timingSlots.EVENING,
                                                       groupValue: _slot,
-                                                      onChanged:time24>=16?null: (timingSlots value) {
+                                                      onChanged:sixteen==false?null: (timingSlots value) {
                                                         setState(() {
                                                           _slot = value;
-                                                          timeSlot= "Between 4PM-7PM";
+                                                          timeSlot= "Between 3PM-6PM";
                                                           print(timeSlot);
 
                                                         });
@@ -713,12 +830,13 @@ class _CartScreenState extends State<CartScreen> with BaseScreenMixin {
 
 
                                         ),
+
                                         new Container(
                                             decoration: BoxDecoration(
                                                 borderRadius: BorderRadius.all(Radius.circular(4)),
                                                 border:
                                                 Border.all(color: Colors.tealAccent.withOpacity(0.4), width: 1),
-                                                color: time24>=19?Colors.grey.withOpacity(0.5): Colors.tealAccent.withOpacity(0.2)),
+                                                color: nineten==false?Colors.grey.withOpacity(0.5): Colors.tealAccent.withOpacity(0.2)),
                                             margin: EdgeInsets.all(8),
                                             child: Column(
                                                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -737,7 +855,7 @@ class _CartScreenState extends State<CartScreen> with BaseScreenMixin {
                                                           height: 5,
                                                         ),
                                                         Text(
-                                                          "Between 7PM-10PM",
+                                                          "Between 6PM-8PM",
                                                           style: AppTextStyles.medium12Black,
                                                         )
                                                       ],
@@ -745,10 +863,61 @@ class _CartScreenState extends State<CartScreen> with BaseScreenMixin {
                                                     leading: Radio(
                                                       value: timingSlots.NIGHT,
                                                       groupValue: _slot,
-                                                      onChanged: time24>=19?null:(timingSlots value) {
+                                                      onChanged: nineten==false?null:(timingSlots value) {
                                                         setState(() {
                                                           _slot = value;
-                                                          timeSlot= "Between 7PM-10PM";
+                                                          timeSlot= "Between 6PM-8PM";
+                                                          print(timeSlot);
+
+                                                        });
+                                                      },
+                                                    ),
+                                                  ),
+
+
+
+                                                ])
+
+
+
+                                        ),
+
+                                        new Container(
+                                            decoration: BoxDecoration(
+                                                borderRadius: BorderRadius.all(Radius.circular(4)),
+                                                border:
+                                                Border.all(color: Colors.tealAccent.withOpacity(0.4), width: 1),
+                                                color: midnight==false?Colors.grey.withOpacity(0.5): Colors.tealAccent.withOpacity(0.2)),
+                                            margin: EdgeInsets.all(8),
+                                            child: Column(
+                                                crossAxisAlignment: CrossAxisAlignment.start,
+                                                mainAxisAlignment: MainAxisAlignment.center,
+                                                children: <Widget>[
+                                                  ListTile(
+                                                    title:                          Column(
+                                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                                      mainAxisAlignment: MainAxisAlignment.center,
+                                                      children: <Widget>[
+                                                        Text(
+                                                          "NIGHT",
+                                                          style: AppTextStyles.medium16PrimaryColor,
+                                                        ),
+                                                        SizedBox(
+                                                          height: 5,
+                                                        ),
+                                                        Text(
+                                                          "Between 8PM-10PM",
+                                                          style: AppTextStyles.medium12Black,
+                                                        )
+                                                      ],
+                                                    ),
+                                                    leading: Radio(
+                                                      value: timingSlots.MIDNIGHT,
+                                                      groupValue: _slot,
+                                                      onChanged: midnight==false?null:(timingSlots value) {
+                                                        setState(() {
+                                                          _slot = value;
+                                                          timeSlot= "Between 8PM-10PM";
                                                           print(timeSlot);
 
                                                         });
@@ -783,6 +952,7 @@ class _CartScreenState extends State<CartScreen> with BaseScreenMixin {
                                                 buttonPress =true;
                                               });
                                               if(payingOn== "CASH ON DELIVERY"){
+
                                                 placeOrderCubit.placeOrder(
                                                     cartItemStatus,
                                                     "Payed on Cod",
@@ -790,19 +960,44 @@ class _CartScreenState extends State<CartScreen> with BaseScreenMixin {
 
                                                 );
                                                 print("cartItemStatus");
-
+                                                setState(() {
+                                                  buttonPress =false;
+                                                });
                                               }
 
                                               if(payingOn== "BENIFIT"){
+                                                setState(() {
+                                                  buttonPress =true;
+                                                });
+                                                SharedPreferences prefs =
+                                                await SharedPreferences.getInstance();
+                                                prefs.setString("timeSlot", timeSlot.toString());
+                                                print("cartItemStatus");
                                                 Navigator.push(
                                                     context,
                                                     new MaterialPageRoute(
                                                         builder: (context) => BeniftPayPage(id: DateTime.now().millisecondsSinceEpoch.toString(),amnt: (double.parse(cartItemStatus.priceInCart.toStringAsFixed(3))) + (0.500),)));
-                                                print("cartItemStatus");
+
+                                                setState(() {
+                                                  buttonPress =false;
+                                                });
+
+
 
                                               }
-                                              else{
+                                              if(payingOn== "NET BANKING"){
+                                                setState(() {
+                                                  buttonPress =true;
 
+                                                });
+                                                SharedPreferences prefs =
+                                                await SharedPreferences.getInstance();
+                                                prefs.setString("timeSlot", timeSlot.toString());
+                                                print("cartItemStatus");
+                                                print("check11ingggg");
+                                                setState(() {
+                                                  buttonPress =false;
+                                                });
                                                 var rsp = await checkoutApi( (double.parse(cartItemStatus.priceInCart.toStringAsFixed(3))) + (0.500),DateTime.now().millisecondsSinceEpoch.toString(),DateTime.now().millisecondsSinceEpoch.toString());
 
                                                 print("checkingggg");

@@ -13,7 +13,7 @@ class _PaymentSuccessfullState extends State<PaymentSuccessfull> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      resizeToAvoidBottomPadding: true,
+      resizeToAvoidBottomInset: true,
       // appBar: AppBar(
       //   automaticallyImplyLeading: false,
       //   title: Text(

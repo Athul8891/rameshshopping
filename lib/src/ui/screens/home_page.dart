@@ -310,7 +310,7 @@ class _HomePageScreenState extends State<HomePageScreen> {
                       Navigator.of(context).pushNamed(
                           Routes.allProductListScreen,
                           arguments: AllProductListScreenArguments(
-                              productCondition: condition,productValue: value,pageHeading:StringsConstants.dealOfTheDay ));
+                              productCondition: condition,productValue: value,pageHeading:title ));
                     },
                   ))
             ],

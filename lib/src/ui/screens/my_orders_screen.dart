@@ -1,4 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:corazon_customerapp/src/routes/router.gr.dart';
 import 'package:flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -66,10 +67,15 @@ class _MyOrdersScreenState extends State<MyOrdersScreen> {
   }
 
   Widget orderView(List<OrderModel> orderList) {
+   // var del = 0.500;
+
     return ListView.builder(
       controller: controller,
       itemCount: orderList.length,
       itemBuilder: (BuildContext context, int orderListIndex) {
+        // if(orderList[orderListIndex].price>3.00){
+        //   del=0.0;
+        // }
         return Column(
           children: <Widget>[
             Container(
@@ -127,7 +133,7 @@ class _MyOrdersScreenState extends State<MyOrdersScreen> {
                               width: 13,
                             ),
                             Text(
-                              "${orderList[orderListIndex].currency} ${(orderList[orderListIndex].price).toStringAsFixed(3)}",
+                              "${orderList[orderListIndex].currency} ${(orderList[orderListIndex].price+(orderList[orderListIndex].price>3.0?0.0:0.500)).toStringAsFixed(3)}",
                               style: AppTextStyles.normal14Black,
                             )
                           ],
@@ -151,7 +157,10 @@ class _MyOrdersScreenState extends State<MyOrdersScreen> {
                     SizedBox(
                       height: 10,
                     ),
-                    canctBt(orderList,orderListIndex),
+
+                    orderList[orderListIndex].orderStatus.toString().toUpperCase()=="CANCELED"?SizedBox(
+                      width: 5,
+                    ): canctBt(orderList,orderListIndex),
 
                     SizedBox(
                       height: 20,
@@ -243,8 +252,24 @@ class _MyOrdersScreenState extends State<MyOrdersScreen> {
                     SizedBox(height: 30,),
                     FloatingActionButton.extended(
                         onPressed: () {
-                        ordersCubit.cancelOrders(index);
+                     var rsp =   ordersCubit.cancelOrders(index);
+                     print("rsppppppppppp");
+                     print(rsp);
                           Navigator.pop(context);
+                    //  ordersCubit.fetchOrders();
+                    // ordersCubit.fetchOrders();
+                     // Navigator.pushReplacement(
+                     //     context,
+                     //     MaterialPageRoute(
+                     //         builder: (BuildContext context) => super.widget));
+                    // ordersCubit.fetchOrders();
+                     // ordersCubit.fetchOrders();
+
+                     Navigator.pushReplacement(
+                         context,
+                         new MaterialPageRoute(
+                             builder: (context) => MyOrdersScreen()));
+
                           // Flushbar(
                           //   // title:  "Item added to cart",
                           //   message: "Order cancelation submited",

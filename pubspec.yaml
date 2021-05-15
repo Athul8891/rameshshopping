@@ -1,6 +1,6 @@
 name: corazon_customerapp
 description: A new Flutter project.
-version: 1.0.3+5
+version: 1.2.4+9
 
 environment:
   sdk: ">=2.7.0 <3.0.0"
@@ -34,6 +34,7 @@ dependencies:
   flushbar: ^1.10.4
   webview_flutter: ^1.0.7
   lottie: ^0.7.0+1
+  shared_preferences: ^0.5.7
 
 
 dev_dependencies:
