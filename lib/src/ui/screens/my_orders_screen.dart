@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:corazon_customerapp/src/routes/router.gr.dart';
 import 'package:flushbar/flushbar.dart';
@@ -22,12 +24,15 @@ class MyOrdersScreen extends StatefulWidget {
 class _MyOrdersScreenState extends State<MyOrdersScreen> {
   MyOrdersCubit ordersCubit = AppInjector.get<MyOrdersCubit>();
   ScrollController controller = ScrollController();
+var  cnclBtn = false;
 
   @override
   void initState() {
     super.initState();
     ordersCubit.fetchOrders();
     controller.addListener(_scrollListener);
+
+
   }
 
   void _scrollListener() {
@@ -37,7 +42,18 @@ class _MyOrdersScreenState extends State<MyOrdersScreen> {
       ordersCubit.fetchNextList();
     }
   }
+  void delayedLoad(){
 
+    Timer(Duration(seconds: 1), () {
+
+     // Navigator.pop(context);
+      ordersCubit.fetchOrders();
+      print("Yeah, this line is printed after 3 seconds");
+      setState(() {
+        cnclBtn = false;
+      });
+    });
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -55,10 +71,21 @@ class _MyOrdersScreenState extends State<MyOrdersScreen> {
               );
             },
             dataWidget: (List<OrderModel> value) {
-              return orderView(value);
+              return cnclBtn==true?Center(
+                child: CommonAppLoader(),
+              ):orderView(value);
             },
             errorWidget: (String error) {
-              return Container();
+              return Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Center(
+
+                      child: Image.asset('assets/images/ufo.gif', fit: BoxFit.cover)),
+                  Text("You Haven't ordered anything yet"),
+                ],
+              );
             },
           );
         },
@@ -133,7 +160,7 @@ class _MyOrdersScreenState extends State<MyOrdersScreen> {
                               width: 13,
                             ),
                             Text(
-                              "${orderList[orderListIndex].currency} ${(orderList[orderListIndex].price+(orderList[orderListIndex].price>3.0?0.0:0.500)).toStringAsFixed(3)}",
+                              "${orderList[orderListIndex].currency} ${(orderList[orderListIndex].price+(double.parse(orderList[orderListIndex].delivery.toString()))-(double.parse(orderList[orderListIndex].discount.toString()))).toStringAsFixed(3)}",
                               style: AppTextStyles.normal14Black,
                             )
                           ],
@@ -254,9 +281,13 @@ class _MyOrdersScreenState extends State<MyOrdersScreen> {
                         onPressed: () {
                      var rsp =   ordersCubit.cancelOrders(index);
                      print("rsppppppppppp");
+                     Navigator.pop(context);
                      print(rsp);
-                          Navigator.pop(context);
-                    //  ordersCubit.fetchOrders();
+                     setState(() {
+                       cnclBtn = true;
+                     });
+                     delayedLoad();
+
                     // ordersCubit.fetchOrders();
                      // Navigator.pushReplacement(
                      //     context,
@@ -265,10 +296,10 @@ class _MyOrdersScreenState extends State<MyOrdersScreen> {
                     // ordersCubit.fetchOrders();
                      // ordersCubit.fetchOrders();
 
-                     Navigator.pushReplacement(
-                         context,
-                         new MaterialPageRoute(
-                             builder: (context) => MyOrdersScreen()));
+                     // Navigator.pushReplacement(
+                     //     context,
+                     //     new MaterialPageRoute(
+                     //         builder: (context) => MyOrdersScreen()));
 
                           // Flushbar(
                           //   // title:  "Item added to cart",

@@ -13,7 +13,7 @@ class CatCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
+    return GestureDetector(
 
     //  borderRadius: BorderRadius.circular(10),
       onTap: () {
@@ -28,108 +28,28 @@ class CatCard extends StatelessWidget {
       child:
 
       Container(
-       // margin: EdgeInsets.all(8),
-        padding: EdgeInsets.all(1),
 
-
-        child:  Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            AspectRatio(
-              aspectRatio: 1.02,
-              child:
-              Container(
-
-
-                decoration: BoxDecoration(
-                    image: DecorationImage(
-                        image: NetworkImage(productModel.image), fit: BoxFit.fill),
-                    border: Border.all(color: Colors.grey.shade300, width: 1),
-                 //   shape: BoxShape.circle, color: AppColors.color6EBA49,
-                ),
-              ),
-              // Container(
-              //  // height: 50,
-              //
-              //   decoration: BoxDecoration(
-              //     color: Colors.grey.withOpacity(0.1),
-              //     borderRadius: BorderRadius.circular(15),
-              //   ),
-              //
-              //   //   tag: product.id.toString(),
-              //   child: CachedNetworkImage(
-              //     imageUrl: productModel.image,
-              //     fit: BoxFit.fill,
-              //   ),
-              //
-              // ),
-            ),
-             const SizedBox(height: 8),
-
-
-            Flexible(
-              child: Center(
-                child: Text(
-
-                    productModel.name,
-                  textAlign: TextAlign.center,
-                  style: AppTextStyles.medium12Black,
-                  maxLines: 1,
-                ),
-              ),
-
-
-              // RichText(
-              //   overflow: TextOverflow.ellipsis,
-              //   strutStyle: StrutStyle(fontSize: 25.0),
-              //   text: TextSpan(
-              //
-              //       style: AppTextStyles.medium12Black,
-              //       text:  productModel.name,
-              //
-              //   ),
-              // ),
-            ),
-
-            // Row(
-            //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            //   children: [
-            //     // Text(
-            //     //   "${"BHD " }${productModel.currentPrice}",
-            //     //   style: AppTextStyles.medium16Black,
-            //     // ),
-            //
-            //
-            //     // InkWell(
-            //     //   borderRadius: BorderRadius.circular(50),
-            //     //   onTap: () {},
-            //     //   // child: Container(
-            //     //   //   padding: EdgeInsets.all(getProportionateScreenWidth(8)),
-            //     //   //   height: getProportionateScreenWidth(28),
-            //     //   //   width: getProportionateScreenWidth(28),
-            //     //   //   decoration: BoxDecoration(
-            //     //   //     color: product.isFavourite
-            //     //   //         ? kPrimaryColor.withOpacity(0.15)
-            //     //   //         : kSecondaryColor.withOpacity(0.1),
-            //     //   //     shape: BoxShape.circle,
-            //     //   //   ),
-            //     //   //   child: SvgPicture.asset(
-            //     //   //     "assets/icons/Heart Icon_2.svg",
-            //     //   //     color: product.isFavourite
-            //     //   //         ? Color(0xFFFF4848)
-            //     //   //         : Color(0xFFDBDEE4),
-            //     //   //   ),
-            //     //   // ),
-            //     // ),
-            //   ],
-            // ),
-            // Text(
-            //   "${"BHD "}${productModel.actualPrice}",
-            //   style: AppTextStyles.normal12Color81819AStroke,
-            // ),
-          ],
+               height: 20,
+        decoration: BoxDecoration(
+          image: DecorationImage(
+              image: NetworkImage(productModel.image), fit: BoxFit.fill),
+          border: Border.all(color: Colors.grey.shade300, width: 1),
+            borderRadius: BorderRadius.all(Radius.circular(5))
+          //   shape: BoxShape.circle, color: AppColors.color6EBA49,
         ),
-      )
+        alignment: Alignment.bottomCenter,
+        child: Container(
+          width: double.infinity,
+          color:  AppColors.primaryColor,
+          child: Text(
+
+            productModel.name,
+            textAlign: TextAlign.center,
+            style: AppTextStyles.medium12White,
+            maxLines: 1,
+          ),
+        ) ,
+      ),
 
 
       //

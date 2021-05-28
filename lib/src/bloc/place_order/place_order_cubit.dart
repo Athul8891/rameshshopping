@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:corazon_customerapp/src/ui/screens/cart_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -18,20 +19,31 @@ class PlaceOrderCubit extends Cubit<PlaceOrderState> {
   final FirebaseAuth auth = FirebaseAuth.instance;
   var timeSlots = "";
   var uid = "";
+  var oId=0;
+  var delivery="0.000";
+  var discount="0.000";
 
   PlaceOrderCubit() : super(PlaceOrderState.idle());
 
   placeOrder(CartStatusProvider cartItemStatus,
-      String response, String timeSlot,  ) async {
+      String response, String timeSlot, ordId,Delivery,Discount  ) async {
     timeSlots=timeSlot;
+    oId=ordId;
+    delivery=Delivery.toString();
+    discount=Discount.toString();
     final FirebaseUser user = await auth.currentUser();
      uid = user.uid;
     emit(PlaceOrderState.orderPlacedInProgress());
     if (await ConnectionStatus.getInstance().checkConnection()) {
       try {
+
+
+         print("ordId");
+         print(ordId);
         await firebaseRepo
-            .placeOrder(_orderFromCartList(cartItemStatus, response));
+            .placeOrder(_orderFromCartList(cartItemStatus, response,ordId));
         await firebaseRepo.emptyCart();
+        await updateData();
         emit(PlaceOrderState.orderSuccessfullyPlaced());
       } catch (e) {
         emit(OrderNotPlaced(e.toString()));
@@ -42,7 +54,7 @@ class PlaceOrderCubit extends Cubit<PlaceOrderState> {
   }
 
   OrderModel _orderFromCartList(
-      CartStatusProvider cartItemStatus, String response, ) {
+      CartStatusProvider cartItemStatus, String response,int ordId ) {
     var cartItems = cartItemStatus.cartItems;
 
     List<OrderItem> getOrderItems() {
@@ -64,11 +76,12 @@ class PlaceOrderCubit extends Cubit<PlaceOrderState> {
     }
 
     OrderModel orderModel = OrderModel(
-        orderId:
-            "${cartItemStatus.priceInCart}${DateTime.now().millisecondsSinceEpoch}",
+        orderId: ordId.toString(),
         orderItems: getOrderItems(),
         paymentId: response,
         signature: response,
+        delivery: delivery,
+        discount: discount,
         timeSlot: timeSlots,
         uId: uid,
         isAccepted: "0",
@@ -77,5 +90,47 @@ class PlaceOrderCubit extends Cubit<PlaceOrderState> {
         orderAddress: accountProvider.addressSelected);
     print(orderModel);
     return orderModel;
+  }
+
+
+
+  Future updateData(){
+
+
+
+    Firestore.instance
+        .collection('OderCount').document('count').updateData(
+        {
+          // "id": uid.toString(),
+
+          "count": oId,
+
+
+
+        }
+
+    ) .then((value){
+
+      //Navigator.of(context).pop();
+    })
+        .catchError((error) {
+
+
+
+    });
+
+
+
+
+
+
+    // FirebaseFirestore.instance
+    //     .collection('users')
+    //     .get()
+    //     .then((QuerySnapshot querySnapshot) => {
+    // querySnapshot.docs.forEach((doc) {
+    // print(doc["first_name"]);
+    // })
+    // });
   }
 }

@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:corazon_customerapp/src/repository/ChekoutApi.dart';
 import 'package:corazon_customerapp/src/repository/coupon.dart';
 import 'package:corazon_customerapp/src/ui/screens/benifitpaypage.dart';
@@ -51,7 +52,22 @@ class _CartScreenState extends State<CartScreen> with BaseScreenMixin {
   var nineten = true;
   var midnight = true;
   var onlineTimeSlot= "";
-  var delv = 0.500;
+  var delv = 0.000;
+  var limit = 0.000;
+  var charge = 0.000;
+  var startChekout = true;
+  var timeSlotClick = false;
+  var ordId=0;
+
+  var redeemLimit=0.000;
+  var redeemAmount=0.000;
+
+  var discountAmount=0.000;
+
+  var cartTotal=0.000;
+
+
+
   timingSlots _slot = timingSlots.SELECT;
   paymentOption _paymthd = paymentOption.NETBANKING;
   TextEditingController couponController = TextEditingController();
@@ -67,6 +83,7 @@ class _CartScreenState extends State<CartScreen> with BaseScreenMixin {
 
     get24hr();
     getTimeSlot();
+    getData();
   }
 
   void timerSched(){
@@ -134,11 +151,60 @@ class _CartScreenState extends State<CartScreen> with BaseScreenMixin {
     var prefs = await SharedPreferences.getInstance();
 
     var strKey = prefs.getString('timeSlot');
+    var disc = prefs.getString('discount');
     setState(() {
       onlineTimeSlot =strKey;
+      discountAmount= disc!=null?double.parse(disc):0.000;
+      print("disc");
+      print(discountAmount);
 
     });
 
+  }
+
+  Future getData(){
+
+    Firestore.instance
+        .collection('OderCount').document('count')
+        .get()
+        .then((DocumentSnapshot documentSnapshot) {
+      if (documentSnapshot.exists) {
+        //print('Document data: ${documentSnapshot.data()}');
+
+        setState(() {
+          ordId=documentSnapshot['count']+1;
+
+          charge=double.parse(documentSnapshot['delv'].toString());
+          limit=double.parse(documentSnapshot['limit'].toString());
+
+          redeemAmount=double.parse(documentSnapshot['couponRedeem'].toString());
+          redeemLimit=double.parse(documentSnapshot['redeemLimit'].toString());
+        });
+
+
+        print("documentSnapshot");
+        print(ordId);
+
+
+        // print(hospitalName);
+      } else {
+        print('Document does not exist on the database');
+      }
+    }).then((value){
+
+      return ordId;
+
+
+    });
+
+    // FirebaseFirestore.instance
+    //     .collection('users')
+    //     .get()
+    //     .then((QuerySnapshot querySnapshot) => {
+    // querySnapshot.docs.forEach((doc) {
+    // print(doc["first_name"]);
+    // })
+    // });
   }
 
 
@@ -149,25 +215,51 @@ class _CartScreenState extends State<CartScreen> with BaseScreenMixin {
 
       child: (CartStatusProvider cartItemStatus) {
         // ignore: unrelated_type_equality_checks
-        if (widget.id=="1") {
+        print("startChekout");
+        print(startChekout);
+        if (widget.id=="1"&&startChekout==true) {
+
+
+          WidgetsBinding.instance.addPostFrameCallback((_){
+            setState(() {
+              startChekout=false;
+
+            });
+
+          });
+
+
+          print("thodangii");
           placeOrderCubit.placeOrder(
               cartItemStatus,
               "Online Payment",
-              onlineTimeSlot
+              onlineTimeSlot,
+              ordId,
+              delv,
+              discountAmount
 
           );
 
         }
         return Scaffold(
           key: scaffoldKey,
-          backgroundColor: AppColors.colorF8F8F8,
+          backgroundColor: AppColors.backGroundColor,
           appBar: AppBar(
             title: Text(StringsConstants.cart),
             elevation: 1,
           ),
           body: cartItemStatus.noOfItemsInCart > 0
               ? cartView(cartItemStatus)
-              : Container(),
+              :   Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Center(
+
+                  child: Image.asset('assets/images/ufo.gif', fit: BoxFit.cover)),
+              Text("Your Cart Is Empty !"),
+            ],
+          ),
           bottomNavigationBar: Visibility(
               visible: cartItemStatus.noOfItemsInCart > 0,
               child: checkOut(cartItemStatus)),
@@ -223,40 +315,114 @@ class _CartScreenState extends State<CartScreen> with BaseScreenMixin {
     );
   }
   Future<void> _displayTextInputDialog(BuildContext context) async {
-    return showDialog(
+
+    showDialog(
         context: context,
-        builder: (context) {
-          return AlertDialog(
-              title: Text('Apply the Coupon'),
-              content: Container(
-                height: 150,
-                child:             Column(
-                  children: [
-                    TextField(
-                      controller: couponController,
-                      onChanged: (value) {
 
-                      },
-                      //  controller: _textFieldController,
-                      decoration: InputDecoration(hintText: "Enter the code !"),
+        builder: (BuildContext context) {
+          return StatefulBuilder(
+            builder: (context, StateSetter setState){
+              return AlertDialog(
+                  title: Text('Apply the Coupon'),
+                  content: Container(
+                    height: 150,
+                    child:             Column(
+                      children: [
+                        TextField(
+                          controller: couponController,
+                          onChanged: (value) {
+
+                          },
+                          //  controller: _textFieldController,
+                          decoration: InputDecoration(hintText: "Enter the code !"),
+                        ),
+                        SizedBox(height: 30,),
+                        FloatingActionButton.extended(
+                            onPressed: timeSlotClick==true?null:() async{
+
+                              if(double.parse(cartTotal.toStringAsFixed(3).toString())>redeemLimit){
+
+
+                              setState(() {
+                                timeSlotClick=true;
+                              });
+                              var checkcode = await checkCoupon(couponController.text.toString());
+                              print("step1");
+                              print(timeSlotClick);
+                              if(checkcode=="CODETRUE"){
+
+                                var userused = await ifCouponExist(couponController.text.toString());
+                                print("step2");
+                                print(timeSlotClick);
+                                if(userused=="NOTUSED"){
+
+                                  var apply = await ifCouponNotUsed(couponController.text.toString());
+
+                                  if(apply=="COUPONAPPLYED"){
+
+                                    Navigator.pop(context);
+
+                                    showSnackBar(title: "Coupon Applied !");
+
+                                    SharedPreferences prefs =
+                                    await SharedPreferences.getInstance();
+                                    prefs.setString("discount", redeemAmount.toString());
+                                    getTimeSlot();
+
+                                    setState(() {
+                                      timeSlotClick=false;
+                                    });
+
+                                  }else{
+                                    setState(() {
+                                      timeSlotClick=false;
+                                    });
+                                    Navigator.pop(context);
+
+                                    showSnackBar(title: "Coupon Applying Failed !");
+
+                                  }
+                                  print("step3");
+                                  print(apply);
+                                }
+                                else{
+                                  setState(() {
+                                    timeSlotClick=false;
+                                  });
+                                  Navigator.pop(context);
+
+                                  showSnackBar(title: "You used this coupon before !");
+
+                                }
+                              }
+                              else{
+                                setState(() {
+                                  timeSlotClick=false;
+                                });
+                                Navigator.pop(context);
+
+                                showSnackBar(title: "Invalid Code!");
+                              }
+                              }
+                              else{
+                                Navigator.pop(context);
+                                showSnackBar(title: "Coupon only available orders above BHD "+redeemLimit.toStringAsFixed(3).toString());
+                              }
+                              //  Navigator.pop(context);
+                            },
+                            label: Text(
+                              timeSlotClick==true?"Aplying...":"Apply",
+                              style: AppTextStyles.medium14White,
+                            )),
+                      ],
                     ),
-                    SizedBox(height: 30,),
-                    FloatingActionButton.extended(
-                        onPressed: () {
-                        // var rsp = checkCoupon(couponController.text.toString());
+                  )
 
-                          Navigator.pop(context);
-                        },
-                        label: Text(
-                          "Apply",
-                          style: AppTextStyles.medium14White,
-                        )),
-                  ],
-                ),
-              )
+              );
+            },
+          );});
 
-          );
-        });
+
   }
   Widget applyCoupon() {
 
@@ -502,7 +668,13 @@ class _CartScreenState extends State<CartScreen> with BaseScreenMixin {
                 height: 10,
               ),
               priceRow("Delivery Charge",
-                  "${cartItemStatus.currency}${(delv).toStringAsFixed(3).toString()}",
+                  "${cartItemStatus.currency}${" "+(delv).toStringAsFixed(3).toString()}",
+                  isFinal: true),
+              SizedBox(
+                height: 10,
+              ),
+              priceRow("Discount",
+                  "${cartItemStatus.currency}${" "+(discountAmount).toStringAsFixed(3).toString()}",
                   isFinal: true),
             ],
           ),
@@ -562,32 +734,35 @@ class _CartScreenState extends State<CartScreen> with BaseScreenMixin {
   Widget checkOut(CartStatusProvider cartItemStatus) {
 
 
-    print("arttttttttt");
-
-    if(cartItemStatus.priceInCart>3.00){
 
 
 
-      WidgetsBinding.instance.addPostFrameCallback((_){
+    if(cartItemStatus.priceInCart>limit){
+    WidgetsBinding.instance.addPostFrameCallback((_){
           setState(() {
             delv=0.0;
-
+            cartTotal=cartItemStatus.priceInCart+delv;
+            print("arttttttttt");
+            print(cartTotal);
           });
-
-      });
-
-
-
-    }
+    });
+   }
     else{
-
-       WidgetsBinding.instance.addPostFrameCallback((_){
+      WidgetsBinding.instance.addPostFrameCallback((_){
        setState(() {
-           delv = 0.500;});
-
+           delv = charge;
+           cartTotal=cartItemStatus.priceInCart+delv;
+           print("arttttttttt");
+           print(cartTotal);
+       });
       });
 
-    }
+
+
+
+
+
+  }
 
     print(delv);
     return Container(
@@ -604,7 +779,7 @@ class _CartScreenState extends State<CartScreen> with BaseScreenMixin {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
-                      "${cartItemStatus.currency} ${(cartItemStatus.priceInCart+ delv).toStringAsFixed(3)}",
+                      "${cartItemStatus.currency} ${(cartItemStatus.priceInCart+ delv-discountAmount).toStringAsFixed(3)}",
                       style: AppTextStyles.medium15Black,
                     ),
                     ActionText(StringsConstants.viewDetailedBillCaps)
@@ -936,7 +1111,7 @@ class _CartScreenState extends State<CartScreen> with BaseScreenMixin {
                                         SizedBox(height: 10,),
 
                                         CommonButton(
-                                          title: timeSlot=="SELECT"?"Timeslot Not Selected!":StringsConstants.save,
+                                          title:timeSlotClick==true?"Processing..": timeSlot=="SELECT"?"Timeslot Not Selected!":StringsConstants.save,
                                           titleColor: AppColors.white,
                                           height: 50,
                                           replaceWithIndicator: buttonPress,
@@ -948,46 +1123,65 @@ class _CartScreenState extends State<CartScreen> with BaseScreenMixin {
 
                                             }
                                             else{
-                                              setState(() {
-                                                buttonPress =true;
-                                              });
+                                              // setState(() {
+                                              //   timeSlotClick =true;
+                                              // });
                                               if(payingOn== "CASH ON DELIVERY"){
-
+                                                setState(() {
+                                                  timeSlotClick =true;
+                                                });
                                                 placeOrderCubit.placeOrder(
                                                     cartItemStatus,
                                                     "Payed on Cod",
-                                                    timeSlot
+                                                    timeSlot,
+                                                  ordId,
+                                                  delv,
+                                                    discountAmount
 
                                                 );
                                                 print("cartItemStatus");
                                                 setState(() {
-                                                  buttonPress =false;
+                                                  timeSlotClick =false;
                                                 });
                                               }
 
                                               if(payingOn== "BENIFIT"){
+                                                if(cartItemStatus.priceInCart < 1.0){
+                                                 Navigator.pop(context);
+                                                 showSnackBar(title:"Online transactions only above BHD 1.000" );
+                                                 return ;
+                                                 }
                                                 setState(() {
-                                                  buttonPress =true;
+                                                  timeSlotClick =true;
                                                 });
                                                 SharedPreferences prefs =
                                                 await SharedPreferences.getInstance();
                                                 prefs.setString("timeSlot", timeSlot.toString());
                                                 print("cartItemStatus");
+
+
+
                                                 Navigator.push(
                                                     context,
                                                     new MaterialPageRoute(
-                                                        builder: (context) => BeniftPayPage(id: DateTime.now().millisecondsSinceEpoch.toString(),amnt: (double.parse(cartItemStatus.priceInCart.toStringAsFixed(3))) + (0.500),)));
+                                                        builder: (context) => BeniftPayPage(id: DateTime.now().millisecondsSinceEpoch.toString(),amnt: (double.parse(cartItemStatus.priceInCart.toStringAsFixed(3))) + (delv),)));
 
                                                 setState(() {
-                                                  buttonPress =false;
+                                                  timeSlotClick =false;
                                                 });
 
 
 
                                               }
                                               if(payingOn== "NET BANKING"){
+
+                                                if(cartItemStatus.priceInCart < 1.0){
+                                                  Navigator.pop(context);
+                                                  showSnackBar(title:"Online transactions only above BHD 1.000" );
+                                                  return ;
+                                                }
                                                 setState(() {
-                                                  buttonPress =true;
+                                                  timeSlotClick =true;
 
                                                 });
                                                 SharedPreferences prefs =
@@ -998,7 +1192,9 @@ class _CartScreenState extends State<CartScreen> with BaseScreenMixin {
                                                 setState(() {
                                                   buttonPress =false;
                                                 });
-                                                var rsp = await checkoutApi( (double.parse(cartItemStatus.priceInCart.toStringAsFixed(3))) + (0.500),DateTime.now().millisecondsSinceEpoch.toString(),DateTime.now().millisecondsSinceEpoch.toString());
+
+
+                                                var rsp = await checkoutApi( (double.parse(cartItemStatus.priceInCart.toStringAsFixed(3))) + (delv),DateTime.now().millisecondsSinceEpoch.toString(),DateTime.now().millisecondsSinceEpoch.toString());
 
                                                 print("checkingggg");
                                                 print(rsp);
@@ -1007,7 +1203,7 @@ class _CartScreenState extends State<CartScreen> with BaseScreenMixin {
                                                   var sessionid = rsp['session']['id'];
                                                   print(sessionid);
                                                   setState(() {
-                                                    buttonPress =false;
+                                                    timeSlotClick =false;
                                                   });
                                                   Navigator.push(
                                                       context,

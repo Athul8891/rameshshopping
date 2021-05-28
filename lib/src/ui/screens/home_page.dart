@@ -14,7 +14,7 @@ import 'package:corazon_customerapp/src/routes/router.gr.dart';
 import 'package:corazon_customerapp/src/ui/common/action_text.dart';
 import 'package:corazon_customerapp/src/ui/common/product_card.dart';
 import 'package:shimmer/shimmer.dart';
-
+import 'package:new_version/new_version.dart';
 class HomePageScreen extends StatefulWidget {
   @override
   _HomePageScreenState createState() => _HomePageScreenState();
@@ -38,10 +38,20 @@ class _HomePageScreenState extends State<HomePageScreen> {
     fetchProductData();
     super.initState();
 
+    NewVersion(
+      context: context,
+      iOSId: 'com.corazon.corazon_customerapp',
+      androidId: 'com.corazon.corazon_customerapp',
+      dialogText: "A new version of app is available, Update the app to unlock new features !"
+    ).showAlertIfNecessary();
+
   }
 
 
-  getBanner(){
+
+
+
+    getBanner(){
     Firestore.instance.collection('Banner').getDocuments()
         .then((QuerySnapshot querySnapshot) => {
       querySnapshot.documents.forEach((doc) {
@@ -255,7 +265,7 @@ class _HomePageScreenState extends State<HomePageScreen> {
               crossAxisCount:3,
               shrinkWrap: true,
               mainAxisSpacing: 10,
-              childAspectRatio: 0.7,
+              childAspectRatio: 1,
               crossAxisSpacing: 10,
               children: List.generate(
 

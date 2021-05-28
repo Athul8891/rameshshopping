@@ -244,7 +244,18 @@ class _AllProductListScreenState extends State<AllProductListScreen> {
                         return Container();
                       },
                       dataWidget: (List<ProductModel> value) {
-                        return dataWidget(value);
+                        print("value");
+                        print(value.length);
+                        return value.length==0?Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Center(
+
+                                child: Image.asset('assets/images/noproduct.png', fit: BoxFit.cover)),
+                            Text("Coming Soon!"),
+                          ],
+                        ):dataWidget(value);
                       },
                     );
                   },

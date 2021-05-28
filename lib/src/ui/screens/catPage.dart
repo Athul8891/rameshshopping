@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:corazon_customerapp/src/res/app_colors.dart';
 import 'package:corazon_customerapp/src/routes/router.gr.dart';
 import 'package:flutter/material.dart';
 
@@ -106,10 +107,12 @@ class _MyHomePageState extends State<CatPage> {
 
                           border: Border.all(color: Colors.grey.shade200),
                           borderRadius: BorderRadius.all(Radius.circular(10))
+
                       ),
+
                           child: Center(
-                            child: new Text(document['strName'],
-                              style: TextStyle(fontWeight: FontWeight.bold,  color: Colors.black87,backgroundColor: Colors.white38,fontSize: 20.0, ),
+                            child: new Text(" "+document['strName']+" ",
+                              style: TextStyle(fontWeight: FontWeight.bold,  color: Colors.white,backgroundColor: AppColors.primaryColor,fontSize: 20.0, ),
 
                             ),
                           ) ,

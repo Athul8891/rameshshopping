@@ -73,7 +73,7 @@ class FirestoreRepository {
 
     if(root=="MainCat"){
       List<DocumentSnapshot> docList = (await _firestore
-          .collection(root).getDocuments())
+          .collection(root).orderBy("slNo", descending: false).getDocuments())
           .documents;
       return List.generate(docList.length, (index) {
         return ProductModel.fromJson(docList[index]);
@@ -221,7 +221,7 @@ class FirestoreRepository {
             var orditem = item['order_items'];
             var ordadrs = item['order_address'];
             var price = item['price'];
-            print("priceeeeeeeeeeeeeeeee");
+            print("plaaaaaaaaaaaaaaaaacing");
             print(price.toStringAsFixed(3));
             sendEmail(orditem,ordadrs,item,price);
 
@@ -240,6 +240,7 @@ class FirestoreRepository {
     SharedPreferences prefs =
     await SharedPreferences.getInstance();
     prefs.setString("timeSlot", "SELECT");
+    prefs.setString("discount", "0.000");
     print("cartItemStatus");
     print("seeeeeeeeeee55555555555555555eeeeeeeeend");
     var send = await senMail(ordadrs['email'].toString(),price.toString(),item['order_id'].toString(),ordadrs['name'].toString(),ordadrs['email'].toString(),ordadrs['phone'].toString(),item['wholeadress'].toString(),item['barcode'].toString(),orditem);
@@ -250,6 +251,7 @@ class FirestoreRepository {
   }
 
   Future<void> emptyCart() async {
+    print("deleeeeeeeeeet");
     return await _firestore
         .collection("users")
         .document(await authRepo.getUid())

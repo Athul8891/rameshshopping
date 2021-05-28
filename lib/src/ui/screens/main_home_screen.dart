@@ -14,6 +14,7 @@ import 'package:corazon_customerapp/src/res/string_constants.dart';
 import 'package:corazon_customerapp/src/res/text_styles.dart';
 import 'package:corazon_customerapp/src/ui/screens/cart_screen.dart';
 import 'package:corazon_customerapp/src/ui/screens/home_page.dart';
+import 'package:flutter/services.dart';
 
 import 'SearchScreen.dart';
 import 'account_screen.dart';
@@ -29,6 +30,8 @@ class _MainHomeScreenState extends State<MainHomeScreen> {
   var authRepo = AppInjector.get<AuthRepository>();
   var cartStatusProvider = AppInjector.get<CartStatusProvider>();
   var accountProvider = AppInjector.get<AccountProvider>();
+  int _currentIndex = 0;
+
   @override
   void initState() {
     super.initState();
@@ -78,66 +81,116 @@ class _MainHomeScreenState extends State<MainHomeScreen> {
   Widget build(BuildContext context) {
     return ProviderNotifier<MainScreenProvider>(
       child: (MainScreenProvider mainScreenProvider) {
-        return Scaffold(
-          body: [
-            HomePageScreen(),
-            SearchItemScreen(),
-            CartScreen(),
-            AccountScreen(),
-          ][mainScreenProvider.bottomBarIndex],
-          bottomNavigationBar: BottomNavigationBar(
-            type: BottomNavigationBarType.fixed,
-            //  backgroundColor: AppColors.primaryColor,
-            unselectedItemColor: AppColors.color81819A,
-            selectedItemColor: AppColors.primaryColor,
-            showSelectedLabels: true,
-            showUnselectedLabels: true,
-            items: [
-              BottomNavigationBarItem(
-                  icon: Icon(Icons.home), title: Text(StringsConstants.home)),
-              BottomNavigationBarItem(
-                  icon: Icon(Icons.search),
-                  title: Text(StringsConstants.search)),
-              BottomNavigationBarItem(
-                  icon: Stack(
-                    children: <Widget>[
-                      Center(child: Icon(Icons.shopping_cart)),
-                      ProviderNotifier<CartStatusProvider>(
-                        child: (CartStatusProvider value) {
-                          return Visibility(
-                            visible: value.noOfItemsInCart > 0,
-                            child: Padding(
-                              padding: const EdgeInsets.only(left: 20),
-                              child: Align(
-                                alignment: Alignment.center,
-                                child: CircleAvatar(
-                                  minRadius: 7,
-                                  maxRadius: 7,
-                                  backgroundColor: AppColors.color6EBA49,
-                                  child: Text(
-                                    "${value.noOfItemsInCart}",
-                                    style: AppTextStyles.normal12blue,
+        return WillPopScope(
+          onWillPop: _onBackPressed,
+          child: Scaffold(
+            body: [
+              HomePageScreen(),
+              SearchItemScreen(),
+              CartScreen(),
+              AccountScreen(),
+            ][mainScreenProvider.bottomBarIndex],
+            bottomNavigationBar: BottomNavigationBar(
+              type: BottomNavigationBarType.fixed,
+              //  backgroundColor: AppColors.primaryColor,
+              unselectedItemColor: AppColors.color81819A,
+              selectedItemColor: AppColors.primaryColor,
+              showSelectedLabels: true,
+              showUnselectedLabels: true,
+              items: [
+                BottomNavigationBarItem(
+                    icon: Icon(Icons.home), title: Text(StringsConstants.home)),
+                BottomNavigationBarItem(
+                    icon: Icon(Icons.search),
+                    title: Text(StringsConstants.search)),
+                BottomNavigationBarItem(
+                    icon: Stack(
+                      children: <Widget>[
+                        Center(child: Icon(Icons.shopping_cart)),
+                        ProviderNotifier<CartStatusProvider>(
+                          child: (CartStatusProvider value) {
+                            return Visibility(
+                              visible: value.noOfItemsInCart > 0,
+                              child: Padding(
+                                padding: const EdgeInsets.only(left: 20),
+                                child: Align(
+                                  alignment: Alignment.center,
+                                  child: CircleAvatar(
+                                    minRadius: 7,
+                                    maxRadius: 7,
+                                    backgroundColor: AppColors.color6EBA49,
+                                    child: Text(
+                                      "${value.noOfItemsInCart}",
+                                      style: AppTextStyles.normal12blue,
+                                    ),
                                   ),
                                 ),
                               ),
-                            ),
-                          );
-                        },
-                      )
-                    ],
-                  ),
-                  title: Text(StringsConstants.cart)),
-              BottomNavigationBarItem(
-                  icon: Icon(Icons.person),
-                  title: Text(StringsConstants.account)),
-            ],
-            onTap: (index) {
-              mainScreenProvider.bottomBarIndex = index;
-            },
-            currentIndex: mainScreenProvider.bottomBarIndex,
+                            );
+                          },
+                        )
+                      ],
+                    ),
+                    title: Text(StringsConstants.cart)),
+                BottomNavigationBarItem(
+                    icon: Icon(Icons.person),
+                    title: Text(StringsConstants.account)),
+              ],
+              onTap: (index) {
+                   setState(() {
+                     _currentIndex = index;
+                     mainScreenProvider.bottomBarIndex = _currentIndex;
+                   });
+
+              },
+              currentIndex: mainScreenProvider.bottomBarIndex,
+            ),
           ),
         );
       },
+    );
+  }
+
+
+  Future<bool> _onBackPressed() {
+    if (_currentIndex != 0) {
+      print("aaaaaaaaaaaaaa");
+      setState(() {
+        _currentIndex = 0;
+        print(_currentIndex);
+      });
+    } else {
+      print("_currentIndex");
+      print(_currentIndex);
+      _showDialog();
+    }
+  }
+
+  void _showDialog() {
+    // flutter defined function
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        shape:
+        RoundedRectangleBorder(borderRadius: new BorderRadius.circular(10)),
+        elevation: 10,
+        title: Text('Confirm Exit!'),
+        content: Text('Are you sure you want to exit?'),
+        actions: <Widget>[
+          FlatButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+            child: Text('No',style: TextStyle(color: AppColors.primaryColor),),
+          ),
+          FlatButton(
+            onPressed: () {
+              SystemNavigator.pop();
+            },
+            child: Text('Yes',style: TextStyle(color: AppColors.primaryColor),),
+          ),
+        ],
+      ),
     );
   }
 }

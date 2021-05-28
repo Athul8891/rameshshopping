@@ -15,6 +15,9 @@ class OrderModel {
 
   String signature;
   String wholeadress;
+  String delivery;
+  String discount;
+
   num timestamp;
   Address orderAddress;
 
@@ -33,6 +36,9 @@ class OrderModel {
         this.signature,
         this.timestamp,
         this.wholeadress,
+        this.delivery,
+        this.discount,
+
         this.orderAddress});
 
   factory OrderModel.fromJson(json) {
@@ -49,6 +55,8 @@ class OrderModel {
         signature: json['signature'] as String,
         wholeadress: json['wholeadress'] as String,
         timeSlot: json['timeSlot'] as String,
+        delivery: json['delivery'] as String,
+        discount: json['discount'] as String,
         timestamp: json['timestamp'] as num,
 
         orderAddress: Address.fromDocument(json['order_address']),
@@ -69,6 +77,8 @@ class OrderModel {
     "signature": signature,
     "timeSlot":timeSlot,
     "wholeadress":wholeadress,
+    "delivery":delivery,
+    "discount":discount,
     "order_address": orderAddress.toJson(),
     "timestamp":DateTime.now().millisecondsSinceEpoch,
 
