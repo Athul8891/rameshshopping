@@ -1,107 +1,33 @@
 {
   "project_info": {
-    "project_number": "819242326993",
-    "project_id": "corzonapp",
-    "storage_bucket": "corzonapp.appspot.com"
+    "project_number": "761052654612",
+    "project_id": "shopping-a0195",
+    "storage_bucket": "shopping-a0195.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:819242326993:android:7e8435f79345082322def0",
+        "mobilesdk_app_id": "1:761052654612:android:ebff4267f7f9e044344b01",
         "android_client_info": {
-          "package_name": "com.corazon.corazon_customerapp"
+          "package_name": "com.rameshshoppingkart.customer"
         }
       },
       "oauth_client": [
         {
-          "client_id": "819242326993-1kdal9k5vk3m78l8l7rg95gledj5akhj.apps.googleusercontent.com",
+          "client_id": "761052654612-mimiodiev9akohi0qhda2h3e7jt3v08b.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyAwV9xfMzXAUZNTxYl4OEzz9IrAPeebdEM"
+          "current_key": "AIzaSyDxmoOE385LPG1RK-rEAMJSVVqQxnemVDk"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "819242326993-1kdal9k5vk3m78l8l7rg95gledj5akhj.apps.googleusercontent.com",
-              "client_type": 3
-            }
-          ]
-        }
-      }
-    },
-    {
-      "client_info": {
-        "mobilesdk_app_id": "1:819242326993:android:aea90b4976719b6722def0",
-        "android_client_info": {
-          "package_name": "com.corazon.corazon_seller"
-        }
-      },
-      "oauth_client": [
-        {
-          "client_id": "819242326993-7ldnkc033ussd1ipqgggkis659csf2vn.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.corazon.corazon_seller",
-            "certificate_hash": "7dbf0c71c89b8605ee89e93e0b484f53bed44b64"
-          }
-        },
-        {
-          "client_id": "819242326993-1kdal9k5vk3m78l8l7rg95gledj5akhj.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
-      "api_key": [
-        {
-          "current_key": "AIzaSyAwV9xfMzXAUZNTxYl4OEzz9IrAPeebdEM"
-        }
-      ],
-      "services": {
-        "appinvite_service": {
-          "other_platform_oauth_client": [
-            {
-              "client_id": "819242326993-1kdal9k5vk3m78l8l7rg95gledj5akhj.apps.googleusercontent.com",
-              "client_type": 3
-            }
-          ]
-        }
-      }
-    },
-    {
-      "client_info": {
-        "mobilesdk_app_id": "1:819242326993:android:98f532042ec81d7722def0",
-        "android_client_info": {
-          "package_name": "com.shopping.corzonapp"
-        }
-      },
-      "oauth_client": [
-        {
-          "client_id": "819242326993-p5731j98j8ngkkipgg224d41guu9g6av.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.shopping.corzonapp",
-            "certificate_hash": "7dbf0c71c89b8605ee89e93e0b484f53bed44b64"
-          }
-        },
-        {
-          "client_id": "819242326993-1kdal9k5vk3m78l8l7rg95gledj5akhj.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
-      "api_key": [
-        {
-          "current_key": "AIzaSyAwV9xfMzXAUZNTxYl4OEzz9IrAPeebdEM"
-        }
-      ],
-      "services": {
-        "appinvite_service": {
-          "other_platform_oauth_client": [
-            {
-              "client_id": "819242326993-1kdal9k5vk3m78l8l7rg95gledj5akhj.apps.googleusercontent.com",
+              "client_id": "761052654612-mimiodiev9akohi0qhda2h3e7jt3v08b.apps.googleusercontent.com",
               "client_type": 3
             }
           ]

@@ -29,7 +29,7 @@ class StringsConstants {
   static const account = "Account";
   static const viewCart = "View Cart";
   static const edit = "Edit";
-  static const products = "Corazon";
+  static const products = "Remesh";
   static const details = "Details";
   static const editCaps = "EDIT";
   static const defaultCaps = "DEFAULT";
@@ -85,8 +85,8 @@ class StringsConstants {
 
   //auth const
 
-  static const numPrefix = "+973";
-  static const valdationNum = 8;
+  static const numPrefix = "+91";
+  static const valdationNum = 10;
 
 
 }

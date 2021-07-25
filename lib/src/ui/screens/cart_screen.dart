@@ -23,7 +23,9 @@ import 'package:corazon_customerapp/src/ui/common/common_button.dart';
 import 'package:corazon_customerapp/src/ui/common/common_card.dart';
 import 'package:corazon_customerapp/src/ui/screens/base_screen_mixin.dart';
 import 'package:corazon_customerapp/src/repository/firestore_repository.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
+import 'package:razorpay_flutter/razorpay_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class CartScreen extends StatefulWidget {
@@ -71,7 +73,7 @@ class _CartScreenState extends State<CartScreen> with BaseScreenMixin {
   timingSlots _slot = timingSlots.SELECT;
   paymentOption _paymthd = paymentOption.NETBANKING;
   TextEditingController couponController = TextEditingController();
-
+  Razorpay _razorpay;
   @override
   void initState() {
     super.initState();
@@ -84,6 +86,11 @@ class _CartScreenState extends State<CartScreen> with BaseScreenMixin {
     get24hr();
     getTimeSlot();
     getData();
+
+    _razorpay = Razorpay();
+    _razorpay.on(Razorpay.EVENT_PAYMENT_SUCCESS, _handlePaymentSuccess);
+    _razorpay.on(Razorpay.EVENT_PAYMENT_ERROR, _handlePaymentError);
+    _razorpay.on(Razorpay.EVENT_EXTERNAL_WALLET, _handleExternalWallet);
   }
 
   void timerSched(){
@@ -208,6 +215,63 @@ class _CartScreenState extends State<CartScreen> with BaseScreenMixin {
   }
 
 
+
+  ///razor pay
+
+  void openCheckout(var amount) async {
+    DateTime now = DateTime.now();
+    var options = {
+      'id': now.toString(),
+      'key': 'rzp_test_FUD6UygqR37FmX',
+      'amount': int.parse(amount.toString()) * 100,
+      'name': 'Remesh',
+      //'description': 'Fine T-Shirt',
+      'image':
+      'https://firebasestorage.googleapis.com/v0/b/elumart-93d6f.appspot.com/o/Elumart.png?alt=media&token=79c9629e-ff16-4289-8e03-31ff2c7d4eff',
+      'prefill': {'contact': "+9188888888", 'email': 'test@razorpay.com'},
+      'external': {
+        'wallets': ['paytm']
+      }
+    };
+
+    try {
+      _razorpay.open(options);
+    } catch (e) {
+      debugPrint(e);
+    }
+  }
+
+  void _handlePaymentSuccess(PaymentSuccessResponse response) async{
+
+
+    Fluttertoast.showToast(
+        msg: "SUCCESS: " + response.paymentId, timeInSecForIosWeb: 4);
+
+
+
+
+    Navigator.pushReplacement(
+        context,
+        new MaterialPageRoute(
+            builder: (context) => CartScreen(id: "1",)));
+
+
+
+
+
+  }
+
+  void _handlePaymentError(PaymentFailureResponse response) {
+    Fluttertoast.showToast(
+        msg: "ERROR: " + response.code.toString() + " - " + response.message,
+        timeInSecForIosWeb: 4);
+  }
+
+  void _handleExternalWallet(ExternalWalletResponse response) {
+    Fluttertoast.showToast(
+        msg: "EXTERNAL_WALLET: " + response.walletName, timeInSecForIosWeb: 4);
+  }
+///razor
   @override
   Widget build(BuildContext context) {
 
@@ -481,35 +545,35 @@ class _CartScreenState extends State<CartScreen> with BaseScreenMixin {
                   endIndent: 10,
                 ),
                 ///netbanbk
-                Row(
-                  children: [
-                    SizedBox(
-                      height: 18,
-                      width: 20,
-                      child: Icon(Icons.account_balance,size: 18),
-                    ),
-                    SizedBox(
-                      width: 5,
-                    ),
-                    Text("Credit Card"),
-                    Spacer(),
-
-                    Radio(
-                      value: paymentOption.NETBANKING,
-                      groupValue: _paymthd,
-                      onChanged: (paymentOption value) {
-                        setState(() {
-                          _paymthd = value;
-                          payingOn= "NET BANKING";
-                          print(_paymthd);
-                          print(timeSlot);
-
-                        });
-                      },
-                    ),
-                  ],
-                ),
-                Divider(),
+                // Row(
+                //   children: [
+                //     SizedBox(
+                //       height: 18,
+                //       width: 20,
+                //       child: Icon(Icons.account_balance,size: 18),
+                //     ),
+                //     SizedBox(
+                //       width: 5,
+                //     ),
+                //     Text("Credit Card"),
+                //     Spacer(),
+                //
+                //     Radio(
+                //       value: paymentOption.NETBANKING,
+                //       groupValue: _paymthd,
+                //       onChanged: (paymentOption value) {
+                //         setState(() {
+                //           _paymthd = value;
+                //           payingOn= "NET BANKING";
+                //           print(_paymthd);
+                //           print(timeSlot);
+                //
+                //         });
+                //       },
+                //     ),
+                //   ],
+                // ),
+                // Divider(),
 
                 ///benifitcard
                 Row(
@@ -522,7 +586,7 @@ class _CartScreenState extends State<CartScreen> with BaseScreenMixin {
                     SizedBox(
                       width: 5,
                     ),
-                    Text("Debit Card"),
+                    Text("Online Payment"),
                     Spacer(),
                     Radio(
                       value: paymentOption.BENIFT,
@@ -1163,11 +1227,11 @@ class _CartScreenState extends State<CartScreen> with BaseScreenMixin {
                                                 print("cartItemStatus");
 
 
-
-                                                Navigator.push(
-                                                    context,
-                                                    new MaterialPageRoute(
-                                                        builder: (context) => BeniftPayPage(id: DateTime.now().millisecondsSinceEpoch.toString(),amnt: (double.parse(cartItemStatus.priceInCart.toStringAsFixed(3))) + (delv-discountAmount),)));
+                                                openCheckout((double.parse(cartItemStatus.priceInCart.toStringAsFixed(3))) + (delv-discountAmount));
+                                                // Navigator.push(
+                                                //     context,
+                                                //     new MaterialPageRoute(
+                                                //         builder: (context) => BeniftPayPage(id: DateTime.now().millisecondsSinceEpoch.toString(),amnt: (double.parse(cartItemStatus.priceInCart.toStringAsFixed(3))) + (delv-discountAmount),)));
 
                                                 setState(() {
                                                   timeSlotClick =false;
