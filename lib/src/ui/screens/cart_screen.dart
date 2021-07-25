@@ -1118,6 +1118,9 @@ class _CartScreenState extends State<CartScreen> with BaseScreenMixin {
                                           //isDisabled:
                                           margin: EdgeInsets.only(bottom: 40),
                                           onTap: () async{
+                                            print("delvvvvv");
+                                            print(discountAmount);
+
                                             if(timeSlot=="SELECT"){
 
 
@@ -1164,7 +1167,7 @@ class _CartScreenState extends State<CartScreen> with BaseScreenMixin {
                                                 Navigator.push(
                                                     context,
                                                     new MaterialPageRoute(
-                                                        builder: (context) => BeniftPayPage(id: DateTime.now().millisecondsSinceEpoch.toString(),amnt: (double.parse(cartItemStatus.priceInCart.toStringAsFixed(3))) + (delv),)));
+                                                        builder: (context) => BeniftPayPage(id: DateTime.now().millisecondsSinceEpoch.toString(),amnt: (double.parse(cartItemStatus.priceInCart.toStringAsFixed(3))) + (delv-discountAmount),)));
 
                                                 setState(() {
                                                   timeSlotClick =false;
@@ -1194,7 +1197,7 @@ class _CartScreenState extends State<CartScreen> with BaseScreenMixin {
                                                 });
 
 
-                                                var rsp = await checkoutApi( (double.parse(cartItemStatus.priceInCart.toStringAsFixed(3))) + (delv),DateTime.now().millisecondsSinceEpoch.toString(),DateTime.now().millisecondsSinceEpoch.toString());
+                                                var rsp = await checkoutApi( (double.parse(cartItemStatus.priceInCart.toStringAsFixed(3))) + (delv-discountAmount),DateTime.now().millisecondsSinceEpoch.toString(),DateTime.now().millisecondsSinceEpoch.toString());
 
                                                 print("checkingggg");
                                                 print(rsp);

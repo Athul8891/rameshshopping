@@ -13,6 +13,8 @@ import 'package:corazon_customerapp/src/res/text_styles.dart';
 import 'package:corazon_customerapp/src/routes/router.gr.dart';
 import 'package:corazon_customerapp/src/ui/common/action_text.dart';
 import 'package:corazon_customerapp/src/ui/common/product_card.dart';
+import 'package:package_info/package_info.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:new_version/new_version.dart';
 class HomePageScreen extends StatefulWidget {
@@ -37,13 +39,8 @@ class _HomePageScreenState extends State<HomePageScreen> {
     getBanner();
     fetchProductData();
     super.initState();
+    this.checkVersion;
 
-    NewVersion(
-      context: context,
-      iOSId: 'com.corazon.corazon_customerapp',
-      androidId: 'com.corazon.corazon_customerapp',
-      dialogText: "A new version of app is available, Update the app to unlock new features !"
-    ).showAlertIfNecessary();
 
   }
 
@@ -72,6 +69,22 @@ class _HomePageScreenState extends State<HomePageScreen> {
     dealsDayCubit.fetchProductData(ProductData.DealOfTheDay);
     topProductsCubit.fetchProductData(ProductData.OnSale);
     onSaleCubit.fetchProductData(ProductData.TopProducts);
+  }
+  checkVersion()async{
+    PackageInfo packageInfo = await PackageInfo.fromPlatform();
+    var prefs = await SharedPreferences.getInstance();
+    var buildNum = prefs.getString('buildNum');
+    String buildNumber = packageInfo.buildNumber;
+   
+    if(buildNum!=buildNumber){
+      NewVersion(
+          context: context,
+          iOSId: 'com.corazon.corazon_customerapp',
+          androidId: 'com.corazon.corazon_customerapp',
+          dialogText: "A new version of app is available, Update the app to unlock new features !"
+      ).showAlertIfNecessary();
+
+    }
   }
 
   @override

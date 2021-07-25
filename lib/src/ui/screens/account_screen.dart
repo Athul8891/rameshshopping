@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:corazon_customerapp/src/di/app_injector.dart';
 import 'package:corazon_customerapp/src/notifiers/account_provider.dart';
@@ -19,6 +21,26 @@ class AccountScreen extends StatefulWidget {
 }
 
 class _AccountScreenState extends State<AccountScreen> {
+
+  Firestore _firestore = Firestore.instance;
+  final FirebaseAuth auth = FirebaseAuth.instance;
+  var uid;
+
+  @override
+  void initState() {
+    this.checkUser();
+  }
+
+  void checkUser()async{
+    final FirebaseUser user = await auth.currentUser();
+    setState(() {
+      uid=user;
+    });
+
+
+    print("userrrrrrrr");
+    print(user);
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -36,17 +58,19 @@ class _AccountScreenState extends State<AccountScreen> {
                       children: <Widget>[
                         ProviderNotifier<AccountProvider>(
                           child: (AccountProvider value) {
+                            print("valueee");
+                            print(value.firebaseUser);
                             return Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: <Widget>[
                                 Text(
-                                  value.accountDetails.name,
+                                  uid!=null?value.accountDetails.name:"Not Logged in",
                                   style: AppTextStyles.medium22Black,
                                 ),
-                                Text(
+                                uid!=null?Text(
                                   value.accountDetails.phoneNumber,
                                   style: AppTextStyles.normal14Color4C4C6F,
-                                ),
+                                ):Container(),
                               ],
                             );
                           },
@@ -54,33 +78,33 @@ class _AccountScreenState extends State<AccountScreen> {
                         SizedBox(
                           height: 10,
                         ),
-                        ActionText(
+                        uid!=null?ActionText(
                           StringsConstants.editCaps,
                           onTap: () {
                             Navigator.of(context).pushNamed(
                                 Routes.addUserDetailScreen,
                                 arguments: false);
                           },
-                        ),
+                        ):Container(),
                       ],
                     ),
                   ),
                   Divider(),
-                  ListTile(
+                  uid!=null?ListTile(
                     title: Text(StringsConstants.myOrders),
                     leading: Icon(Icons.shopping_basket),
                     onTap: () {
                       Navigator.of(context).pushNamed(Routes.myOrdersScreen);
                     },
-                  ),
+                  ):Container(),
                   Divider(),
-                  ListTile(
+                  uid!=null?ListTile(
                     title: Text(StringsConstants.myAddress),
                     leading: Icon(Icons.place),
                     onTap: () {
                       Navigator.of(context).pushNamed(Routes.myAddressScreen);
                     },
-                  ),
+                  ):Container(),
 
 
                   Divider(),
@@ -115,15 +139,21 @@ class _AccountScreenState extends State<AccountScreen> {
                   ),
                   Divider(),
                   ListTile(
-                    title: Text(StringsConstants.logout),
+                    title: Text(uid!=null?StringsConstants.logout:"Login"),
                     leading: Icon(Icons.exit_to_app),
                     onTap: () {
-                      AppInjector.get<AuthRepository>()
-                          .logoutUser()
-                          .then((value) {
-                        Navigator.of(context).pushNamedAndRemoveUntil(
-                            Routes.loginScreen, (route) => false);
-                      });
+                      if(uid!=null){
+                        AppInjector.get<AuthRepository>()
+                            .logoutUser()
+                            .then((value) {
+                          Navigator.of(context).pushNamedAndRemoveUntil(
+                              Routes.loginScreen, (route) => false);
+                        });
+                      }else{
+                        Navigator.of(context).pushReplacementNamed(Routes.loginScreen);
+
+                      }
+
                     },
                   ),
                 ],

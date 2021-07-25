@@ -1,5 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_pro/carousel_pro.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -27,10 +29,16 @@ class _ProductDetailPageState extends State<ProductDetailPage>
     with BaseScreenMixin {
   var addToCartCubit = AppInjector.get<AddToCartCubit>();
   var arrImages = [];
+  Firestore _firestore = Firestore.instance;
+  final FirebaseAuth auth = FirebaseAuth.instance;
+  var uid;
+
+
 
   @override
   void initState() {
     super.initState();
+    this.checkUser();
     addToCartCubit.checkItemInCart(widget.productModel.productId);
     addToCartCubit.listenToProduct(widget.productModel.productId);
 
@@ -48,6 +56,18 @@ class _ProductDetailPageState extends State<ProductDetailPage>
     print(arrImages);
   }
 
+  void checkUser()async{
+    final FirebaseUser user = await auth.currentUser();
+    setState(() {
+      uid=user;
+    });
+
+
+     print("userrrrrrrr");
+     print(user);
+  }
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -57,7 +77,7 @@ class _ProductDetailPageState extends State<ProductDetailPage>
     double height = MediaQuery.of(context).size.height;
     return Scaffold(
       key: scaffoldKey,
-      floatingActionButton: CommonViewCartOverlay(),
+      floatingActionButton: uid==null?SizedBox(height: 10,):CommonViewCartOverlay(),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       appBar: AppBar(
         title: Text(widget.productModel.name),
@@ -207,7 +227,13 @@ class _ProductDetailPageState extends State<ProductDetailPage>
     return AnimatedCrossFade(
       firstChild: InkWell(
         onTap: () {
-          addToCartCubit.addToCart(widget.productModel);
+          if(uid==null){
+            showSnackBar( title: "Please login to perform this action!");
+
+          }else{
+            addToCartCubit.addToCart(widget.productModel);
+
+          }
         },
         child: Container(
           height: 30,

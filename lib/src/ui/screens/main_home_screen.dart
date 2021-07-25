@@ -137,7 +137,9 @@ class _MainHomeScreenState extends State<MainHomeScreen> {
                     title: Text(StringsConstants.account)),
               ],
               onTap: (index) {
+
                    setState(() {
+
                      _currentIndex = index;
                      mainScreenProvider.bottomBarIndex = _currentIndex;
                    });

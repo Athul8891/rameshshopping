@@ -89,11 +89,14 @@ class WebViewExampleState extends State<BeniftPayPage> {
   @override
   Widget build(BuildContext context) {
     print("setstate3");
+    bool isLoading=true;
 
-    return WebView(
+    return  WebView(
 
       initialUrl: "https://www.corazonmart.com/pg/Benifit/benifit_pg/request.php?amnt="+widget.amnt.toString()+"&&id="+widget.id.toString() ,
       javascriptMode: JavascriptMode.unrestricted,
+
+
       onWebViewCreated: (controller) {
         print("create");
         _controller = controller;
@@ -102,6 +105,10 @@ class WebViewExampleState extends State<BeniftPayPage> {
 
       onPageFinished: (controller) {
 
+        setState(() {
+          isLoading = false;
+
+        });
         print("finsheeeeeeeeeeeeeeeed");
         readJS();
       },

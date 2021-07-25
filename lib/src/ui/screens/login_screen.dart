@@ -35,6 +35,20 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: AppColors.color96C160,
+          actions: [
+            IconButton(
+              icon: Icon(Icons.clear),
+              color: AppColors.primaryColor,
+              onPressed: () {
+                Navigator.of(context).pushReplacementNamed(Routes.mainHomeScreen);
+
+              },
+            )
+          ],
+
+      ),
       body: Stack(
         children: <Widget>[
           Material(
@@ -139,6 +153,8 @@ class _LoginScreenState extends State<LoginScreen> {
               SizedBox(
                 height: 20,
               ),
+
+
             ],
           ),
         ),

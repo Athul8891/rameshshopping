@@ -1,5 +1,7 @@
 import 'dart:io';
 
+import 'package:ars_progress_dialog/ars_progress_dialog.dart';
+import 'package:corazon_customerapp/src/res/app_colors.dart';
 import 'package:corazon_customerapp/src/ui/screens/cart_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -16,13 +18,15 @@ class WebViewExample extends StatefulWidget {
 
 class WebViewExampleState extends State<WebViewExample> {
   String id;
-
+  bool isLoading=true;
   WebViewExampleState(this.id);
+
 
   @override
   void initState() {
     super.initState();
     // Enable hybrid composition.
+
     if (Platform.isAndroid) WebView.platform = SurfaceAndroidWebView();
   }
 
@@ -33,7 +37,12 @@ class WebViewExampleState extends State<WebViewExample> {
 
       initialUrl: "https://corazonmart.com/pg/MasterPG/master.php?SessionId=" + widget.id.toString()+"&&street=test&&city=test&&postcodeZip=987456&&stateProvince=ukrain&&country=USA" ,
       javascriptMode: JavascriptMode.unrestricted,
+      onPageFinished: (finish) {
+        print("finishaayi");
 
+
+
+      },
 
       navigationDelegate: (request) {
         print("444444444444444444444444444444");
