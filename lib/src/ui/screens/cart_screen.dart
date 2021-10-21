@@ -223,7 +223,7 @@ class _CartScreenState extends State<CartScreen> with BaseScreenMixin {
     var options = {
       'id': now.toString(),
       'key': 'rzp_test_FUD6UygqR37FmX',
-      'amount': int.parse(amount.toString()) * 100,
+      'amount': double.parse(amount.toString()) * 100,
       'name': 'Remesh',
       //'description': 'Fine T-Shirt',
       'image':
@@ -846,7 +846,7 @@ class _CartScreenState extends State<CartScreen> with BaseScreenMixin {
                       "${cartItemStatus.currency} ${(cartItemStatus.priceInCart+ delv-discountAmount).toStringAsFixed(3)}",
                       style: AppTextStyles.medium15Black,
                     ),
-                    ActionText(StringsConstants.viewDetailedBillCaps)
+                    ActionText("TO PAY")
                   ],
                 ),
               ),

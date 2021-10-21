@@ -14,6 +14,43 @@
       },
       "oauth_client": [
         {
+          "client_id": "761052654612-u1p6ur9f4erd95uvojg5t91tpiekiov9.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.rameshshoppingkart.customer",
+            "certificate_hash": "6b93611531b9b83c4a0588b6217ff0ef777af6a8"
+          }
+        },
+        {
+          "client_id": "761052654612-mimiodiev9akohi0qhda2h3e7jt3v08b.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDxmoOE385LPG1RK-rEAMJSVVqQxnemVDk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "761052654612-mimiodiev9akohi0qhda2h3e7jt3v08b.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:761052654612:android:2ea790288a8e0d86344b01",
+        "android_client_info": {
+          "package_name": "com.rameshshoppingkart.seller"
+        }
+      },
+      "oauth_client": [
+        {
           "client_id": "761052654612-mimiodiev9akohi0qhda2h3e7jt3v08b.apps.googleusercontent.com",
           "client_type": 3
         }
